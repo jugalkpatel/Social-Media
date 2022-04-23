@@ -7,6 +7,7 @@ import type { NormalizedCacheObject } from '@apollo/client';
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import isEqual from 'lodash.isequal';
+import { cache, getAuthCredentialsFromLocalStorage } from 'lib';
 
 interface PageProps {
   props?: Record<string, any>;
@@ -33,7 +34,10 @@ const createApolloClient = (ctx?: GetServerSidePropsContext) => {
 
   const authLink = setContext((_, { headers }) => {
     // Get the authentication token from cookies
-    const token = getToken(ctx?.req);
+    const authCredentials = getAuthCredentialsFromLocalStorage();
+
+    const token =
+      authCredentials && authCredentials.token ? authCredentials.token : '';
 
     return {
       headers: {
@@ -46,7 +50,7 @@ const createApolloClient = (ctx?: GetServerSidePropsContext) => {
   return new ApolloClient({
     ssrMode: typeof window === 'undefined',
     link: authLink.concat(httpLink),
-    cache: new InMemoryCache(),
+    cache,
   });
 };
 

@@ -2,7 +2,7 @@ import type { NextPage } from 'next';
 import { useTranslation } from 'react-i18next';
 import { useApolloClient } from '@apollo/client';
 
-import { LanguageSwitcher } from '../components';
+import { LanguageSwitcher } from 'components';
 
 const IndexPage: NextPage = () => {
   const [t] = useTranslation('common');
