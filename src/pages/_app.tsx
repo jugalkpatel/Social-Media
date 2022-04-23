@@ -16,6 +16,7 @@ import theme from '../styles/theme';
 
 import '../lib/i18n';
 import { useApollo } from '../lib/apollo';
+import { Layout } from 'components';
 
 import 'normalize.css/normalize.css';
 
@@ -54,7 +55,9 @@ const App: NextPage<AppProps> = ({ Component, pageProps }) => {
           >
             <NotificationsProvider>
               <ModalsProvider>
-                <Component {...pageProps} />
+                <Layout>
+                  <Component {...pageProps} />
+                </Layout>
               </ModalsProvider>
             </NotificationsProvider>
           </MantineProvider>
