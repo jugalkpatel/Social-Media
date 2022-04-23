@@ -1,5 +1,5 @@
 import { Stack, Container, createStyles } from '@mantine/core';
-// import { NavigationBar } from 'components';
+import { Navbar } from 'components';
 
 type Props = {
   children: JSX.Element | JSX.Element[];
@@ -27,7 +27,7 @@ function Layout({ children }: Props) {
   const { classes } = useStyles();
   return (
     <>
-      {/* <NavigationBar /> */}
+      <Navbar />
       <Stack justify="center" mt="lg">
         <Container className={classes.width}>{children}</Container>
       </Stack>
