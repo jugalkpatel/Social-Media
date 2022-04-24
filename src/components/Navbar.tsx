@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/router';
 import { useReactiveVar } from '@apollo/client';
 
 import {
@@ -21,10 +20,12 @@ import {
 } from 'react-icons/io';
 import { MdNightsStay } from 'react-icons/md';
 import { BsPlusCircleDotted } from 'react-icons/bs';
+import { AiOutlineUser } from 'react-icons/ai';
 
 import logo from '@/assets/LogoImg.png';
 import Avatar from '@/assets/sample_avatar.svg';
-// import { authorizationVar } from 'cache';
+
+import { authorizationVar } from 'lib';
 
 const useStyles = createStyles((theme) => ({
   border: {
@@ -35,8 +36,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 function Navbar() {
-  //   const isAuthorized = useReactiveVar(authorizationVar);
-  const router = useRouter();
+  const isAuthorized = useReactiveVar(authorizationVar);
   const { classes } = useStyles();
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const dark = colorScheme === 'dark';
@@ -50,6 +50,11 @@ function Navbar() {
       innerProps: {},
     });
   };
+
+  const openAuthModal = () => {
+    modals.openContextModal('LOGIN', { innerProps: {} });
+  };
+
   return (
     <Group position="apart" p="xs" className={classes.border}>
       <Link href="/" passHref>
@@ -59,11 +64,13 @@ function Navbar() {
       </Link>
 
       <Group>
-        <Link href="/submit" passHref>
-          <ActionIcon variant="outline" title="create post" component="a">
-            <IoMdAdd />
-          </ActionIcon>
-        </Link>
+        {isAuthorized ? (
+          <Link href="/submit" passHref>
+            <ActionIcon variant="outline" title="create post" component="a">
+              <IoMdAdd />
+            </ActionIcon>
+          </Link>
+        ) : null}
 
         <ActionIcon variant="outline" title="notifications">
           <IoMdNotifications />
@@ -71,8 +78,8 @@ function Navbar() {
 
         <Menu
           control={
-            <ActionIcon size="md">
-              <Avatar />
+            <ActionIcon size="md" variant="outline">
+              {isAuthorized ? <Avatar /> : <AiOutlineUser />}
             </ActionIcon>
           }
         >
@@ -87,16 +94,16 @@ function Navbar() {
           <Divider />
 
           <Menu.Label>MORE STUFF</Menu.Label>
-          {/* {isAuthorized ? (
+          {isAuthorized ? (
             <Menu.Item
               icon={<BsPlusCircleDotted />}
               onClick={openContextModals}
             >
               Create Community
             </Menu.Item>
-          ) : null} */}
+          ) : null}
 
-          <Menu.Item icon={<IoMdExit />} onClick={() => router.push('/access')}>
+          <Menu.Item icon={<IoMdExit />} onClick={openAuthModal}>
             Login / Register
           </Menu.Item>
         </Menu>

@@ -1,24 +1,29 @@
 import type { NextPage } from 'next';
-import { useTranslation } from 'react-i18next';
-import { useApolloClient } from '@apollo/client';
+import { gql, useQuery } from '@apollo/client';
 
-import { LanguageSwitcher } from 'components';
+const IS_LOGGED_IN = gql`
+  query getIsLoggedIn {
+    isLoggedIn @client
+    id @client
+    name @client
+    token @client
+  }
+`;
 
 const IndexPage: NextPage = () => {
-  const [t] = useTranslation('common');
-  const apolloClient = useApolloClient();
+  const { data, loading, error } = useQuery(IS_LOGGED_IN);
 
-  return (
-    <div>
-      <p
-        dangerouslySetInnerHTML={{
-          __html: t('greetings', { version: apolloClient.version }),
-        }}
-      />
+  // console.log({ data });
 
-      <LanguageSwitcher />
-    </div>
-  );
+  if (loading) {
+    return <h1>Loading....</h1>;
+  }
+
+  if (data) {
+    return <pre>{JSON.stringify(data, null, 2)}</pre>;
+  }
+
+  return <h1>Something went wrong</h1>;
 };
 
 export default IndexPage;

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { ApolloProvider } from '@apollo/client';
 
 import {
@@ -16,12 +17,13 @@ import theme from '../styles/theme';
 
 import '../lib/i18n';
 import { useApollo } from '../lib/apollo';
-import { Layout } from 'components';
+import { Layout, Login, Register } from 'components';
 
 import 'normalize.css/normalize.css';
 
 const App: NextPage<AppProps> = ({ Component, pageProps }) => {
   const apolloClient = useApollo(pageProps);
+  const router = useRouter();
   const [colorScheme, setColorScheme] = useState<ColorScheme>('dark');
 
   const toggleColorScheme = (value?: ColorScheme) =>
@@ -54,7 +56,10 @@ const App: NextPage<AppProps> = ({ Component, pageProps }) => {
             withNormalizeCSS
           >
             <NotificationsProvider>
-              <ModalsProvider>
+              <ModalsProvider
+                modals={{ LOGIN: Login, REGISTER: Register }}
+                modalProps={{ centered: true }}
+              >
                 <Layout>
                   <Component {...pageProps} />
                 </Layout>
