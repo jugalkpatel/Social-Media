@@ -1,22 +1,45 @@
-import { useEffect } from 'react';
-import { useReactiveVar } from '@apollo/client';
+import { useEffect, useState } from 'react';
 import { useModals } from '@mantine/modals';
 
-import { authorizationVar } from 'lib';
+import { getAuthCredentialsFromLocalStorage } from 'lib';
 
 function useAuth(): Boolean {
-  const isAuthorized = useReactiveVar(authorizationVar);
-  const modals = useModals();
+  const [isAuthenticated, setAuthenticated] = useState(() => {
+    let checkAuth = false;
+
+    if (typeof window === 'object' && !window.__WAS_SSR) {
+      console.log(window.__WAS_SSR);
+      const authCredentials = getAuthCredentialsFromLocalStorage();
+
+      if (authCredentials && authCredentials.token) {
+        checkAuth = true;
+      }
+
+      return checkAuth;
+    }
+  });
 
   useEffect(() => {
-    if (!isAuthorized) {
-      modals.openContextModal('LOGIN', {
-        innerProps: {},
-      });
-    }
-  }, [isAuthorized]);
+    if (!isAuthenticated) {
+      const authCredentials = getAuthCredentialsFromLocalStorage();
 
-  return isAuthorized;
+      console.log({ authCredentials });
+
+      if (authCredentials && authCredentials.token) {
+        setAuthenticated(true);
+      }
+    }
+  }, []);
+
+  // useEffect(() => {
+  //   if (!isAuthorized) {
+  //     modals.openContextModal('LOGIN', {
+  //       innerProps: {},
+  //     });
+  //   }
+  // }, [isAuthorized]);
+
+  return isAuthenticated;
 }
 
 export { useAuth };

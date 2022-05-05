@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
 import merge from 'deepmerge';
-import cookie from 'cookie';
+// import cookie from 'cookie';
 import type { GetServerSidePropsContext } from 'next';
-import type { IncomingMessage } from 'http';
+// import type { IncomingMessage } from 'http';
 import type { NormalizedCacheObject } from '@apollo/client';
-import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
+import { ApolloClient, HttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import isEqual from 'lodash.isequal';
 import { cache, getAuthCredentialsFromLocalStorage } from 'lib';
@@ -16,13 +16,13 @@ interface PageProps {
 export const APOLLO_STATE_PROPERTY_NAME = '__APOLLO_STATE__';
 export const COOKIES_TOKEN_NAME = 'jwt';
 
-const getToken = (req?: IncomingMessage) => {
-  const parsedCookie = cookie.parse(
-    req ? req.headers.cookie ?? '' : document.cookie,
-  );
+// const getToken = (req?: IncomingMessage) => {
+//   const parsedCookie = cookie.parse(
+//     req ? req.headers.cookie ?? '' : document.cookie,
+//   );
 
-  return parsedCookie[COOKIES_TOKEN_NAME];
-};
+//   return parsedCookie[COOKIES_TOKEN_NAME];
+// };
 
 let apolloClient: ApolloClient<NormalizedCacheObject> = null;
 

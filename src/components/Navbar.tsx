@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { useReactiveVar } from '@apollo/client';
 
 import {
   ActionIcon,
@@ -25,7 +24,7 @@ import { AiOutlineUser } from 'react-icons/ai';
 import logo from '@/assets/LogoImg.png';
 import Avatar from '@/assets/sample_avatar.svg';
 
-import { authorizationVar } from 'lib';
+import { useAuth } from 'hooks';
 
 const useStyles = createStyles((theme) => ({
   border: {
@@ -36,7 +35,9 @@ const useStyles = createStyles((theme) => ({
 }));
 
 function Navbar() {
-  const isAuthorized = useReactiveVar(authorizationVar);
+  // const isAuthorized = useReactiveVar(authorizationVar);
+  const isAuthorized = useAuth();
+
   const { classes } = useStyles();
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const dark = colorScheme === 'dark';
@@ -54,6 +55,8 @@ function Navbar() {
   const openAuthModal = () => {
     modals.openContextModal('LOGIN', { innerProps: {} });
   };
+
+  console.log({ isAuthorized });
 
   return (
     <Group position="apart" p="xs" className={classes.border}>

@@ -29,6 +29,10 @@ const App: NextPage<AppProps> = ({ Component, pageProps }) => {
   const toggleColorScheme = (value?: ColorScheme) =>
     setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
 
+  if (typeof window === 'object') {
+    window.__WAS_SSR = true;
+  }
+
   return (
     <>
       <Head>

@@ -99,6 +99,7 @@ function Login({ context, id: modalId }: ContextModalProps) {
         toast(message);
       })
       .catch((err) => {
+        console.log({ err });
         // for unknown errors
         toast(message);
       });
@@ -194,7 +195,7 @@ function Login({ context, id: modalId }: ContextModalProps) {
               />
             </div>
 
-            <Button type="submit" loading={isSubmitting || loading}>
+            <Button type="submit" loading={isSubmitting}>
               Login
             </Button>
           </Group>

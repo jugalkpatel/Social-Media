@@ -1,3 +1,6 @@
+import type { PrismaClient } from '@prisma/client';
+import type { NextApiResponse, NextApiRequest } from 'next';
+
 export type AuthMode = 'LOGIN' | 'REGISTER';
 
 export type AuthCredentials = {
@@ -24,3 +27,10 @@ export type CommunityError = {
 export type AllCommunitiesResponse = AllCommunities | CommunityError;
 
 export type CommunityVar = Array<Community> | [];
+
+export type Context = {
+  prisma: PrismaClient;
+  request: NextApiRequest;
+  response: NextApiResponse;
+  userId?: string;
+};

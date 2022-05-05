@@ -28,10 +28,9 @@ type FormValues = {
 };
 
 function toast(msg: string) {
-  console.log({ msg });
   showNotification({
     message: msg,
-    autoClose: false,
+    autoClose: 3000,
     icon: <IoMdClose />,
     color: 'red',
   });
@@ -44,6 +43,7 @@ function Register({ context, id: modalId }: ContextModalProps) {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
+    reset,
   } = useForm<FormValues>({
     mode: 'onBlur',
     defaultValues: { name: '', email: '', password: '' },
@@ -104,7 +104,6 @@ function Register({ context, id: modalId }: ContextModalProps) {
         toast(message);
       })
       .catch((error) => {
-        console.log({ error });
         // unhandled errors
         toast(message);
       });
@@ -220,7 +219,7 @@ function Register({ context, id: modalId }: ContextModalProps) {
               />
             </div>
 
-            <Button type="submit" loading={isSubmitting || loading}>
+            <Button type="submit" loading={isSubmitting}>
               Register
             </Button>
           </Group>
