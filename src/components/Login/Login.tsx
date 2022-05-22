@@ -45,7 +45,7 @@ function Login({ context, id: modalId }: ContextModalProps) {
     defaultValues: { email: '', password: '' },
   });
 
-  const [loginUser, { loading }] = useLoginMutation();
+  const [loginUser] = useLoginMutation();
 
   const onSubmit: SubmitHandler<FormValues> = async (values: FormValues) => {
     let message = 'something went wrong!';
@@ -59,33 +59,18 @@ function Login({ context, id: modalId }: ContextModalProps) {
       .then((response) => {
         const { data } = response;
 
-        console.log({ data });
-
         if (data?.login && data.login.__typename === 'AuthPayload') {
           const {
-            token,
             user: { id, name },
           } = data.login;
 
-          const isSavedInLocalStorage = setAuthCredentialsInLocalStorage({
-            token,
-            id,
-            name,
-          });
-
-          if (!isSavedInLocalStorage) {
-            toast('unable to save item in localstorage');
-            return;
-          }
-
           setAuthCredentials({
-            isLoggedIn: true,
+            isLoggedIn: !!id,
             id,
             name,
-            token,
           });
 
-          context.closeModal(modalId);
+          context.closeAll();
 
           router.push('/');
 
@@ -194,7 +179,7 @@ function Login({ context, id: modalId }: ContextModalProps) {
               />
             </div>
 
-            <Button type="submit" loading={isSubmitting || loading}>
+            <Button type="submit" loading={isSubmitting}>
               Login
             </Button>
           </Group>

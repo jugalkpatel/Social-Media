@@ -1,60 +1,87 @@
 import { useMemo } from 'react';
 import merge from 'deepmerge';
-import cookie from 'cookie';
 import type { GetServerSidePropsContext } from 'next';
-import type { IncomingMessage } from 'http';
-import type { NormalizedCacheObject } from '@apollo/client';
-import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
+import { ApolloLink, from, NormalizedCacheObject } from '@apollo/client';
+import { ApolloClient, HttpLink } from '@apollo/client';
+// import { onError } from '@apollo/client/link/error';
 import isEqual from 'lodash.isequal';
-import { cache, getAuthCredentialsFromLocalStorage } from 'lib';
+
+import { cache } from 'lib';
 
 interface PageProps {
   props?: Record<string, any>;
 }
 
 export const APOLLO_STATE_PROPERTY_NAME = '__APOLLO_STATE__';
-export const COOKIES_TOKEN_NAME = 'jwt';
+export const COOKIES_TOKEN_NAME = 'access';
 
-const getToken = (req?: IncomingMessage) => {
-  const parsedCookie = cookie.parse(
-    req ? req.headers.cookie ?? '' : document.cookie,
-  );
+// const errorLink = onError(({ graphQLErrors, networkError }) => {
+//   if (graphQLErrors) {
+//     graphQLErrors.forEach((err) => {
+//       if (err.extensions.code === 'TOKEN_EXPIRED') {
+//         // hit refresh route
+//         // if error again hit logout route
+//         // set localstate to ""
+//         // redirect to login
+//       }
+//     });
+//   }
+// });
 
-  return parsedCookie[COOKIES_TOKEN_NAME];
-};
+// function getCookie(req: IncomingMessage): string {
+//   return req ? req.headers.cookie : '';
+// }
+
+// const afterwareLink = new ApolloLink((operation, forward) => {
+//   return forward(operation).map((response) => {
+//     const context = operation.getContext();
+//     const {
+//       response: { headers },
+//     } = context;
+
+//     const cookies = headers.get('set-cookie');
+
+//     console.log({ cookies });
+
+//     return response;
+//   });
+// });
 
 let apolloClient: ApolloClient<NormalizedCacheObject> = null;
 
 const createApolloClient = (ctx?: GetServerSidePropsContext) => {
   const httpLink = new HttpLink({
     uri: process.env.NEXT_PUBLIC_GRAPHQL_URI,
-    credentials: 'same-origin',
+    credentials: 'include',
   });
 
-  const authLink = setContext((_, { headers }) => {
-    // Get the authentication token from cookies
-    const authCredentials = getAuthCredentialsFromLocalStorage();
+  const afterwareLink = new ApolloLink((operation, forward) => {
+    return forward(operation).map((response) => {
+      const context = operation.getContext();
+      const {
+        response: { headers },
+      } = context;
 
-    const token =
-      authCredentials && authCredentials.token ? authCredentials.token : '';
+      const cookies = headers.get('set-cookie');
 
-    return {
-      headers: {
-        ...headers,
-        authorization: token ? `Bearer ${token}` : '',
-      },
-    };
+      if (cookies) {
+        ctx.req.headers.cookie = cookies;
+      }
+
+      return response;
+    });
   });
 
   return new ApolloClient({
     ssrMode: typeof window === 'undefined',
-    link: authLink.concat(httpLink),
+    link:
+      typeof window === 'undefined' ? afterwareLink.concat(httpLink) : httpLink,
+    // link: httpLink,
     cache,
   });
 };
 
-export function initializeApollo(initialState = null, ctx = null) {
+export function initializeApollo({ initialState = null, ctx = null }) {
   const client = apolloClient ?? createApolloClient(ctx);
 
   // If your page has Next.js data fetching methods that use Apollo Client,
@@ -104,7 +131,10 @@ export function addApolloState(
 
 export function useApollo(pageProps: PageProps) {
   const state = pageProps[APOLLO_STATE_PROPERTY_NAME];
-  const store = useMemo(() => initializeApollo(state), [state]);
+  const store = useMemo(
+    () => initializeApollo({ initialState: state }),
+    [state],
+  );
 
   return store;
 }

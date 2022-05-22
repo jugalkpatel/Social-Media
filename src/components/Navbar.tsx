@@ -1,6 +1,13 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { useReactiveVar } from '@apollo/client';
+// two ways
+// persist in a cookie or fetch cookie in useEffect by creating custom hook with local state
+
+// check cookies are being set or not.
+// fetch authenticated state from cookie
+
+// our login fn is working, we have a problem with refresh.
+// since we're using cookies we can now make a request again on the refresh which validates the user and if access token expires then check refresh token.
 
 import {
   ActionIcon,
@@ -25,7 +32,7 @@ import { AiOutlineUser } from 'react-icons/ai';
 import logo from '@/assets/LogoImg.png';
 import Avatar from '@/assets/sample_avatar.svg';
 
-import { authorizationVar } from 'lib';
+import { useAuth } from 'hooks';
 
 const useStyles = createStyles((theme) => ({
   border: {
@@ -36,7 +43,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 function Navbar() {
-  const isAuthorized = useReactiveVar(authorizationVar);
+  const { isAuthorized } = useAuth();
   const { classes } = useStyles();
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const dark = colorScheme === 'dark';
@@ -44,7 +51,7 @@ function Navbar() {
   const modals = useModals();
 
   const openContextModals = () => {
-    modals.openContextModal('community', {
+    modals.openContextModal('COMMUNITY', {
       title: <Title order={4}>Create Community</Title>,
       centered: true,
       innerProps: {},

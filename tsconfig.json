@@ -17,6 +17,7 @@
     "baseUrl": "./src",
     "paths": {
       "@/assets/*": ["public/assets/*"]
+      // "@/graphql/*": ["/graphql/*"]
     }
   },
   "exclude": ["node_modules"],

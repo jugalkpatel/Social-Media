@@ -19,7 +19,7 @@ import { IoMdClose } from 'react-icons/io';
 import Rocket from '@/assets/rocket.svg';
 
 import { useRegisterMutation } from './__generated__/register.generated';
-import { setAuthCredentials, setAuthCredentialsInLocalStorage } from 'lib';
+import { setAuthCredentials } from 'lib';
 
 type FormValues = {
   name: string;
@@ -66,31 +66,18 @@ function Register({ context, id: modalId }: ContextModalProps) {
 
         if (data?.register && data.register.__typename === 'AuthPayload') {
           const {
-            token,
+            // token,
             user: { id, name },
           } = data.register;
 
-          console.log({ token, id, name });
-
-          const isSavedInLocalStorage = setAuthCredentialsInLocalStorage({
-            id,
-            name,
-            token,
-          });
-
-          if (!isSavedInLocalStorage) {
-            message = 'failed to save auth-credentials in local storage';
-            throw new Error();
-          }
-
           setAuthCredentials({
-            isLoggedIn: true,
             id,
+            isLoggedIn: true,
             name,
-            token,
           });
 
-          context.closeModal(modalId);
+          // context.closeModal(modalId);
+          context.closeAll();
 
           router.push('/');
 
@@ -220,7 +207,7 @@ function Register({ context, id: modalId }: ContextModalProps) {
               />
             </div>
 
-            <Button type="submit" loading={isSubmitting || loading}>
+            <Button type="submit" loading={isSubmitting}>
               Register
             </Button>
           </Group>

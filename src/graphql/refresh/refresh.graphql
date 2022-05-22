@@ -1,0 +1,12 @@
+mutation Refresh {
+  refresh {
+    ... on IRefresh {
+      success
+      __typename
+    }
+    ... on AuthError {
+      message
+      __typename
+    }
+  }
+}

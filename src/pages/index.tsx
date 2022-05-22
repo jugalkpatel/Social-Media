@@ -6,7 +6,6 @@ const IS_LOGGED_IN = gql`
     isLoggedIn @client
     id @client
     name @client
-    token @client
   }
 `;
 

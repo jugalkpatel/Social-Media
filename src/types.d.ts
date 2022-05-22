@@ -6,15 +6,34 @@ export type AuthCredentials = {
   name: string;
 };
 
+// export type Community = {
+//   id: string;
+//   title: string;
+// };
+
+// export type AllCommunities = {
+//   allCommunities: {
+//     communities: Array<Community>;
+//   };
+// };
+
+export type ICommunityCreator = {
+  id: string;
+  name: string;
+};
+
+export type ICommunityMember = {
+  id: string;
+  name: string;
+};
+
 export type Community = {
   id: string;
   title: string;
-};
-
-export type AllCommunities = {
-  allCommunities: {
-    communities: Array<Community>;
-  };
+  description: string;
+  creator: ICommunityCreator;
+  members: Array<ICommunityMember>;
+  createdAt: string;
 };
 
 export type CommunityError = {

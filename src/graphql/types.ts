@@ -28,7 +28,6 @@ export type AuthError = CommonError & {
 
 export type AuthPayload = {
   __typename?: 'AuthPayload';
-  token: Scalars['String'];
   user: User;
 };
 
@@ -61,10 +60,19 @@ export type CommunityResult = {
   title: Scalars['String'];
 };
 
+export type GetCommunityResponse = Community | CommunityError;
+
+export type IRefresh = {
+  __typename?: 'IRefresh';
+  success: Scalars['Boolean'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   CreateCommunity: CommunityResponse;
+  authenticate: AuthResponse;
   login: AuthResponse;
+  refresh: RefreshResponse;
   register: AuthResponse;
 };
 
@@ -89,14 +97,23 @@ export type MutationRegisterArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  GetCommunityResponse: GetCommunityResponse;
   allCommunities: AllCommunitiesResponse;
+  authenticate: AuthResponse;
   user: User;
+};
+
+
+export type QueryGetCommunityResponseArgs = {
+  name: Scalars['String'];
 };
 
 
 export type QueryUserArgs = {
   email: Scalars['String'];
 };
+
+export type RefreshResponse = AuthError | IRefresh;
 
 export type User = {
   __typename?: 'User';

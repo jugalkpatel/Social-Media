@@ -6,8 +6,10 @@ export {
   cache,
   authorizationVar,
   communityVar,
-  tokenVar,
   userIdVar,
   userNameVar,
   setAuthCredentials,
 } from './cache';
+export { handleAuth } from './fetchSSR';
+export { fetchCommunity } from './fetchCommunity';
+export { isTokenExpired } from './isTokenExpired';
