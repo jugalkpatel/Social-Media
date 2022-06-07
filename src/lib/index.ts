@@ -8,8 +8,15 @@ export {
   communityVar,
   userIdVar,
   userNameVar,
+  userPictureVar,
   setAuthCredentials,
 } from './cache';
 export { handleAuth } from './fetchSSR';
-export { fetchCommunity } from './fetchCommunity';
+export {
+  fetchCommunity,
+  GET_COMMUNITY,
+  fetchCommunityData,
+  fetchAllCommunities,
+} from './fetchCommunity';
+export type { GetCommunityQuery } from './fetchCommunity';
 export { isTokenExpired } from './isTokenExpired';

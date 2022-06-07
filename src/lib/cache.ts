@@ -5,6 +5,7 @@ type UserCredentials = {
   isLoggedIn: boolean;
   id: string;
   name: string;
+  picture: string;
 };
 
 export const cache: InMemoryCache = new InMemoryCache({
@@ -24,6 +25,11 @@ export const cache: InMemoryCache = new InMemoryCache({
         name: {
           read() {
             return userNameVar();
+          },
+        },
+        picture: {
+          read() {
+            return userPictureVar();
           },
         },
       },
@@ -46,16 +52,21 @@ export const userIdVar = makeVar<string>('');
 
 export const userNameVar = makeVar<string>('');
 
+export const userPictureVar = makeVar<string>('');
+
 export const communityVar = makeVar<CommunityVar>([]);
 
 export function setAuthCredentials({
   isLoggedIn,
   id,
   name,
+  picture,
 }: UserCredentials): void {
   authorizationVar(isLoggedIn);
 
   userIdVar(id);
 
   userNameVar(name);
+
+  userPictureVar(picture);
 }

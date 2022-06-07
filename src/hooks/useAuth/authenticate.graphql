@@ -4,6 +4,7 @@ mutation Authenticate {
       user {
         id
         name
+        picture
         __typename
       }
     }

@@ -67,19 +67,20 @@ function Register({ context, id: modalId }: ContextModalProps) {
         if (data?.register && data.register.__typename === 'AuthPayload') {
           const {
             // token,
-            user: { id, name },
+            user: { id, name, picture },
           } = data.register;
 
           setAuthCredentials({
             id,
             isLoggedIn: true,
             name,
+            picture,
           });
 
           // context.closeModal(modalId);
           context.closeAll();
 
-          router.push('/');
+          // router.push('/');
 
           return;
         }

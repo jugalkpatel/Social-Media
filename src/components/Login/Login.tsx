@@ -17,7 +17,7 @@ import { IoMdClose } from 'react-icons/io';
 import WavingHand from '@/assets/waving_hand.svg';
 
 import { useLoginMutation } from './__generated__/login.generated';
-import { setAuthCredentials, setAuthCredentialsInLocalStorage } from 'lib';
+import { setAuthCredentials } from 'lib';
 
 type FormValues = {
   email: string;
@@ -61,18 +61,19 @@ function Login({ context, id: modalId }: ContextModalProps) {
 
         if (data?.login && data.login.__typename === 'AuthPayload') {
           const {
-            user: { id, name },
+            user: { id, name, picture },
           } = data.login;
 
           setAuthCredentials({
             isLoggedIn: !!id,
             id,
             name,
+            picture,
           });
 
           context.closeAll();
 
-          router.push('/');
+          // router.push('/');
 
           return;
         }

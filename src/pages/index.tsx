@@ -1,5 +1,6 @@
 import type { NextPage } from 'next';
 import { gql, useQuery } from '@apollo/client';
+import { ContainerLayout } from 'components';
 
 const IS_LOGGED_IN = gql`
   query getIsLoggedIn {
@@ -19,10 +20,20 @@ const IndexPage: NextPage = () => {
   }
 
   if (data) {
-    return <pre>{JSON.stringify(data, null, 2)}</pre>;
+    return (
+      <ContainerLayout>
+        <pre>{JSON.stringify(data, null, 2)}</pre>
+      </ContainerLayout>
+    );
   }
 
-  return <h1>Something went wrong</h1>;
+  return (
+    <ContainerLayout>
+      <h1>Something went wrong</h1>
+    </ContainerLayout>
+  );
+
+  return;
 };
 
 export default IndexPage;

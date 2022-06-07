@@ -33,23 +33,51 @@ export type AuthPayload = {
 
 export type AuthResponse = AuthError | AuthPayload;
 
+export type Comment = {
+  __typename?: 'Comment';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  post?: Maybe<Post>;
+  text: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+  user?: Maybe<User>;
+};
+
 export type CommonError = {
   message: Scalars['String'];
 };
 
 export type Community = {
   __typename?: 'Community';
+  banner: Scalars['String'];
   createdAt: Scalars['DateTime'];
-  creator: User;
+  creator: CommunityCreator;
   description: Scalars['String'];
   id: Scalars['String'];
-  members?: Maybe<Array<Maybe<User>>>;
+  picture: Scalars['String'];
+  posts?: Maybe<Array<Maybe<Post>>>;
   title: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+};
+
+export type CommunityCreator = {
+  __typename?: 'CommunityCreator';
+  id: Scalars['String'];
+  name: Scalars['String'];
 };
 
 export type CommunityError = CommonError & {
   __typename?: 'CommunityError';
   message: Scalars['String'];
+};
+
+export type CommunityPost = {
+  __typename?: 'CommunityPost';
+  content: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  postedBy: User;
+  title: Scalars['String'];
 };
 
 export type CommunityResponse = CommunityError | CommunityResult;
@@ -60,16 +88,61 @@ export type CommunityResult = {
   title: Scalars['String'];
 };
 
-export type GetCommunityResponse = Community | CommunityError;
+export type GetCommunityMember = {
+  __typename?: 'GetCommunityMember';
+  id: Scalars['String'];
+  name: Scalars['String'];
+};
+
+export type GetCommunityResponse = CommunityError | GetCommunityResult;
+
+export type GetCommunityResult = {
+  __typename?: 'GetCommunityResult';
+  banner: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  creator: CommunityCreator;
+  description: Scalars['String'];
+  id: Scalars['String'];
+  members: Array<Maybe<GetCommunityMember>>;
+  picture: Scalars['String'];
+  posts?: Maybe<Array<Maybe<Post>>>;
+  title: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+};
+
+export type IJoinCommunityMember = {
+  __typename?: 'IJoinCommunityMember';
+  id: Scalars['String'];
+};
 
 export type IRefresh = {
   __typename?: 'IRefresh';
   success: Scalars['Boolean'];
 };
 
+export type IUser = {
+  __typename?: 'IUser';
+  id: Scalars['String'];
+};
+
+export type IUserQueryResult = {
+  __typename?: 'IUserQueryResult';
+  id: Scalars['String'];
+  joinedCommunities: Array<Maybe<IUser>>;
+  name: Scalars['String'];
+};
+
+export type JoinCommunityResponse = CommunityError | IJoinCommunityMember;
+
+export type JoinCommunityResult = {
+  __typename?: 'JoinCommunityResult';
+  members: Array<Maybe<IJoinCommunityMember>>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   CreateCommunity: CommunityResponse;
+  JoinCommunity: JoinCommunityResponse;
   authenticate: AuthResponse;
   login: AuthResponse;
   refresh: RefreshResponse;
@@ -80,6 +153,11 @@ export type Mutation = {
 export type MutationCreateCommunityArgs = {
   description: Scalars['String'];
   name: Scalars['String'];
+};
+
+
+export type MutationJoinCommunityArgs = {
+  communityId: Scalars['String'];
 };
 
 
@@ -95,16 +173,25 @@ export type MutationRegisterArgs = {
   password: Scalars['String'];
 };
 
+export type Post = {
+  __typename?: 'Post';
+  content: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  postedBy: User;
+  title: Scalars['String'];
+};
+
 export type Query = {
   __typename?: 'Query';
-  GetCommunityResponse: GetCommunityResponse;
+  GetCommunity: GetCommunityResponse;
   allCommunities: AllCommunitiesResponse;
   authenticate: AuthResponse;
-  user: User;
+  user: IUserQueryResult;
 };
 
 
-export type QueryGetCommunityResponseArgs = {
+export type QueryGetCommunityArgs = {
   name: Scalars['String'];
 };
 
@@ -120,4 +207,21 @@ export type User = {
   email: Scalars['String'];
   id: Scalars['String'];
   name: Scalars['String'];
+  picture: Scalars['String'];
 };
+
+export type Vote = {
+  __typename?: 'Vote';
+  count: Scalars['Int'];
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  post: Post;
+  type: VoteType;
+  updatedAt: Scalars['DateTime'];
+  votedBy: User;
+};
+
+export enum VoteType {
+  Downvote = 'DOWNVOTE',
+  Upvote = 'UPVOTE'
+}

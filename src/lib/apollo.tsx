@@ -1,19 +1,19 @@
 import { useMemo } from 'react';
 import merge from 'deepmerge';
 import type { GetServerSidePropsContext } from 'next';
-import { ApolloLink, from, NormalizedCacheObject } from '@apollo/client';
-import { ApolloClient, HttpLink } from '@apollo/client';
-// import { onError } from '@apollo/client/link/error';
+import {
+  ApolloClient,
+  HttpLink,
+  NormalizedCacheObject,
+  ApolloLink,
+} from '@apollo/client';
 import isEqual from 'lodash.isequal';
 
 import { cache } from 'lib';
-
-interface PageProps {
-  props?: Record<string, any>;
-}
+import { PageProps } from 'types';
 
 export const APOLLO_STATE_PROPERTY_NAME = '__APOLLO_STATE__';
-export const COOKIES_TOKEN_NAME = 'access';
+// export const COOKIES_TOKEN_NAME = 'access';
 
 // const errorLink = onError(({ graphQLErrors, networkError }) => {
 //   if (graphQLErrors) {
@@ -31,21 +31,6 @@ export const COOKIES_TOKEN_NAME = 'access';
 // function getCookie(req: IncomingMessage): string {
 //   return req ? req.headers.cookie : '';
 // }
-
-// const afterwareLink = new ApolloLink((operation, forward) => {
-//   return forward(operation).map((response) => {
-//     const context = operation.getContext();
-//     const {
-//       response: { headers },
-//     } = context;
-
-//     const cookies = headers.get('set-cookie');
-
-//     console.log({ cookies });
-
-//     return response;
-//   });
-// });
 
 let apolloClient: ApolloClient<NormalizedCacheObject> = null;
 

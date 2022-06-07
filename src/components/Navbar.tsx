@@ -17,20 +17,16 @@ import {
   createStyles,
   Divider,
   Title,
+  Text,
+  Avatar,
 } from '@mantine/core';
 import { useModals } from '@mantine/modals';
-import {
-  IoIosSunny,
-  IoMdAdd,
-  IoMdExit,
-  IoMdNotifications,
-} from 'react-icons/io';
+import { IoIosSunny, IoMdAdd, IoMdExit } from 'react-icons/io';
 import { MdNightsStay } from 'react-icons/md';
 import { BsPlusCircleDotted } from 'react-icons/bs';
 import { AiOutlineUser } from 'react-icons/ai';
 
 import logo from '@/assets/LogoImg.png';
-import Avatar from '@/assets/sample_avatar.svg';
 
 import { useAuth } from 'hooks';
 
@@ -40,11 +36,18 @@ const useStyles = createStyles((theme) => ({
       theme.colors.gray[theme.colorScheme === 'light' ? 3 : 8]
     }`,
   },
+  background: {
+    backgroundColor:
+      theme.colorScheme === 'light' ? '#fff' : theme.colors.dark[7],
+  },
 }));
 
 function Navbar() {
-  const { isAuthorized } = useAuth();
-  const { classes } = useStyles();
+  const {
+    data: { isAuthorized, name, picture },
+    loading,
+  } = useAuth();
+  const { classes, cx } = useStyles();
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const dark = colorScheme === 'dark';
 
@@ -63,7 +66,11 @@ function Navbar() {
   };
 
   return (
-    <Group position="apart" p="xs" className={classes.border}>
+    <Group
+      position="apart"
+      p="xs"
+      className={cx(classes.border, classes.background)}
+    >
       <Link href="/" passHref>
         <a style={{ display: 'flex', alignItems: 'center' }}>
           <Image src={logo} layout="fixed" alt="rices" height={30} width={30} />
@@ -79,41 +86,62 @@ function Navbar() {
           </Link>
         ) : null}
 
-        <ActionIcon variant="outline" title="notifications">
+        {/* <ActionIcon variant="outline" title="notifications">
           <IoMdNotifications />
-        </ActionIcon>
+        </ActionIcon> */}
 
-        <Menu
-          control={
-            <ActionIcon size="md" variant="outline">
-              {isAuthorized ? <Avatar /> : <AiOutlineUser />}
-            </ActionIcon>
-          }
+        <Group
+          pl={14}
+          spacing={10}
+          align="center"
+          sx={(theme) => ({
+            borderLeft: `2px solid ${
+              theme.colors.gray[theme.colorScheme === 'light' ? 3 : 8]
+            }`,
+          })}
         >
-          <Menu.Label>Appearance</Menu.Label>
-          <Menu.Item
-            icon={dark ? <IoIosSunny /> : <MdNightsStay />}
-            onClick={() => toggleColorScheme()}
-          >
-            {dark ? 'Light Mode' : 'Dark Mode'}
-          </Menu.Item>
-
-          <Divider />
-
-          <Menu.Label>MORE STUFF</Menu.Label>
           {isAuthorized ? (
-            <Menu.Item
-              icon={<BsPlusCircleDotted />}
-              onClick={openContextModals}
-            >
-              Create Community
-            </Menu.Item>
+            <Text weight={700} transform="uppercase" size="sm">
+              {name}
+            </Text>
           ) : null}
 
-          <Menu.Item icon={<IoMdExit />} onClick={openAuthModal}>
-            Login / Register
-          </Menu.Item>
-        </Menu>
+          <Menu
+            control={
+              <ActionIcon size="md" variant="transparent">
+                {isAuthorized ? (
+                  <Avatar src={picture} size={30} />
+                ) : (
+                  <AiOutlineUser />
+                )}
+              </ActionIcon>
+            }
+          >
+            <Menu.Label>Appearance</Menu.Label>
+            <Menu.Item
+              icon={dark ? <IoIosSunny /> : <MdNightsStay />}
+              onClick={() => toggleColorScheme()}
+            >
+              {dark ? 'Light Mode' : 'Dark Mode'}
+            </Menu.Item>
+
+            <Divider />
+
+            <Menu.Label>MORE STUFF</Menu.Label>
+            {isAuthorized ? (
+              <Menu.Item
+                icon={<BsPlusCircleDotted />}
+                onClick={openContextModals}
+              >
+                Create Community
+              </Menu.Item>
+            ) : null}
+
+            <Menu.Item icon={<IoMdExit />} onClick={openAuthModal}>
+              Login / Register
+            </Menu.Item>
+          </Menu>
+        </Group>
       </Group>
     </Group>
   );

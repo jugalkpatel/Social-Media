@@ -1,0 +1,28 @@
+query GetCommunity($name: String!) {
+  GetCommunity(name: $name) {
+    ... on GetCommunityResult {
+      id
+      title
+      description
+      banner
+      picture
+      members {
+        id
+      }
+      posts {
+        id
+        title
+        content
+        createdAt
+        postedBy {
+          id
+          name
+        }
+      }
+      createdAt
+    }
+    ... on CommunityError {
+      message
+    }
+  }
+}

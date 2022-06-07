@@ -9,6 +9,7 @@ import {
   MantineProvider,
   ColorSchemeProvider,
   ColorScheme,
+  Global,
 } from '@mantine/core';
 import { NotificationsProvider } from '@mantine/notifications';
 import { ModalsProvider } from '@mantine/modals';
@@ -63,6 +64,16 @@ const App: NextPage<AppProps> = ({ Component, pageProps }) => {
                 }}
                 modalProps={{ centered: true }}
               >
+                <Global
+                  styles={(theme) => ({
+                    body: {
+                      backgroundColor:
+                        theme.colorScheme === 'light'
+                          ? theme.colors.gray[2]
+                          : theme.colors.dark[9],
+                    },
+                  })}
+                />
                 <Layout>
                   <Component {...pageProps} />
                 </Layout>

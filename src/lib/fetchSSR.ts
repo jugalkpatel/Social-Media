@@ -50,6 +50,7 @@ const ACCESS = gql`
         user {
           id
           name
+          picture
           __typename
         }
       }
@@ -89,6 +90,92 @@ function extractErrorMessage(response) {
   }
 
   return message;
+}
+
+async function refresh(
+  cookie: string,
+  apolloClient: ApolloClient<NormalizedCacheObject>,
+) {
+  try {
+    const { data } = await apolloClient.mutate({
+      mutation: REFRESH,
+      context: { headers: { cookie } },
+    });
+
+    if (!data || !data?.refresh || data?.refresh?.__typename === 'AuthError') {
+      const { message } = data.refresh as AuthError;
+
+      if (message) {
+        return { success: false };
+      }
+    }
+
+    const { success } = data.refresh as IRefresh;
+
+    return { success };
+  } catch (error) {
+    return { success: false };
+  }
+}
+
+export async function handleAuth(
+  req: IncomingMessage,
+  apolloClient: ApolloClient<NormalizedCacheObject>,
+): Promise<IData | { authenticated: boolean }> {
+  const cookie = getCookie(req);
+  try {
+    if (!cookie) {
+      return { authenticated: false };
+    }
+
+    const { data: accessResponse } = await access(cookie, apolloClient);
+
+    console.log({ accessResponse });
+
+    if (
+      accessResponse &&
+      accessResponse?.authenticate &&
+      accessResponse?.authenticate?.__typename === 'AuthPayload'
+    ) {
+      const { id, name } = accessResponse.authenticate.user as IUser;
+
+      return { id, name };
+    }
+
+    const message = extractErrorMessage(accessResponse);
+
+    throw new Error(message);
+  } catch (error) {
+    console.log({ error });
+    if (error instanceof ApolloError) {
+      const expired = isTokenExpired(error);
+
+      if (expired) {
+        const { success } = await refresh(cookie, apolloClient);
+
+        if (success) {
+          const newCookie = getCookie(req);
+
+          const { data: accessResponse } = await access(
+            newCookie,
+            apolloClient,
+          );
+
+          if (
+            accessResponse &&
+            accessResponse?.authenticate &&
+            accessResponse?.authenticate?.__typename === 'AuthPayload'
+          ) {
+            const { id, name } = accessResponse.authenticate.user as IUser;
+
+            return { id, name };
+          }
+        }
+      }
+    }
+
+    return { authenticated: false };
+  }
 }
 
 // if (
@@ -173,90 +260,3 @@ function extractErrorMessage(response) {
 //     return null;
 //   }
 // }
-
-async function refresh(
-  cookie: string,
-  apolloClient: ApolloClient<NormalizedCacheObject>,
-) {
-  try {
-    const { data } = await apolloClient.mutate({
-      mutation: REFRESH,
-      context: { headers: { cookie } },
-    });
-
-    console.log('in refresh method');
-
-    if (!data || !data?.refresh || data?.refresh?.__typename === 'AuthError') {
-      const { message } = data.refresh as AuthError;
-
-      if (message) {
-        return { success: false };
-      }
-    }
-
-    const { success } = data.refresh as IRefresh;
-
-    console.log(`success in refresh: ${success}`);
-
-    return { success };
-  } catch (error) {
-    return { success: false };
-  }
-}
-
-export async function handleAuth(
-  req: IncomingMessage,
-  apolloClient: ApolloClient<NormalizedCacheObject>,
-): Promise<IData | { authenticated: boolean }> {
-  const cookie = getCookie(req);
-  try {
-    if (!cookie) {
-      return { authenticated: false };
-    }
-
-    const { data: accessResponse } = await access(cookie, apolloClient);
-
-    if (
-      accessResponse &&
-      accessResponse?.authenticate &&
-      accessResponse?.authenticate?.__typename === 'AuthPayload'
-    ) {
-      const { id, name } = accessResponse.authenticate.user as IUser;
-
-      return { id, name };
-    }
-
-    const message = extractErrorMessage(accessResponse);
-
-    throw new Error(message);
-  } catch (error) {
-    if (error instanceof ApolloError) {
-      const expired = isTokenExpired(error);
-
-      if (expired) {
-        const { success } = await refresh(cookie, apolloClient);
-
-        if (success) {
-          const newCookie = getCookie(req);
-
-          const { data: accessResponse } = await access(
-            newCookie,
-            apolloClient,
-          );
-
-          if (
-            accessResponse &&
-            accessResponse?.authenticate &&
-            accessResponse?.authenticate?.__typename === 'AuthPayload'
-          ) {
-            const { id, name } = accessResponse.authenticate.user as IUser;
-
-            return { id, name };
-          }
-        }
-      }
-    }
-
-    return { authenticated: false };
-  }
-}

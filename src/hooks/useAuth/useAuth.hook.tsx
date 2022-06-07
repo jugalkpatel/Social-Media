@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useReactiveVar } from '@apollo/client';
 import { useModals } from '@mantine/modals';
 import { ApolloError } from '@apollo/client';
+import { useRouter } from 'next/router';
 
 import {
   useAuthenticateMutation,
@@ -11,8 +12,13 @@ import {
   RefreshMutationFn,
   useRefreshMutation,
 } from '../../graphql/refresh/__generated__/refresh.generated';
-import { setAuthCredentials, authorizationVar } from 'lib';
-import { isTokenExpired } from 'lib';
+import {
+  setAuthCredentials,
+  authorizationVar,
+  userNameVar,
+  userPictureVar,
+  isTokenExpired,
+} from 'lib';
 
 async function handleRequest(
   access: AuthenticateMutationFn,
@@ -44,8 +50,11 @@ async function handleRequest(
 
 function useAuth() {
   const isAuthorized = useReactiveVar(authorizationVar);
+  const name = useReactiveVar(userNameVar);
+  const picture = useReactiveVar(userPictureVar);
   const [access, { loading: authenticateLoading }] = useAuthenticateMutation();
   const [refresh, { loading: refreshLoading }] = useRefreshMutation();
+  const router = useRouter();
   const modals = useModals();
 
   const checkAuthorization = async () => {
@@ -55,17 +64,16 @@ function useAuth() {
       const { authenticate } = response;
       if (authenticate && authenticate.__typename === 'AuthPayload') {
         const {
-          user: { id, name },
+          user: { id, name, picture },
         } = authenticate;
 
-        setAuthCredentials({ id, name, isLoggedIn: true });
+        setAuthCredentials({ id, name, isLoggedIn: true, picture });
         return;
       }
 
       throw new Error('something went wrong!');
     } catch (error) {
-      console.log({ error });
-
+      // router.push('/');
       // hits when refresh token throws error: refresh token expires
       // logout and redirect to the login modal
       modals.openContextModal('LOGIN', { innerProps: {} });
@@ -77,14 +85,15 @@ function useAuth() {
   // both token expired case: check what happened if both token expired; also redirect user to login if this is the case
 
   useEffect(() => {
-    console.log('useffect fired');
     if (!isAuthorized) {
       checkAuthorization();
     }
   }, []);
 
+  // console.log({ authenticateLoading, refreshLoading });
+
   return {
-    isAuthorized,
+    data: { isAuthorized, name, picture },
     loading: authenticateLoading || refreshLoading,
   } as const;
 }

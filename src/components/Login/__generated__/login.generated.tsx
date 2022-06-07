@@ -9,7 +9,7 @@ export type LoginMutationVariables = Types.Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthError', message: string } | { __typename?: 'AuthPayload', user: { __typename?: 'User', id: string, name: string } } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthError', message: string } | { __typename?: 'AuthPayload', user: { __typename?: 'User', id: string, name: string, picture: string } } };
 
 
 export const LoginDocument = gql`
@@ -19,6 +19,7 @@ export const LoginDocument = gql`
       user {
         id
         name
+        picture
       }
     }
     ... on AuthError {

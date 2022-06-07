@@ -1,5 +1,4 @@
 import { Stack, Container, createStyles } from '@mantine/core';
-import { Navbar } from 'components';
 
 type Props = {
   children: JSX.Element | JSX.Element[];
@@ -23,17 +22,12 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function Layout({ children }: Props) {
+export function ContainerLayout({ children }: Props) {
   const { classes } = useStyles();
+
   return (
-    <>
-      <Navbar />
-      {/* <Stack justify="center" mt="lg">
-        <Container className={classes.width}>{children}</Container>
-      </Stack> */}
-      {children}
-    </>
+    // <Stack justify="center" mt="lg">
+    <Container className={classes.width}>{children}</Container>
+    // </Stack>
   );
 }
-
-export { Layout };

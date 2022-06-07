@@ -10,7 +10,7 @@ export type RegisterMutationVariables = Types.Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'AuthError', message: string } | { __typename?: 'AuthPayload', user: { __typename?: 'User', id: string, name: string } } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'AuthError', message: string } | { __typename?: 'AuthPayload', user: { __typename?: 'User', id: string, name: string, picture: string } } };
 
 
 export const RegisterDocument = gql`
@@ -20,6 +20,7 @@ export const RegisterDocument = gql`
       user {
         id
         name
+        picture
       }
     }
     ... on AuthError {
