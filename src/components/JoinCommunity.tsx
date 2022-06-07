@@ -3,10 +3,15 @@ import { showNotification } from '@mantine/notifications';
 import { IoMdCheckmark, IoMdClose } from 'react-icons/io';
 
 import { GET_COMMUNITY } from 'lib';
+import { useOpenConfirmModal } from 'hooks';
 import {
   useJoinCommunityMutation,
   JoinCommunityMutationFn,
 } from '../graphql/join-community/__generated__/JoinCommunity.generated';
+import {
+  useLeaveCommunityMutation,
+  LeaveCommunityMutationFn,
+} from '../graphql/leave-community/__generated__/LeaveCommunity.generated';
 import { GetCommunityQuery } from '../graphql/fetchCommity/__generated__/fetchCommity.generated';
 
 type Props = {
@@ -87,12 +92,82 @@ const onJoinCommunityClick = async (
   }
 };
 
+const onLeaveCommunityClick = async (
+  leave: LeaveCommunityMutationFn,
+  title: string,
+) => {
+  try {
+    await leave({
+      update: (cache, { data: { leaveCommunity } }) => {
+        if (leaveCommunity.__typename === 'CommunityError') {
+          throw new Error(leaveCommunity.message);
+        }
+
+        if (leaveCommunity.__typename === 'IJoinCommunityMember') {
+          const { id: userId } = leaveCommunity;
+
+          const { GetCommunity } = cache.readQuery<GetCommunityQuery>({
+            query: GET_COMMUNITY,
+            variables: { name: title },
+          });
+
+          if (GetCommunity.__typename === 'GetCommunityResult') {
+            const { members } = GetCommunity;
+
+            cache.writeQuery<GetCommunityQuery>({
+              query: GET_COMMUNITY,
+              data: {
+                GetCommunity: {
+                  ...GetCommunity,
+                  members: members.filter(({ id }) => id !== userId),
+                },
+              },
+            });
+
+            showNotification({
+              message: `Successfully left ${title}`,
+              autoClose: 3000,
+              icon: <IoMdCheckmark />,
+              color: 'green',
+            });
+          }
+
+          if (GetCommunity.__typename === 'CommunityError') {
+            throw new Error(GetCommunity.message);
+          }
+        }
+      },
+    });
+  } catch (error) {
+    showNotification({
+      message: error?.message || 'something went wrong!',
+      autoClose: 3000,
+      icon: <IoMdClose />,
+      color: 'red',
+    });
+  }
+};
+
 function JoinCommunity({
   data: { isUserInCommunity, isAuthenticated, communityId, title, state },
 }: Props) {
   const { classes, cx } = useStyles();
   const [join, { loading }] = useJoinCommunityMutation({
     variables: { communityId },
+  });
+  const [leave, { loading: leaveOperationLoading }] = useLeaveCommunityMutation(
+    {
+      variables: { communityId },
+    },
+  );
+
+  const onLeaveClick = useOpenConfirmModal({
+    data: {
+      title: 'Are you sure, you want to leave this community?',
+      labels: { confirm: 'leave', cancel: 'stay' },
+      onCancel: () => null,
+      onConfirm: () => onLeaveCommunityClick(leave, title),
+    },
   });
 
   if (state === 'ERROR' || !isAuthenticated) {
@@ -108,15 +183,16 @@ function JoinCommunity({
       <Button
         size="sm"
         radius="xl"
-        px={'2rem'}
-        loading={loading}
+        px={'1.5rem'}
+        loading={loading || leaveOperationLoading}
+        variant={isUserInCommunity ? 'outline' : 'filled'}
         onClick={
           isAuthenticated && !isUserInCommunity
             ? () => onJoinCommunityClick(join, title)
-            : () => console.log('already part of the community')
+            : () => onLeaveClick()
         }
       >
-        {isAuthenticated && isUserInCommunity ? 'joined' : 'join'}
+        {isAuthenticated && isUserInCommunity ? 'leave' : 'join'}
       </Button>
     </Skeleton>
   );

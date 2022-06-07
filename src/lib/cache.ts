@@ -34,6 +34,15 @@ export const cache: InMemoryCache = new InMemoryCache({
         },
       },
     },
+    GetCommunityResult: {
+      fields: {
+        members: {
+          merge(existing, incoming) {
+            return incoming;
+          },
+        },
+      },
+    },
     Community: {
       fields: {
         communities: {

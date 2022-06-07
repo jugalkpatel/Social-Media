@@ -1,0 +1,10 @@
+mutation LeaveCommunity($communityId: String!) {
+  leaveCommunity(communityId: $communityId) {
+    ... on IJoinCommunityMember {
+      id
+    }
+    ... on CommunityError {
+      message
+    }
+  }
+}

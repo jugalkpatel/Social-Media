@@ -85,7 +85,7 @@ export function CommunityContent({
     <ContainerLayout>
       <div className={cx(classes.grid, classes.padding)}>
         <div className={classes.mobile}>
-          {isAuthenticated ? (
+          {isAuthenticated && isUserInCommunity ? (
             <Group
               className={cx(
                 classes.background,

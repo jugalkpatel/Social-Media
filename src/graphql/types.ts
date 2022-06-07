@@ -144,6 +144,7 @@ export type Mutation = {
   CreateCommunity: CommunityResponse;
   JoinCommunity: JoinCommunityResponse;
   authenticate: AuthResponse;
+  leaveCommunity: JoinCommunityResponse;
   login: AuthResponse;
   refresh: RefreshResponse;
   register: AuthResponse;
@@ -157,6 +158,11 @@ export type MutationCreateCommunityArgs = {
 
 
 export type MutationJoinCommunityArgs = {
+  communityId: Scalars['String'];
+};
+
+
+export type MutationLeaveCommunityArgs = {
   communityId: Scalars['String'];
 };
 
