@@ -1,82 +1,72 @@
-import { forwardRef, useState } from 'react';
+import { forwardRef, ReactNode, useState, memo, useEffect } from 'react';
 import { Group, Avatar, Text, Select } from '@mantine/core';
 
-const data = [
-  {
-    image: 'https://img.icons8.com/clouds/256/000000/futurama-bender.png',
-    label: 'Bender Bending Rodríguez',
-    value: 'Bender Bending Rodríguez',
-    description: 'Fascinated with cooking',
-  },
+type ISelectData = {
+  image: string;
+  label: string;
+  value: string;
+};
 
-  {
-    image: 'https://img.icons8.com/clouds/256/000000/futurama-mom.png',
-    label: 'Carol Miller',
-    value: 'Carol Miller',
-    description: 'One of the richest people on Earth',
-  },
-  {
-    image: 'https://img.icons8.com/clouds/256/000000/homer-simpson.png',
-    label: 'Homer Simpson',
-    value: 'Homer Simpson',
-    description: 'Overweight, lazy, and often ignorant',
-  },
-  {
-    image: 'https://img.icons8.com/clouds/256/000000/spongebob-squarepants.png',
-    label: 'Spongebob Squarepants',
-    value: 'Spongebob Squarepants',
-    description: 'Not just a sponge',
-  },
-];
+type Props = {
+  communities: Array<ISelectData>;
+  onChange: (event: any) => void;
+  value: string;
+  error?: ReactNode;
+};
 
 interface ItemProps extends React.ComponentPropsWithoutRef<'div'> {
   image: string;
   label: string;
-  description: string;
 }
 
 // eslint-disable-next-line react/display-name
 const SelectItem = forwardRef<HTMLDivElement, ItemProps>(
-  ({ image, label, description, ...others }: ItemProps, ref) => (
+  ({ image, label, ...others }: ItemProps, ref) => (
     <div ref={ref} {...others}>
       <Group noWrap>
-        <Avatar src={image} />
+        <Avatar src={image} sx={{ backgroundColor: 'white' }} />
 
         <div>
-          <Text size="sm">{label}</Text>
-          {/* <Text size="xs" color="dimmed">
-            {description}
-          </Text> */}
+          <Text size="sm" transform="capitalize">
+            {label}
+          </Text>
         </div>
       </Group>
     </div>
   ),
 );
 
-function SelectCommunity() {
-  const [value, setValue] = useState('');
+function SelectCommunity({ communities, value, onChange, error }: Props) {
   console.log({ value });
+
   return (
-    <Select
-      placeholder="Choose a community"
-      value={value}
-      onChange={(value) => setValue(value)}
-      itemComponent={SelectItem}
-      data={data}
-      maxDropdownHeight={400}
-      nothingFound="Nobody here"
-      filter={(value, item) =>
-        item.label.toLowerCase().includes(value.toLowerCase().trim()) ||
-        item.description.toLowerCase().includes(value.toLowerCase().trim())
-      }
-      transition="pop-top-left"
-      transitionDuration={80}
-      transitionTimingFunction="ease"
-      searchable
-      mb="md"
-      allowDeselect
-    />
+    <>
+      <Select
+        placeholder="Choose a community"
+        value={value}
+        onChange={onChange}
+        itemComponent={SelectItem}
+        data={communities}
+        maxDropdownHeight={400}
+        nothingFound={
+          communities.length
+            ? 'Community available.'
+            : "You're not part of any community."
+        }
+        filter={(value, item) =>
+          item.label.toLowerCase().includes(value.toLowerCase().trim())
+        }
+        transition="pop-top-left"
+        transitionDuration={80}
+        transitionTimingFunction="ease"
+        searchable
+        mb="md"
+        allowDeselect
+        required
+      />
+      {error}
+    </>
   );
 }
 
-export { SelectCommunity };
+export default SelectCommunity;

@@ -12,11 +12,8 @@ export {
   setAuthCredentials,
 } from './cache';
 export { handleAuth } from './fetchSSR';
-export {
-  fetchCommunity,
-  GET_COMMUNITY,
-  fetchCommunityData,
-  fetchAllCommunities,
-} from './fetchCommunity';
+export { fetchCommunity, GET_COMMUNITY } from './fetchCommunity';
 export type { GetCommunityQuery } from './fetchCommunity';
 export { isTokenExpired } from './isTokenExpired';
+export { fetchPost } from './fetchPost';
+export type { GetPostQuery } from './fetchPost';

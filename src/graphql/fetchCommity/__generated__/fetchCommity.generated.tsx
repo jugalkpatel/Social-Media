@@ -8,7 +8,7 @@ export type GetCommunityQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetCommunityQuery = { __typename?: 'Query', GetCommunity: { __typename?: 'CommunityError', message: string } | { __typename?: 'GetCommunityResult', id: string, title: string, description: string, banner: string, picture: string, createdAt: any, members: Array<{ __typename?: 'GetCommunityMember', id: string } | null>, posts?: Array<{ __typename?: 'Post', id: string, title: string, content: string, createdAt: any, postedBy: { __typename?: 'User', id: string, name: string } } | null> | null } };
+export type GetCommunityQuery = { __typename?: 'Query', GetCommunity: { __typename?: 'CommunityError', message: string } | { __typename?: 'GetCommunityResult', id: string, title: string, description: string, banner: string, picture: string, createdAt: any, members: Array<{ __typename?: 'GetCommunityMember', id: string } | null>, posts?: Array<{ __typename?: 'CommunityPost', id: string, title: string, content: string, createdAt: any, postedBy: { __typename?: 'CommunityUser', id: string, name: string } } | null> | null } };
 
 
 export const GetCommunityDocument = gql`

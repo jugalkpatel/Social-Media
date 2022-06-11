@@ -11,19 +11,30 @@ import {
   fetchCommunity,
   userIdVar,
   addApolloState,
+  // handleAuth,
 } from 'lib';
 import {
   useGetCommunityQuery,
   GetCommunityQuery,
-} from '../../graphql/fetchCommity/__generated__/fetchCommity.generated';
+} from '../../../graphql/fetchCommity/__generated__/fetchCommity.generated';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const apolloClient = initializeApollo({ ctx: context });
 
+  // let isAuthenticated = false;
+
   try {
     const {
       params: { name },
+      // req,
     } = context;
+    // const user = await handleAuth(req, apolloClient);
+
+    // if (!('authenticated' in user)) {
+    //   isAuthenticated = true;
+    // }
+
+    // console.log({ user });
 
     const community = await fetchCommunity(name, apolloClient);
 

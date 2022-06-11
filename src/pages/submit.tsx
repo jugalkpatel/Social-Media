@@ -1,7 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
-import { useReactiveVar } from '@apollo/client';
-import { useRouter } from 'next/router';
-
+import { useReactiveVar, ApolloError } from '@apollo/client';
+import { useForm } from '@mantine/form';
+import Router from 'next/router';
 import {
   Container,
   Title,
@@ -10,43 +9,39 @@ import {
   Input,
   Stack,
   Button,
+  Loader,
+  Center,
+  Text,
 } from '@mantine/core';
+import { showNotification } from '@mantine/notifications';
 
 import { SelectCommunity, Wysiwyg } from 'components';
 import { authorizationVar } from 'lib';
+import {
+  useGetUserCommunitiesQuery,
+  GetUserCommunitiesQuery,
+} from '../graphql/user-communities/__generated__/getUserCommunities.generated';
+import {
+  useCreatePostMutation,
+  CreatePostMutationFn,
+} from '../graphql/create-post/__generated__/createPost.generated';
+import { IoMdCheckmark, IoMdClose } from 'react-icons/io';
+
+type IPostState = {
+  community: string;
+  title: string;
+  content: string;
+};
 
 const useStyles = createStyles((theme) => ({
   height: {
     height: '50vh',
-    // overflowY: 'scroll',
 
     [theme.fn.largerThan('xl')]: {
       height: '60vh',
     },
   },
 }));
-
-function ReadOnlyWysiwyg({ value }) {
-  const [text, setText] = useState(JSON.parse(value));
-
-  // useEffect(() => {
-  //   const parsed = JSON.parse(value);
-  //   console.log({ parsed });
-  //   setText(parsed);
-  // }, [value]);
-
-  console.log({ text });
-
-  return (
-    <Wysiwyg
-      value={text}
-      // defaultValue={parsedArray}
-
-      // readOnly={true}
-      onChange={setText}
-    />
-  );
-}
 
 const handleUpload = (file: File): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -68,67 +63,217 @@ const handleUpload = (file: File): Promise<string> =>
       .then((result) => {
         resolve(result.url);
       })
-      .catch((error) => {
+      .catch((_) => {
         reject(new Error('Upload Failed'));
       });
   });
 
+const onSubmitClick = async ({
+  createPost,
+  values,
+}: {
+  createPost: CreatePostMutationFn;
+  values: IPostState;
+}) => {
+  let errorMessage = 'something went wrong!';
+  try {
+    const { data } = await createPost({
+      variables: {
+        title: values.title,
+        community: values.community,
+        content: values.content,
+      },
+    });
+
+    if (data?.createPost && data.createPost.__typename === 'CreatePostResult') {
+      const { id, title, community } = data.createPost;
+
+      console.log({ id, title, community });
+
+      showNotification({
+        message: 'post created successfully',
+        autoClose: 3000,
+        icon: <IoMdCheckmark />,
+        color: 'green',
+      });
+
+      Router.push(`/c/${community}/posts/${id}`);
+    }
+
+    if (data?.createPost && data.createPost.__typename === 'PostError') {
+      const { message } = data.createPost;
+
+      errorMessage = message;
+
+      throw new Error();
+    }
+  } catch (error) {
+    showNotification({
+      message: errorMessage,
+      autoClose: 3000,
+      icon: <IoMdClose />,
+      color: 'red',
+    });
+  }
+};
+
+// render a loading state initially
+// show skeleton till component fetch all user communities
+function setState(data: GetUserCommunitiesQuery, error: ApolloError) {
+  if (
+    data?.getUserCommunities &&
+    data.getUserCommunities.__typename === 'IUserCommunites'
+  ) {
+    return { communities: data.getUserCommunities.communities, state: 'DATA' };
+  }
+
+  if (
+    (data?.getUserCommunities &&
+      data.getUserCommunities.__typename === 'UserError') ||
+    error
+  ) {
+    return { communities: null, state: 'ERROR' };
+  }
+
+  return { communities: null, state: 'LOADING' };
+}
+
+const TITLE_LENGTH = 200;
+
 function Submit() {
-  const isAuthorized = useReactiveVar(authorizationVar);
-  const [value, setValue] = useState<string>('');
-  const router = useRouter();
-
   const { classes } = useStyles();
+  const { data, error } = useGetUserCommunitiesQuery();
+  const [createPost, { loading }] = useCreatePostMutation();
+  const form = useForm<IPostState>({
+    initialValues: {
+      community: '',
+      title: '',
+      content: '',
+    },
+    validate: {
+      community: (value) =>
+        !communities.find(({ id }) => value === id)
+          ? 'Please select valid value for communities'
+          : null,
+      title: (value) =>
+        value.length <= 0 ? 'Title atleast include 1 character' : null,
+      content: (value) =>
+        !value.length ? 'Post content should not be empty!' : null,
+    },
+  });
+  const isAuthorized = useReactiveVar(authorizationVar);
+  // const router = useRouter();
+  const { communities, state } = setState(data, error);
 
-  if (!isAuthorized) {
+  console.log({ communities, state });
+
+  // useEffect(() => {
+  //   if (!isAuthorized || state === 'ERROR') {
+  //     router.push('/');
+  //   }
+  // }, [isAuthorized]);
+
+  if (!isAuthorized || state === 'ERROR') {
     return null;
   }
 
-  const handleClick = () => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('quill', value);
-    }
-
-    router.push('/editor');
-  };
+  const communitiesData =
+    communities && communities.length
+      ? communities.map(({ id, picture, title }) => {
+          return {
+            image: picture,
+            label: title.replace(/^\w/, (c) => c.toUpperCase()),
+            value: id,
+          };
+        })
+      : [];
 
   // save quill data to the db
   // store image and send link: figure out cloudinary
 
+  console.log(form.values);
+
   return (
-    <Container pb={40}>
-      <Title order={3}>Create a post</Title>
-      <Divider my="xs" size="xs" />
+    <Container py={25}>
+      {state === 'LOADING' ? (
+        <Center className={classes.height}>
+          <Loader variant="bars" />
+        </Center>
+      ) : (
+        <>
+          <Title order={2}>Create a post</Title>
+          <Divider my="xs" size="xs" />
 
-      <SelectCommunity />
+          <form
+            onSubmit={form.onSubmit((values) =>
+              onSubmitClick({
+                createPost,
+                values,
+              }),
+            )}
+          >
+            <SelectCommunity
+              communities={communitiesData}
+              {...form.getInputProps('community')}
+            />
 
-      <Stack spacing="sm">
-        <Input size="sm" maxLength={30} placeholder="Title" />
+            <Stack spacing="sm">
+              <Stack sx={{ gap: '10px' }}>
+                <Input
+                  size="sm"
+                  maxLength={TITLE_LENGTH}
+                  placeholder="Title"
+                  required
+                  {...form.getInputProps('title')}
+                />
+                <Text size="xs" pl={3}>
+                  {TITLE_LENGTH - form.values.title.length} characters remaining
+                </Text>
+              </Stack>
 
-        <Wysiwyg
-          value={value}
-          onChange={(value, delta, sources, editor) => {
-            setValue(JSON.stringify(editor.getContents()));
-          }}
-          className={classes.height}
-          onImageUpload={handleUpload}
-          sx={{ maxWidth: '100%', overflowY: 'auto' }}
-        />
-      </Stack>
-      <Divider my="md" size="xs" />
+              <Divider size="xs" />
 
-      <Stack align="flex-end">
-        <Button variant="filled" px={25} onClick={handleClick}>
-          Post
-        </Button>
-      </Stack>
+              <Wysiwyg
+                value={form.values.content}
+                onChange={(value, delta, sources, editor) => {
+                  form.setFieldValue(
+                    'content',
+                    JSON.stringify(editor.getContents()),
+                  );
+                }}
+                className={classes.height}
+                onImageUpload={handleUpload}
+                sx={{ maxWidth: '100%', overflowY: 'auto' }}
+              />
+            </Stack>
+            <Divider my="md" size="xs" />
 
-      {/* {value ? <ReadOnlyWysiwyg value={value} /> : null} */}
+            <Stack align="flex-end">
+              <Button type="submit" variant="filled" px={25} loading={loading}>
+                Post
+              </Button>
+            </Stack>
+          </form>
+        </>
+      )}
     </Container>
   );
 }
 
 export default Submit;
+// const handleClick = () => {
+//   if (typeof window !== 'undefined') {
+//     localStorage.setItem('quill', value);
+//   }
+
+//   router.push('/editor');
+// };
+
+// fix title of submit
+// upgrade mantine
+// create post
+// fetch only those communities of which user if part of
+// make page protected
 
 /* <Wysiwyg
         theme="snow"

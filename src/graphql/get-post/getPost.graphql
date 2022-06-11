@@ -1,0 +1,57 @@
+query GetPost($postId: String!) {
+  getPost(postId: $postId) {
+    ... on IPostType {
+      id
+      title
+      content
+      createdAt
+      bookmarkedBy {
+        id
+      }
+      postedBy {
+        id
+        name
+        picture
+      }
+      community {
+        id
+        title
+        description
+        banner
+        picture
+        createdAt
+        members {
+          id
+        }
+      }
+      votes {
+        id
+        type
+        votedBy {
+          id
+        }
+      }
+      comments {
+        id
+        text
+        createdAt
+        updatedAt
+        user {
+          id
+          name
+          picture
+        }
+        votes {
+          id
+          type
+          votedBy {
+            id
+          }
+        }
+      }
+    }
+    ... on PostError {
+      message
+    }
+  }
+}

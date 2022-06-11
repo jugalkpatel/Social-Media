@@ -13,7 +13,7 @@ const useStyles = createStyles((theme) => ({
     },
 
     [theme.fn.largerThan('lg')]: {
-      width: '960px',
+      width: '990px',
     },
 
     [theme.fn.largerThan('xl')]: {

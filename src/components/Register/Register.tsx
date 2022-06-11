@@ -80,7 +80,7 @@ function Register({ context, id: modalId }: ContextModalProps) {
           // context.closeModal(modalId);
           context.closeAll();
 
-          // router.push('/');
+          router.push('/');
 
           return;
         }

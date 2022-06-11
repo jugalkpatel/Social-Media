@@ -20,7 +20,7 @@ type Props = {
     isAuthenticated: boolean;
     communityId: string;
     title: string;
-    state: 'DATA' | 'LOADING' | 'ERROR';
+    state?: 'DATA' | 'LOADING' | 'ERROR';
   };
 };
 

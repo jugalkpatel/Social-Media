@@ -1,0 +1,15 @@
+query GetUserCommunities {
+  getUserCommunities {
+    ... on IUserCommunites {
+      id
+      communities {
+        id
+        picture
+        title
+      }
+    }
+    ... on UserError {
+      message
+    }
+  }
+}

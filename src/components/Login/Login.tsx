@@ -73,7 +73,7 @@ function Login({ context, id: modalId }: ContextModalProps) {
 
           context.closeAll();
 
-          // router.push('/');
+          router.push('/');
 
           return;
         }
