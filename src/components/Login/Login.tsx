@@ -45,7 +45,7 @@ function Login({ context, id: modalId }: ContextModalProps) {
     defaultValues: { email: '', password: '' },
   });
 
-  const [loginUser] = useLoginMutation();
+  const [loginUser, { loading }] = useLoginMutation();
 
   const onSubmit: SubmitHandler<FormValues> = async (values: FormValues) => {
     let message = 'something went wrong!';
@@ -180,7 +180,7 @@ function Login({ context, id: modalId }: ContextModalProps) {
               />
             </div>
 
-            <Button type="submit" loading={isSubmitting}>
+            <Button type="submit" loading={loading}>
               Login
             </Button>
           </Group>

@@ -7,10 +7,8 @@ import {
   MediaQuery,
   Text,
   Group,
-  Skeleton,
 } from '@mantine/core';
 
-import { State } from 'types';
 import { ContainerLayout } from 'components';
 
 type Props = {
@@ -19,10 +17,9 @@ type Props = {
     picture: string;
     title: string;
     description: string;
-    memberCount: number;
-    state: State;
   };
-  children: React.ReactNode;
+  join: React.ReactNode;
+  count: React.ReactNode;
 };
 
 const useStyles = createStyles((theme) => ({
@@ -96,8 +93,9 @@ const useStyles = createStyles((theme) => ({
 }));
 
 const CommunityHeader: React.FC<Props> = ({
-  data: { banner, description, memberCount, picture, title, state },
-  children,
+  data: { banner, description, picture, title },
+  join,
+  count,
 }) => {
   const { classes, cx } = useStyles();
   return (
@@ -155,20 +153,11 @@ const CommunityHeader: React.FC<Props> = ({
                 <Text size="md" align="center" lineClamp={3}>
                   {description}
                 </Text>
-                {state === 'ERROR' ? null : (
-                  <Skeleton
-                    visible={state === 'LOADING'}
-                    sx={{ width: 'fit-content' }}
-                  >
-                    <Text size="md" weight={700} align="center" py={'10px'}>
-                      {memberCount} members
-                    </Text>
-                  </Skeleton>
-                )}
+                {count}
               </Stack>
             </MediaQuery>
 
-            {children}
+            {join}
           </Group>
         </div>
       </ContainerLayout>

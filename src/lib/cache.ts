@@ -1,5 +1,4 @@
 import { InMemoryCache, makeVar } from '@apollo/client';
-import { CommunityVar } from 'types';
 
 type UserCredentials = {
   isLoggedIn: boolean;
@@ -34,20 +33,11 @@ export const cache: InMemoryCache = new InMemoryCache({
         },
       },
     },
-    GetCommunityResult: {
+    FetchCommunityResult: {
       fields: {
         members: {
           merge(existing, incoming) {
             return incoming;
-          },
-        },
-      },
-    },
-    Community: {
-      fields: {
-        communities: {
-          read() {
-            return communityVar();
           },
         },
       },
@@ -62,8 +52,6 @@ export const userIdVar = makeVar<string>('');
 export const userNameVar = makeVar<string>('');
 
 export const userPictureVar = makeVar<string>('');
-
-export const communityVar = makeVar<CommunityVar>([]);
 
 export function setAuthCredentials({
   isLoggedIn,

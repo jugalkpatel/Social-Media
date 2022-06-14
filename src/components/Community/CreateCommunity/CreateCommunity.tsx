@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-
+import { ContextModalProps } from '@mantine/modals';
 import {
   Divider,
   TextInput,
@@ -15,7 +15,6 @@ import { IoMdClose, IoMdCheckmark } from 'react-icons/io';
 import { showNotification } from '@mantine/notifications';
 
 import { useCreateCommunityMutation } from './__generated__/create-community.generated';
-import { ContextModalProps } from '@mantine/modals';
 
 const NAME_LENGTH = 20;
 const DESC_LENGTH = 180;
@@ -153,4 +152,4 @@ function CreateCommunityModal({ id, context }: ContextModalProps) {
   );
 }
 
-export { CreateCommunityModal };
+export default CreateCommunityModal;

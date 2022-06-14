@@ -1,17 +1,12 @@
-export { LanguageSwitcher } from './LanguageSwitcher';
 export { Layout } from './Layout';
 export { Navbar } from './Navbar';
 export { Login } from './Login/Login';
 export { Register } from './Register/Register';
-export { CreateCommunityModal } from './CreateCommunity/CreateCommunity';
-export { default as SelectCommunity } from './SelectCommunity';
 export { default as Wysiwyg } from './Wysiwyg';
 export { ContainerLayout } from './ContainerLayout';
-export { default as CommunityHeader } from './CommunityHeader';
 export { UserAvatar } from './UserAvatar';
-export { CommunityContent } from './CommunityContent';
-export { default as JoinCommunity } from './JoinCommunity';
 export { default as PostLayout } from './Post/PostLayout';
 export { default as PostContent } from './Post/PostContent';
 export { default as PostCommunity } from './Post/PostCommunity';
 export { default as ReadOnlyEditor } from './Post/ReadOnlyEditor';
+export * from './Community';

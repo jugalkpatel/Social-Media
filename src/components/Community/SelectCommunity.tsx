@@ -1,4 +1,4 @@
-import { forwardRef, ReactNode, useState, memo, useEffect } from 'react';
+import { forwardRef, ReactNode } from 'react';
 import { Group, Avatar, Text, Select } from '@mantine/core';
 
 type ISelectData = {
@@ -37,8 +37,6 @@ const SelectItem = forwardRef<HTMLDivElement, ItemProps>(
 );
 
 function SelectCommunity({ communities, value, onChange, error }: Props) {
-  console.log({ value });
-
   return (
     <>
       <Select

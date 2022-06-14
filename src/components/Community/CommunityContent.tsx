@@ -2,32 +2,27 @@ import {
   createStyles,
   MediaQuery,
   Group,
-  Input,
   Stack,
   Text,
   Divider,
-  Button,
   Title,
   Center,
-  Skeleton,
 } from '@mantine/core';
 import { MdCake } from 'react-icons/md';
 import { format } from 'fecha';
 
-import { CommunityPost, State } from 'types';
-import { UserAvatar, ContainerLayout } from 'components';
+import { CommunityPost } from 'types';
+import { ContainerLayout } from 'components';
 
 type Props = {
   data: {
-    memberCount: number;
     description: string;
     date: string;
     posts: Array<CommunityPost>;
-    isAuthenticated: boolean;
-    isUserInCommunity: boolean;
-    onCreatePost: () => void;
-    state: State;
   };
+  input: React.ReactNode;
+  addPost: React.ReactNode;
+  count: React.ReactNode;
 };
 
 const useStyles = createStyles((theme) => ({
@@ -62,22 +57,13 @@ const useStyles = createStyles((theme) => ({
   padding: {
     padding: '1rem 0',
   },
-  paddingHalf: {
-    padding: '0.5rem',
-  },
 }));
 
-export function CommunityContent({
-  data: {
-    description,
-    memberCount,
-    date,
-    posts,
-    onCreatePost,
-    isUserInCommunity,
-    isAuthenticated,
-    state,
-  },
+function CommunityContent({
+  data: { description, date, posts },
+  addPost,
+  input,
+  count,
 }: Props) {
   const { classes, cx } = useStyles();
 
@@ -85,24 +71,7 @@ export function CommunityContent({
     <ContainerLayout>
       <div className={cx(classes.grid, classes.padding)}>
         <div className={classes.mobile}>
-          {isAuthenticated && isUserInCommunity ? (
-            <Group
-              className={cx(
-                classes.background,
-                classes.paddingHalf,
-                classes.border,
-              )}
-              direction="row"
-              sx={{ flexWrap: 'nowrap', gridRow: '1/2', gridColumn: '1/2' }}
-            >
-              <UserAvatar />
-              <Input
-                placeholder="Create Post"
-                sx={{ width: '100%' }}
-                onClick={onCreatePost}
-              />
-            </Group>
-          ) : null}
+          {input}
 
           <Stack>
             {posts.length ? (
@@ -113,11 +82,8 @@ export function CommunityContent({
                   <Title order={4} align="center">
                     There are no posts in this community.
                   </Title>
-                  {isAuthenticated && isUserInCommunity ? (
-                    <Button radius="lg" onClick={onCreatePost}>
-                      Add a post
-                    </Button>
-                  ) : null}
+
+                  {addPost}
                 </Stack>
               </Center>
             )}
@@ -137,17 +103,7 @@ export function CommunityContent({
 
             <Text lineClamp={5}>{description}</Text>
 
-            {state === 'ERROR' ? null : (
-              <Skeleton
-                visible={state === 'LOADING'}
-                sx={{ width: 'fit-content' }}
-              >
-                <Stack sx={{ gap: 0 }}>
-                  <Text weight={700}>{memberCount}</Text>
-                  <Text size="sm">Members</Text>
-                </Stack>
-              </Skeleton>
-            )}
+            {count}
 
             <Divider size="xs" />
 
@@ -158,11 +114,8 @@ export function CommunityContent({
                   Created {format(new Date(date), 'mediumDate')}
                 </Text>
               </Group>
-              {isAuthenticated && isUserInCommunity ? (
-                <Button radius="lg" onClick={onCreatePost}>
-                  Create Post
-                </Button>
-              ) : null}
+
+              {addPost}
             </Stack>
           </Stack>
         </MediaQuery>
@@ -170,3 +123,5 @@ export function CommunityContent({
     </ContainerLayout>
   );
 }
+
+export default CommunityContent;

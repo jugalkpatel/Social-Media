@@ -2,7 +2,6 @@ import { useState } from 'react';
 import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
-// import { useRouter } from 'next/router';
 import { ApolloProvider } from '@apollo/client';
 
 import {
@@ -16,9 +15,8 @@ import { ModalsProvider } from '@mantine/modals';
 
 import theme from '../styles/theme';
 
-import '../lib/i18n';
 import { useApollo } from '../lib/apollo';
-import { Layout, Login, Register, CreateCommunityModal } from 'components';
+import { Layout, Login, Register, CreateCommunity } from 'components';
 
 import 'normalize.css/normalize.css';
 
@@ -60,7 +58,7 @@ const App: NextPage<AppProps> = ({ Component, pageProps }) => {
                 modals={{
                   LOGIN: Login,
                   REGISTER: Register,
-                  COMMUNITY: CreateCommunityModal,
+                  COMMUNITY: CreateCommunity,
                 }}
                 modalProps={{ centered: true }}
               >

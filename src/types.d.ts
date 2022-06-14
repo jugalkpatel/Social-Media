@@ -18,16 +18,6 @@ export type ICommunityMember = {
   id: string;
 };
 
-export type Community = {
-  id: string;
-  title: string;
-  picture: string;
-  banner: string;
-  description: string;
-  members: Array<ICommunityMember>;
-  createdAt: string;
-};
-
 export type CommunityPost = {
   id: string;
   title: string;
@@ -109,5 +99,60 @@ export type Post = {
       type: Types.VoteType;
       votedBy: { __typename?: 'IUserWithID'; id: string };
     }> | null;
+  } | null> | null;
+};
+
+export type Community = {
+  __typename?: 'FetchCommunityResult';
+  id: string;
+  title: string;
+  createdAt: any;
+  banner: string;
+  description: string;
+  updatedAt: any;
+  picture: string;
+  creator: { __typename?: 'CommunityUser'; id: string };
+  members: Array<{ __typename?: 'CommunityUser'; id: string } | null>;
+  posts?: Array<{
+    __typename?: 'IPostType';
+    id: string;
+    title: string;
+    content: string;
+    createdAt: any;
+    bookmarkedBy?: Array<{
+      __typename?: 'IUserWithID';
+      id: string;
+    } | null> | null;
+    postedBy: {
+      __typename?: 'IPostUser';
+      id: string;
+      name: string;
+      picture: string;
+    };
+    votes?: Array<{
+      __typename?: 'ICommonVote';
+      id: string;
+      type: Types.VoteType;
+      votedBy: { __typename?: 'IUserWithID'; id: string };
+    }> | null;
+    comments?: Array<{
+      __typename?: 'IPostComment';
+      id: string;
+      text: string;
+      createdAt: any;
+      updatedAt: any;
+      user: {
+        __typename?: 'IPostUser';
+        id: string;
+        name: string;
+        picture: string;
+      };
+      votes?: Array<{
+        __typename?: 'ICommonVote';
+        id: string;
+        type: Types.VoteType;
+        votedBy: { __typename?: 'IUserWithID'; id: string };
+      }> | null;
+    } | null> | null;
   } | null> | null;
 };

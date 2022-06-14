@@ -208,7 +208,7 @@ function Register({ context, id: modalId }: ContextModalProps) {
               />
             </div>
 
-            <Button type="submit" loading={isSubmitting}>
+            <Button type="submit" loading={loading}>
               Register
             </Button>
           </Group>

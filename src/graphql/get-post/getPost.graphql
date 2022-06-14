@@ -20,9 +20,6 @@ query GetPost($postId: String!) {
         banner
         picture
         createdAt
-        members {
-          id
-        }
       }
       votes {
         id
