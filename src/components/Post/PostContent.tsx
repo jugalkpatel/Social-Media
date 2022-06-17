@@ -1,7 +1,9 @@
+import { useRouter } from 'next/router';
+import { format, setGlobalDateMasks } from 'fecha';
+import { NextParsedUrlQuery } from 'next/dist/server/request-meta';
 import {
   Group,
   createStyles,
-  Stack,
   Text,
   MediaQuery,
   ActionIcon,
@@ -12,22 +14,15 @@ import {
 import { TbArrowBigDown, TbArrowBigTop } from 'react-icons/tb';
 import { VscComment } from 'react-icons/vsc';
 import { IoBookmarkOutline } from 'react-icons/io5';
-import { format, setGlobalDateMasks } from 'fecha';
+
+import { PostParams } from 'types';
+import { PostSkeleton, ReadOnlyEditor, PostContentLayout } from 'components';
+import { useFetchPost } from 'operations';
+import { voteCount } from 'lib';
 
 setGlobalDateMasks({
-  postTime: 'hh:mm A',
+  postTime: '[on] MMMM Do, YY · hh:mm A',
 });
-
-type Props = {
-  children: React.ReactNode;
-  data: {
-    picture: string;
-    communityTitle: string;
-    postTime: string;
-    createdBy: string;
-    postTitle: string;
-  };
-};
 
 const useStyles = createStyles((theme) => ({
   flex: {
@@ -43,6 +38,8 @@ const useStyles = createStyles((theme) => ({
       flexDirection: 'column',
       gap: '3px',
       paddingTop: '10px',
+      gridColumn: '1 / 2',
+      gridRow: '1 / -1',
     },
   },
   arrow: {
@@ -71,13 +68,38 @@ const useStyles = createStyles((theme) => ({
     padding: '10px',
     paddingBottom: '0',
   },
+  margin: {
+    margin: '0px 7px',
+    [theme.fn.largerThan('lg')]: {
+      margin: '0px 0px',
+    },
+  },
 }));
 
-function PostContent({
-  children,
-  data: { picture, communityTitle, postTime, createdBy, postTitle },
-}: Props) {
+function getPostId(query: NextParsedUrlQuery) {
+  if (!('id' in query)) {
+    return '';
+  }
+
+  const { id } = query as PostParams;
+
+  return id;
+}
+
+function PostContent() {
+  const { query } = useRouter();
   const { classes, cx } = useStyles();
+
+  const { post, state } = useFetchPost({ postId: getPostId(query) });
+
+  if (state === 'ERROR') {
+    return null;
+  }
+
+  if (state === 'LOADING') {
+    return <PostSkeleton />;
+  }
+
   return (
     <Group
       direction="column"
@@ -86,91 +108,101 @@ function PostContent({
       p={3}
       spacing={0}
     >
-      <Stack spacing={5}>
-        <Group className={classes.padding}>
-          <Avatar src={picture} radius="xl" sx={{ backgroundColor: '#fff' }} />
+      <PostContentLayout
+        top={
+          <Group className={classes.padding}>
+            <Avatar
+              src={post.community.picture}
+              radius="xl"
+              sx={{ backgroundColor: '#fff' }}
+            />
 
-          <Group direction="column" sx={{ gap: '0' }}>
-            <Text weight={700}>r/{communityTitle}</Text>
-            <Text size="sm">
-              u/{createdBy} · {format(new Date(postTime), 'postTime')}
-            </Text>
+            <Group direction="column" sx={{ gap: '0' }}>
+              <Text weight={700}>r/{post.community.title}</Text>
+              <Text size="sm">
+                u/{post.postedBy.name} ·{' '}
+                {format(new Date(post.createdAt), 'postTime')}
+              </Text>
+            </Group>
           </Group>
-        </Group>
+        }
+        title={
+          <Title order={2} className={classes.padding}>
+            {post.title}
+          </Title>
+        }
+        main={<ReadOnlyEditor content={post.content} />}
+        bottom={
+          <Group noWrap={true} className={classes.margin}>
+            <Group align="center" noWrap={true} className={classes.desktop}>
+              <ActionIcon variant="transparent" size="sm">
+                <TbArrowBigTop className={classes.arrow} />
+              </ActionIcon>
 
-        <Title order={2} className={classes.padding}>
-          {postTitle}
-        </Title>
+              <Text weight={700} size="sm" color="gray">
+                {voteCount(post.votes)}
+              </Text>
 
-        {children}
+              <ActionIcon size="sm">
+                <TbArrowBigDown className={classes.arrow} />
+              </ActionIcon>
+            </Group>
 
-        <MediaQuery smallerThan="lg" styles={{ display: 'none' }}>
-          <Group noWrap={true} spacing={5}>
-            <Button
-              leftIcon={<VscComment className={classes.fontSize} />}
-              variant="subtle"
-              color="gray"
-              sx={{ color: 'gray' }}
-              px="sm"
-              size="xs"
-            >
-              12 Comments
-            </Button>
+            <MediaQuery largerThan="lg" styles={{ display: 'none' }}>
+              <Button
+                leftIcon={<VscComment className={classes.fontSize} />}
+                variant="subtle"
+                color="gray"
+                sx={{ color: 'gray' }}
+                px="sm"
+                size="xs"
+              >
+                {post.comments.length} Comments
+              </Button>
+            </MediaQuery>
 
-            <Button
-              leftIcon={<IoBookmarkOutline className={classes.fontSize} />}
-              variant="subtle"
-              color="gray"
-              px="sm"
-              size="xs"
-              sx={{ color: 'gray' }}
-            >
-              Save
-            </Button>
+            <MediaQuery largerThan="lg" styles={{ display: 'none' }}>
+              <Button
+                leftIcon={<IoBookmarkOutline className={classes.fontSize} />}
+                variant="subtle"
+                color="gray"
+                px="sm"
+                sx={{ color: 'gray' }}
+                size="xs"
+              >
+                Save
+              </Button>
+            </MediaQuery>
           </Group>
-        </MediaQuery>
-      </Stack>
-      <Group noWrap={true} mx={'7px'}>
-        <Group align="center" noWrap={true} className={classes.desktop}>
-          <ActionIcon variant="transparent" size="sm">
-            <TbArrowBigTop className={classes.arrow} />
-          </ActionIcon>
+        }
+        desktopOnly={
+          <MediaQuery smallerThan="lg" styles={{ display: 'none' }}>
+            <Group noWrap={true} spacing={5} pb={5}>
+              <Button
+                leftIcon={<VscComment className={classes.fontSize} />}
+                variant="subtle"
+                color="gray"
+                sx={{ color: 'gray' }}
+                px="sm"
+                size="xs"
+              >
+                {post.comments.length} Comments
+              </Button>
 
-          <Text weight={500} size="sm" color="gray">
-            30
-          </Text>
-
-          <ActionIcon size="sm">
-            <TbArrowBigDown className={classes.arrow} />
-          </ActionIcon>
-        </Group>
-
-        <MediaQuery largerThan="lg" styles={{ display: 'none' }}>
-          <Button
-            leftIcon={<VscComment className={classes.fontSize} />}
-            variant="subtle"
-            color="gray"
-            sx={{ color: 'gray' }}
-            px="sm"
-            size="xs"
-          >
-            12 Comments
-          </Button>
-        </MediaQuery>
-
-        <MediaQuery largerThan="lg" styles={{ display: 'none' }}>
-          <Button
-            leftIcon={<IoBookmarkOutline className={classes.fontSize} />}
-            variant="subtle"
-            color="gray"
-            px="sm"
-            sx={{ color: 'gray' }}
-            size="xs"
-          >
-            Save
-          </Button>
-        </MediaQuery>
-      </Group>
+              <Button
+                leftIcon={<IoBookmarkOutline className={classes.fontSize} />}
+                variant="subtle"
+                color="gray"
+                px="sm"
+                size="xs"
+                sx={{ color: 'gray' }}
+              >
+                Save
+              </Button>
+            </Group>
+          </MediaQuery>
+        }
+      />
     </Group>
   );
 }

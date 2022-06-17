@@ -1,6 +1,6 @@
+import Router from 'next/router';
 import { useReactiveVar, ApolloError } from '@apollo/client';
 import { useForm } from '@mantine/form';
-import Router from 'next/router';
 import {
   Container,
   Title,
@@ -20,11 +20,11 @@ import { authorizationVar } from 'lib';
 import {
   useGetUserCommunitiesQuery,
   GetUserCommunitiesQuery,
-} from '../graphql/user-communities/__generated__/getUserCommunities.generated';
+} from '../graphql-generated/user-communities/__generated__/getUserCommunities.generated';
 import {
   useCreatePostMutation,
   CreatePostMutationFn,
-} from '../graphql/create-post/__generated__/createPost.generated';
+} from '../graphql-generated/create-post/__generated__/createPost.generated';
 import { IoMdCheckmark, IoMdClose } from 'react-icons/io';
 
 type IPostState = {

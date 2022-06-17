@@ -1,0 +1,22 @@
+query FetchCommunity($name: String!) {
+  fetchCommunity(name: $name) {
+    ... on FetchCommunityResult {
+      id
+      title
+      createdAt
+      banner
+      description
+      updatedAt
+      picture
+      creator {
+        id
+      }
+      members {
+        id
+      }
+    }
+    ... on CommunityError {
+      message
+    }
+  }
+}

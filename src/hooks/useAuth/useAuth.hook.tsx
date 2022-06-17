@@ -11,7 +11,7 @@ import {
 import {
   RefreshMutationFn,
   useRefreshMutation,
-} from '../../graphql/refresh/__generated__/refresh.generated';
+} from '../../graphql-generated/refresh/__generated__/refresh.generated';
 import {
   setAuthCredentials,
   authorizationVar,

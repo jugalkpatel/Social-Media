@@ -7,16 +7,17 @@ import {
   Text,
   Divider,
 } from '@mantine/core';
-import { format } from 'fecha';
 import { GiCakeSlice } from 'react-icons/gi';
+import { format } from 'fecha';
 
 type Props = {
+  joinElement: React.ReactNode;
+  countElement: React.ReactNode;
   data: {
     banner: string;
     picture: string;
     title: string;
     description: string;
-    memberCount: number;
     createdAt: string;
   };
 };
@@ -37,7 +38,9 @@ const useStyles = createStyles((theme) => ({
 }));
 
 function PostCommunity({
-  data: { banner, picture, title, description, memberCount, createdAt },
+  joinElement,
+  countElement,
+  data: { banner, picture, title, description, createdAt },
 }: Props) {
   const { classes, cx } = useStyles();
   return (
@@ -58,10 +61,12 @@ function PostCommunity({
           {description}
         </Text>
 
-        <Stack sx={{ gap: 0 }}>
+        {/* <Stack sx={{ gap: 0 }}>
           <Text weight={700}>{memberCount}</Text>
           <Text size="sm">Members</Text>
-        </Stack>
+        </Stack> */}
+
+        {countElement}
 
         <Divider size="xs" />
 
@@ -73,6 +78,8 @@ function PostCommunity({
         </Group>
 
         <Divider size="xs" />
+
+        {joinElement}
       </Stack>
     </Stack>
   );

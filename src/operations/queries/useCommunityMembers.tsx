@@ -1,4 +1,5 @@
 import { ApolloError, gql, useQuery } from '@apollo/client';
+import { State } from 'types';
 
 export type FetchMembersQuery = {
   fetchCommunity:
@@ -33,7 +34,10 @@ type Props = {
   title: string;
 };
 
-function setState(data: FetchMembersQuery, error: ApolloError) {
+function setState(
+  data: FetchMembersQuery,
+  error: ApolloError,
+): { members: Array<{ id: string } | null>; state: State } {
   if (data.fetchCommunity.__typename === 'FetchCommunityResult') {
     return { members: data.fetchCommunity.members, state: 'DATA' };
   }
@@ -48,7 +52,7 @@ function setState(data: FetchMembersQuery, error: ApolloError) {
 function useCommunityMembers({ title }: Props) {
   const { data, error } = useQuery<FetchMembersQuery, FetchMembersVars>(
     FETCH_MEMBERS,
-    { variables: { name: title }, fetchPolicy: 'cache-first' },
+    { variables: { name: title }, fetchPolicy: 'cache-only' },
   );
 
   const { members, state } = setState(data, error);

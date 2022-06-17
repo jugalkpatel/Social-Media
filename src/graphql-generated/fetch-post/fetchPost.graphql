@@ -1,13 +1,10 @@
-query GetPost($postId: String!) {
-  getPost(postId: $postId) {
+query FetchPost($postId: String!) {
+  fetchPost(postId: $postId) {
     ... on IPostType {
       id
       title
       content
       createdAt
-      bookmarkedBy {
-        id
-      }
       postedBy {
         id
         name
@@ -16,10 +13,7 @@ query GetPost($postId: String!) {
       community {
         id
         title
-        description
-        banner
         picture
-        createdAt
       }
       votes {
         id
@@ -33,6 +27,9 @@ query GetPost($postId: String!) {
         text
         createdAt
         updatedAt
+        post {
+          id
+        }
         user {
           id
           name
@@ -45,6 +42,9 @@ query GetPost($postId: String!) {
             id
           }
         }
+      }
+      bookmarkedBy {
+        id
       }
     }
     ... on PostError {

@@ -4,15 +4,18 @@ import {
   PostLayout,
   PostContent,
   PostCommunity,
-  ReadOnlyEditor,
+  JoinCommunity,
+  MemberCount,
+  CommentEditor,
+  PostComments,
 } from 'components';
-import { addApolloState, fetchPost, initializeApollo } from 'lib';
-import { Post } from 'types';
-
-type Params = {
-  name: string;
-  id: string;
-};
+import {
+  fetchCommunity,
+  addApolloState,
+  initializeApollo,
+  fetchPost,
+} from 'lib';
+import { Community, PostParams } from 'types';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { params } = context;
@@ -21,26 +24,22 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return { notFound: true };
   }
 
-  const apolloClient = initializeApollo({ ctx: context });
-
   try {
-    const { id } = params as Params;
+    const apolloClient = initializeApollo({ ctx: context });
+    const { name, id } = params as PostParams;
 
+    const community = await fetchCommunity(name, apolloClient);
     const post = await fetchPost(id, apolloClient);
 
-    console.log({ post });
-
-    if (!post) {
+    if (!community || !post) {
       return {
         notFound: true,
       };
     }
 
     const documentProps = addApolloState(apolloClient, {
-      props: { post },
+      props: { community },
     });
-
-    console.log({ documentProps });
 
     return {
       props: documentProps.props,
@@ -53,51 +52,26 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 };
 
-const voteCount = () => {};
-
-// build a layout for desktop and mobile
 export default function ({
-  post,
+  community,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  console.log({ post });
-  const {
-    community: {
-      banner,
-      picture,
-      title: communityTitle,
-      description,
-      members,
-      createdAt,
-    },
-    votes,
-    content,
-    createdAt: postTime,
-    postedBy: { name: userName },
-    title,
-  } = post as Post;
+  const { banner, picture, title, description, members, createdAt, id } =
+    community as Community;
   return (
     <PostLayout
-      main={
-        <PostContent
-          data={{
-            picture,
-            communityTitle,
-            postTime,
-            createdBy: userName,
-            postTitle: title,
-          }}
-        >
-          <ReadOnlyEditor content={content} />
-        </PostContent>
-      }
+      main={<PostContent />}
+      comments={<PostComments postId={id} />}
       right={
         <PostCommunity
+          joinElement={
+            <JoinCommunity data={{ communityId: id, title }} fullWidth={true} />
+          }
+          countElement={<MemberCount title={title} />}
           data={{
             banner,
             picture,
-            title: communityTitle,
+            title,
             description,
-            memberCount: members.length,
             createdAt,
           }}
         />

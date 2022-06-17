@@ -1,4 +1,4 @@
-import * as Types from '../../../../graphql/types';
+import * as Types from '../../../../graphql-generated/types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
@@ -8,30 +8,24 @@ export type CreateCommunityMutationVariables = Types.Exact<{
   description: Types.Scalars['String'];
 }>;
 
-export type CreateCommunityMutation = {
-  __typename?: 'Mutation';
-  CreateCommunity:
-    | { __typename?: 'CommunityError'; message: string }
-    | { __typename?: 'CommunityResult'; id: string; title: string };
-};
+
+export type CreateCommunityMutation = { __typename?: 'Mutation', CreateCommunity: { __typename?: 'CommunityError', message: string } | { __typename?: 'CommunityResult', id: string, title: string } };
+
 
 export const CreateCommunityDocument = gql`
-  mutation CreateCommunity($name: String!, $description: String!) {
-    CreateCommunity(name: $name, description: $description) {
-      ... on CommunityResult {
-        id
-        title
-      }
-      ... on CommunityError {
-        message
-      }
+    mutation CreateCommunity($name: String!, $description: String!) {
+  CreateCommunity(name: $name, description: $description) {
+    ... on CommunityResult {
+      id
+      title
+    }
+    ... on CommunityError {
+      message
     }
   }
-`;
-export type CreateCommunityMutationFn = Apollo.MutationFunction<
-  CreateCommunityMutation,
-  CreateCommunityMutationVariables
->;
+}
+    `;
+export type CreateCommunityMutationFn = Apollo.MutationFunction<CreateCommunityMutation, CreateCommunityMutationVariables>;
 
 /**
  * __useCreateCommunityMutation__
@@ -51,24 +45,10 @@ export type CreateCommunityMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useCreateCommunityMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    CreateCommunityMutation,
-    CreateCommunityMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    CreateCommunityMutation,
-    CreateCommunityMutationVariables
-  >(CreateCommunityDocument, options);
-}
-export type CreateCommunityMutationHookResult = ReturnType<
-  typeof useCreateCommunityMutation
->;
-export type CreateCommunityMutationResult =
-  Apollo.MutationResult<CreateCommunityMutation>;
-export type CreateCommunityMutationOptions = Apollo.BaseMutationOptions<
-  CreateCommunityMutation,
-  CreateCommunityMutationVariables
->;
+export function useCreateCommunityMutation(baseOptions?: Apollo.MutationHookOptions<CreateCommunityMutation, CreateCommunityMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateCommunityMutation, CreateCommunityMutationVariables>(CreateCommunityDocument, options);
+      }
+export type CreateCommunityMutationHookResult = ReturnType<typeof useCreateCommunityMutation>;
+export type CreateCommunityMutationResult = Apollo.MutationResult<CreateCommunityMutation>;
+export type CreateCommunityMutationOptions = Apollo.BaseMutationOptions<CreateCommunityMutation, CreateCommunityMutationVariables>;

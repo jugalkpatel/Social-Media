@@ -18,7 +18,7 @@ type Props = {
   data: {
     description: string;
     date: string;
-    posts: Array<CommunityPost>;
+    // posts: Array<CommunityPost>;
   };
   input: React.ReactNode;
   addPost: React.ReactNode;
@@ -60,12 +60,13 @@ const useStyles = createStyles((theme) => ({
 }));
 
 function CommunityContent({
-  data: { description, date, posts },
+  data: { description, date },
   addPost,
   input,
   count,
 }: Props) {
   const { classes, cx } = useStyles();
+  const posts = [1, 2, 3, 4];
 
   return (
     <ContainerLayout>

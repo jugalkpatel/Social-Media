@@ -10,6 +10,7 @@ import {
 } from 'operations';
 
 type Props = {
+  fullWidth?: boolean;
   data: {
     communityId: string;
     title: string;
@@ -23,13 +24,10 @@ const useStyles = createStyles((theme) => ({
       textAlign: 'start',
     },
   },
-  width: {
-    width: 'fit-content',
-  },
 }));
 
-function JoinCommunity({ data: { communityId, title } }: Props) {
-  const { classes, cx } = useStyles();
+function JoinCommunity({ data: { communityId, title }, fullWidth }: Props) {
+  const { classes } = useStyles();
   const userId = useReactiveVar(userIdVar);
   const { members, state } = useCommunityMembers({ title });
   const { join, loading: joinOperationLoading } = useJoinCommunity({
@@ -44,6 +42,8 @@ function JoinCommunity({ data: { communityId, title } }: Props) {
   const isUserInCommunity = members.length
     ? !!members.find(({ id }) => id === userId)
     : false;
+
+  console.log({ isUserInCommunity });
 
   const onLeaveClick = useOpenConfirmModal({
     data: {
@@ -61,13 +61,14 @@ function JoinCommunity({ data: { communityId, title } }: Props) {
   return (
     <Skeleton
       visible={state === 'LOADING'}
-      className={cx(classes.align, classes.width)}
-      sx={{ width: 'fit-content' }}
+      className={classes.align}
+      sx={{ width: fullWidth ? null : 'fit-content' }}
     >
       <Button
         size="sm"
         radius="xl"
         px={'1.5rem'}
+        fullWidth={true}
         loading={joinOperationLoading || leaveOperationLoading}
         variant={isUserInCommunity ? 'outline' : 'filled'}
         onClick={

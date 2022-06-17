@@ -4,12 +4,12 @@ import { IoMdCheckmark, IoMdClose } from 'react-icons/io';
 import {
   useJoinCommunityMutation,
   JoinCommunityMutationFn,
-} from '../../graphql/join-community/__generated__/JoinCommunity.generated';
+} from '../../graphql-generated/join-community/__generated__/JoinCommunity.generated';
 import {
   FetchCommunityQuery,
   FetchCommunityDocument,
   FetchCommunityQueryVariables,
-} from '../../graphql/fetch-community/__generated__/fetchCommunity.generated';
+} from '../../graphql-generated/fetch-community/__generated__/fetchCommunity.generated';
 
 type Props = {
   id: string;

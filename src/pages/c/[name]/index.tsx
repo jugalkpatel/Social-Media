@@ -19,7 +19,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       params: { name },
     } = context;
 
-    const community = await fetchCommunity(name, apolloClient);
+    const communityName = Array.isArray(name) ? name[0] : name;
+
+    const community = await fetchCommunity(communityName, apolloClient);
 
     if (!community) {
       return {
@@ -44,7 +46,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 export default function ({
   community,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const { id, title, description, banner, picture, createdAt, members, posts } =
+  const { id, title, description, banner, picture, createdAt } =
     community as Community;
 
   return (
@@ -70,7 +72,6 @@ export default function ({
         data={{
           description,
           date: createdAt,
-          posts,
         }}
         input={<PostInput title={title} />}
         addPost={<AddPost title={title} />}
