@@ -2,11 +2,21 @@ import { format, setGlobalDateMasks } from 'fecha';
 import { createStyles, Avatar, Group, Text, ActionIcon } from '@mantine/core';
 import { TbArrowBigDown, TbArrowBigTop } from 'react-icons/tb';
 
-import { CommentLayout, ReadOnlyCommentEditor } from 'components';
+import {
+  CommentLayout,
+  ReadOnlyCommentEditor,
+  CommentSkeleton,
+} from 'components';
+import { Comment } from 'graphql-generated';
+import { voteCount } from 'lib';
 
 setGlobalDateMasks({
   commentTime: '[on] MMMM Do, YY · hh:mm A',
 });
+
+type Props = {
+  comment: Comment;
+};
 
 const useStyles = createStyles((theme) => ({
   arrow: {
@@ -15,8 +25,21 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function Comment() {
+function Comment({ comment }: Props) {
   const { classes } = useStyles();
+  const {
+    id,
+    createdAt,
+    user: { name: userName, picture: userAvatar },
+    votes,
+    text,
+  } = comment;
+
+  console.log({ id });
+
+  if (!id) {
+    return <CommentSkeleton />;
+  }
 
   return (
     <CommentLayout
@@ -24,24 +47,24 @@ function Comment() {
         <Avatar
           size="md"
           radius="xl"
-          src="https://res.cloudinary.com/rices/image/upload/v1653666783/zivhuyp61daafykvvohh.png"
+          src={userAvatar}
           sx={{ backgroundColor: '#fff' }}
         />
       }
       info={
         <Group noWrap={true} spacing={5}>
           <Text weight={700} size="xs">
-            AnywhereCivil5027
+            {userName}
           </Text>
 
           <Text size="xs">·</Text>
 
           <Text size="xs" color="gray">
-            {format(new Date('2022-05-27 17:16:50.685'), 'commentTime')}
+            {format(new Date(createdAt), 'commentTime')}
           </Text>
         </Group>
       }
-      main={<ReadOnlyCommentEditor />}
+      main={<ReadOnlyCommentEditor content={text} />}
       votes={
         <Group align="center" noWrap={true} spacing={4}>
           <ActionIcon variant="transparent" size="sm">
@@ -49,8 +72,7 @@ function Comment() {
           </ActionIcon>
 
           <Text weight={700} size="sm" color="gray">
-            {/* {voteCount(post.votes)} */}
-            10
+            {voteCount(votes)}
           </Text>
 
           <ActionIcon size="sm">

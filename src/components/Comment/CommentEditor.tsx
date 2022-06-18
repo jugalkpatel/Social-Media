@@ -1,8 +1,12 @@
-import { useState } from 'react';
 import { Button, createStyles, Group, Stack } from '@mantine/core';
 import { useForm } from '@mantine/form';
 
 import { CommentWysiwyg } from 'components';
+import { useCreateComment } from 'operations';
+
+type Props = {
+  postId: string;
+};
 
 const useStyles = createStyles((theme) => ({
   height: {
@@ -19,9 +23,9 @@ const handleUpload = (file: File): Promise<string> => {
   });
 };
 
-function CommentEditor() {
-  // const [value, setValue] = useState('');
+function CommentEditor({ postId }: Props) {
   const { classes } = useStyles();
+  const { createComment, loading } = useCreateComment();
   const form = useForm<{ text: string }>({
     initialValues: { text: '' },
     validate: {
@@ -30,8 +34,13 @@ function CommentEditor() {
     },
   });
 
+  const handleSubmit = async () => {
+    await createComment({ postId, text: form.values.text });
+    form.reset();
+  };
+
   return (
-    <form onSubmit={form.onSubmit((values) => console.log(values))}>
+    <form onSubmit={form.onSubmit(() => handleSubmit())}>
       <Stack>
         <CommentWysiwyg
           value={form.values.text}
@@ -52,7 +61,7 @@ function CommentEditor() {
           noWrap={true}
           sx={{ justifyContent: 'flex-end' }}
         >
-          <Button size="xs" type="submit">
+          <Button size="xs" type="submit" loading={loading}>
             Post
           </Button>
         </Group>

@@ -1,12 +1,12 @@
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
+import { Community, PostParams } from 'types';
 import {
   PostLayout,
   PostContent,
   PostCommunity,
   JoinCommunity,
   MemberCount,
-  CommentEditor,
   PostComments,
 } from 'components';
 import {
@@ -15,7 +15,7 @@ import {
   initializeApollo,
   fetchPost,
 } from 'lib';
-import { Community, PostParams } from 'types';
+import { IPostType } from 'graphql-generated';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { params } = context;
@@ -38,7 +38,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
 
     const documentProps = addApolloState(apolloClient, {
-      props: { community },
+      props: { community, post },
     });
 
     return {
@@ -54,13 +54,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 export default function ({
   community,
+  post,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const { banner, picture, title, description, members, createdAt, id } =
+  const { banner, picture, title, description, createdAt, id } =
     community as Community;
+  const { id: postId, comments } = post as IPostType;
   return (
     <PostLayout
       main={<PostContent />}
-      comments={<PostComments postId={id} />}
+      comments={<PostComments postId={postId} commentCount={comments.length} />}
       right={
         <PostCommunity
           joinElement={

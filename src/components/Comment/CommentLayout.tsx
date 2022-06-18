@@ -1,4 +1,5 @@
-import { createStyles, Stack } from '@mantine/core';
+import { Button, createStyles, Stack } from '@mantine/core';
+import { useWindowScroll } from '@mantine/hooks';
 
 const useStyles = createStyles((theme) => ({
   grid: {
@@ -11,6 +12,11 @@ const useStyles = createStyles((theme) => ({
       gap: '1rem',
     },
   },
+  button: {
+    position: 'fixed',
+    bottom: '10px',
+    right: '10px',
+  },
 }));
 
 type Props = {
@@ -22,6 +28,7 @@ type Props = {
 
 function CommentLayout({ avatar, main, info, votes }: Props) {
   const { classes } = useStyles();
+  const [, scrollTo] = useWindowScroll();
   return (
     <div className={classes.grid}>
       {avatar}
@@ -30,6 +37,14 @@ function CommentLayout({ avatar, main, info, votes }: Props) {
         {main}
         {votes}
       </Stack>
+      <Button
+        className={classes.button}
+        size="xs"
+        px="sm"
+        onClick={() => scrollTo({ y: 0 })}
+      >
+        Back to Top
+      </Button>
     </div>
   );
 }

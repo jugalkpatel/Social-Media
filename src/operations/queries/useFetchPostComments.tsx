@@ -4,7 +4,6 @@ import * as Types from 'graphql-generated';
 import { FetchPostQueryVariables } from 'graphql-generated';
 
 export type FetchPostCommentsQuery = {
-  __typename?: 'Query';
   fetchPost:
     | {
         __typename?: 'IPostType';
@@ -40,9 +39,12 @@ export const FETCH_POST_COMMENTS = gql`
         id
         comments {
           id
+          text
           createdAt
           updatedAt
-          text
+          post {
+            id
+          }
           user {
             id
             name
@@ -84,15 +86,15 @@ function setState(data: FetchPostCommentsQuery, error: ApolloError) {
   return { comments: [], state: 'LOADING' };
 }
 
-function useFetchComments({ postId }: Props) {
+function useFetchPostComments({ postId }: Props) {
   const { data, error } = useQuery<
     FetchPostCommentsQuery,
     FetchPostQueryVariables
-  >(FETCH_POST_COMMENTS, { variables: { postId } });
+  >(FETCH_POST_COMMENTS, { variables: { postId }, fetchPolicy: 'cache-only' });
 
   const { comments, state } = setState(data, error);
 
   return { comments, state };
 }
 
-export default useFetchComments;
+export default useFetchPostComments;

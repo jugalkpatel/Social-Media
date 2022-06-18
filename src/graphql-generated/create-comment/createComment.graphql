@@ -1,0 +1,28 @@
+mutation CreateComment($postId: String!, $text: String!) {
+  createComment(postId: $postId, text: $text) {
+    ... on Comment {
+      id
+      text
+      user {
+        id
+        name
+        picture
+      }
+      createdAt
+      updatedAt
+      post {
+        id
+      }
+      votes {
+        id
+        type
+        votedBy {
+          id
+        }
+      }
+    }
+    ... on CommentError {
+      message
+    }
+  }
+}

@@ -8,6 +8,7 @@ import { userIdVar } from 'lib';
 
 type Props = {
   postId: string;
+  commentCount: number;
 };
 
 const GRAY_COLOR = '#373A40';
@@ -34,7 +35,9 @@ function PostComments({ postId }: Props) {
   const { classes, cx } = useStyles();
   const userId = useReactiveVar(userIdVar);
   const isAuthenticated = !!userId;
-  const { comments, state } = useFetchPostComments({ postId });
+  const { comments } = useFetchPostComments({ postId });
+
+  console.log({ comments });
 
   return (
     <Stack
@@ -45,23 +48,27 @@ function PostComments({ postId }: Props) {
     >
       {isAuthenticated ? (
         <>
-          <CommentEditor />
-          <Divider size="xs" variant="dotted" pt="xs" />
+          <CommentEditor postId={postId} />
+          <Divider size="xs" />
         </>
       ) : null}
 
-      {!comments.length ? (
-        <Center style={{ height: 200 }}>
-          <Stack align="center">
-            <AiOutlineComment fontSize={40} style={{ color: GRAY_COLOR }} />
-            <Text size="lg" weight={700} sx={{ color: GRAY_COLOR }}>
-              No Comments Yet
-            </Text>
-          </Stack>
-        </Center>
-      ) : (
-        <Comment />
-      )}
+      <Stack id="comments" py="sm">
+        {!comments.length ? (
+          <Center style={{ height: 200 }}>
+            <Stack align="center">
+              <AiOutlineComment fontSize={40} style={{ color: GRAY_COLOR }} />
+              <Text size="lg" weight={700} sx={{ color: GRAY_COLOR }}>
+                No Comments Yet
+              </Text>
+            </Stack>
+          </Center>
+        ) : (
+          comments.map((comment) => {
+            return <Comment key={comment.id} comment={comment} />;
+          })
+        )}
+      </Stack>
     </Stack>
   );
 }

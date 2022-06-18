@@ -21,7 +21,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const communityName = Array.isArray(name) ? name[0] : name;
 
+    console.log({ communityName });
+
     const community = await fetchCommunity(communityName, apolloClient);
+
+    console.log({ community });
 
     if (!community) {
       return {

@@ -188,11 +188,6 @@ function Submit() {
         })
       : [];
 
-  // save quill data to the db
-  // store image and send link: figure out cloudinary
-
-  console.log(form.values);
-
   return (
     <Container py={25}>
       {state === 'LOADING' ? (

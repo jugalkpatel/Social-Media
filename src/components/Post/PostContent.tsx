@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { format, setGlobalDateMasks } from 'fecha';
 import { NextParsedUrlQuery } from 'next/dist/server/request-meta';
 import {
@@ -10,6 +11,7 @@ import {
   Button,
   Avatar,
   Title,
+  Stack,
 } from '@mantine/core';
 import { TbArrowBigDown, TbArrowBigTop } from 'react-icons/tb';
 import { VscComment } from 'react-icons/vsc';
@@ -149,16 +151,21 @@ function PostContent() {
             </Group>
 
             <MediaQuery largerThan="lg" styles={{ display: 'none' }}>
-              <Button
-                leftIcon={<VscComment className={classes.fontSize} />}
-                variant="subtle"
-                color="gray"
-                sx={{ color: 'gray' }}
-                px="sm"
-                size="xs"
-              >
-                {post.comments.length} Comments
-              </Button>
+              <Stack spacing={0}>
+                <Link href="#comments" replace>
+                  <Button
+                    leftIcon={<VscComment className={classes.fontSize} />}
+                    variant="subtle"
+                    color="gray"
+                    sx={{ color: 'gray' }}
+                    px="sm"
+                    size="xs"
+                    component="a"
+                  >
+                    {post.comments.length} Comments
+                  </Button>
+                </Link>
+              </Stack>
             </MediaQuery>
 
             <MediaQuery largerThan="lg" styles={{ display: 'none' }}>
