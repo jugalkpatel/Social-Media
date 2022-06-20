@@ -2,11 +2,9 @@ mutation Refresh {
   refresh {
     ... on IRefresh {
       success
-      __typename
     }
-    ... on AuthError {
+    ... on CommonError {
       message
-      __typename
     }
   }
 }

@@ -6,3 +6,4 @@ export { default as CommunityContent } from './CommunityContent';
 export { default as CommunityHeader } from './CommunityHeader';
 export { default as JoinCommunity } from './JoinCommunity';
 export { default as SelectCommunity } from './SelectCommunity';
+export { default as CommunityPosts } from './CommunityPosts';

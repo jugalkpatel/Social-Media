@@ -1,0 +1,13 @@
+mutation JoinCommunity($communityId: String!) {
+  joinCommunity(communityId: $communityId) {
+    ... on Community {
+      id
+      members {
+        id
+      }
+    }
+    ... on CommonError {
+      message
+    }
+  }
+}

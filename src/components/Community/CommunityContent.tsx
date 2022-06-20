@@ -23,6 +23,7 @@ type Props = {
   input: React.ReactNode;
   addPost: React.ReactNode;
   count: React.ReactNode;
+  allPosts: React.ReactNode;
 };
 
 const useStyles = createStyles((theme) => ({
@@ -39,7 +40,7 @@ const useStyles = createStyles((theme) => ({
 
     [theme.fn.largerThan('lg')]: {
       gridTemplateColumns: '2fr 1fr',
-      gridTemplateRows: 'max-content 2fr auto',
+      gridTemplateRows: '300px auto',
       gap: '1rem',
     },
   },
@@ -64,6 +65,7 @@ function CommunityContent({
   addPost,
   input,
   count,
+  allPosts,
 }: Props) {
   const { classes, cx } = useStyles();
   const posts = [1, 2, 3, 4];
@@ -76,7 +78,7 @@ function CommunityContent({
 
           <Stack>
             {posts.length ? (
-              <h1>there are some posts</h1>
+              allPosts
             ) : (
               <Center style={{ height: '30vh' }}>
                 <Stack justify="center" align="center">
@@ -95,7 +97,7 @@ function CommunityContent({
           <Stack
             className={cx(classes.background, classes.border)}
             p="md"
-            sx={{ gridRow: '1/3', gridColumn: '2/3' }}
+            sx={{ gridRow: '1/2', gridColumn: '2/3' }}
             justify="space-evenly"
           >
             <Text size="sm" weight={700}>

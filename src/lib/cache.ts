@@ -33,15 +33,15 @@ export const cache: InMemoryCache = new InMemoryCache({
         },
       },
     },
-    FetchCommunityResult: {
-      fields: {
-        members: {
-          merge(existing, incoming) {
-            return incoming;
-          },
-        },
-      },
-    },
+    // Community: {
+    //   fields: {
+    //     members: {
+    //       merge(existing = [], incoming: any[]) {
+    //         return [...existing, ...incoming];
+    //       },
+    //     },
+    //   },
+    // },
   },
 });
 

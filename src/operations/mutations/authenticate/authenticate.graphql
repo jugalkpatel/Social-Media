@@ -1,0 +1,12 @@
+mutation Authenticate {
+  authenticate {
+    ... on User {
+      id
+      name
+      picture
+    }
+    ... on CommonError {
+      message
+    }
+  }
+}

@@ -1,0 +1,13 @@
+mutation LeaveCommunity($communityId: String!) {
+  leaveCommunity(communityId: $communityId) {
+    ... on CommonError {
+      message
+    }
+    ... on Community {
+      id
+      members {
+        id
+      }
+    }
+  }
+}

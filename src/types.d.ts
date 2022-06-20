@@ -69,68 +69,55 @@ export type Community = {
 
 // added custom post type because we're only fetching half data.
 export type Post = {
-  __typename?: 'IPostType';
+  __typename?: 'Post';
   id: string;
   title: string;
   content: string;
   createdAt: any;
-  postedBy: {
-    __typename?: 'IPostUser';
-    id: string;
-    name: string;
-    picture: string;
-  };
-  community: {
-    __typename?: 'IPostCommunity';
+  community?: {
+    __typename?: 'Community';
     id: string;
     title: string;
     picture: string;
-  };
-  votes?: Array<{
-    __typename?: 'ICommonVote';
+  } | null;
+  postedBy?: {
+    __typename?: 'User';
     id: string;
-    type: Types.VoteType;
-    votedBy: { __typename?: 'IUserWithID'; id: string };
-  }> | null;
+    name: string;
+    picture: string;
+  } | null;
   bookmarkedBy?: Array<{
-    __typename?: 'IUserWithID';
+    __typename?: 'User';
     id: string;
   } | null> | null;
+  votes: Array<{
+    __typename?: 'Vote';
+    id: string;
+    type: Types.VoteType;
+    votedBy?: { __typename?: 'User'; id: string } | null;
+  } | null>;
   comments?: Array<{
     __typename?: 'Comment';
     id: string;
-    createdAt: any;
-    updatedAt: any;
     text: string;
-    user: {
-      __typename?: 'IPostUser';
+    createdAt: any;
+    user?: {
+      __typename?: 'User';
       id: string;
       name: string;
       picture: string;
-    };
+    } | null;
     votes?: Array<{
-      __typename?: 'ICommonVote';
+      __typename?: 'CommentVote';
       id: string;
       type: Types.VoteType;
-      votedBy: { __typename?: 'IUserWithID'; id: string };
+      votedBy?: { __typename?: 'User'; id: string } | null;
     } | null> | null;
   } | null> | null;
 };
 
-export type PartialCommunity = {
-  __typename?: 'FetchCommunityResult';
+export type Vote = {
   id: string;
-  title: string;
-  createdAt: any;
-  banner: string;
-  description: string;
-  picture: string;
-  members: Array<{ __typename?: 'CommunityUser'; id: string } | null>;
+  type: Types.VoteType;
+  votedBy?: { __typename?: 'User'; id: string } | null;
 };
-
-// export type Vote = {
-//   __typename?: 'ICommonVote';
-//   id: string;
-//   type: Types.VoteType;
-//   votedBy: { __typename?: 'IUserWithID'; id: string };
-// };

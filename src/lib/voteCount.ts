@@ -1,6 +1,7 @@
-import { VoteType, ICommonVote } from 'graphql-generated';
+import { VoteType } from 'graphql-generated';
+import { Vote } from 'types';
 
-export default function voteCount(votes: Array<ICommonVote> | null): number {
+export default function voteCount(votes: Array<Vote> | null): number {
   if (!votes || !votes.length) {
     return 0;
   }

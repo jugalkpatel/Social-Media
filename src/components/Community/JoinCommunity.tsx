@@ -43,8 +43,6 @@ function JoinCommunity({ data: { communityId, title }, fullWidth }: Props) {
     ? !!members.find(({ id }) => id === userId)
     : false;
 
-  console.log({ isUserInCommunity });
-
   const onLeaveClick = useOpenConfirmModal({
     data: {
       title: 'Are you sure, you want to leave this community?',

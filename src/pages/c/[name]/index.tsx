@@ -1,6 +1,5 @@
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
-import { Community } from 'types';
 import {
   CommunityHeader,
   CommunityContent,
@@ -8,8 +7,10 @@ import {
   MemberCount,
   AddPost,
   PostInput,
+  CommunityPosts,
 } from 'components';
 import { initializeApollo, fetchCommunity, addApolloState } from 'lib';
+import { Community } from 'graphql-generated';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const apolloClient = initializeApollo({ ctx: context });
@@ -20,8 +21,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     } = context;
 
     const communityName = Array.isArray(name) ? name[0] : name;
-
-    console.log({ communityName });
 
     const community = await fetchCommunity(communityName, apolloClient);
 
@@ -45,6 +44,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       notFound: true,
     };
   }
+};
+
+type Parms = {
+  name: string;
 };
 
 export default function ({
@@ -80,6 +83,7 @@ export default function ({
         input={<PostInput title={title} />}
         addPost={<AddPost title={title} />}
         count={<MemberCount title={title} />}
+        allPosts={<CommunityPosts title={title} />}
       />
     </>
   );

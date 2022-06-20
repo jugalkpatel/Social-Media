@@ -18,7 +18,7 @@ import { useModals } from '@mantine/modals';
 import { IoMdClose } from 'react-icons/io';
 import Rocket from '@/assets/rocket.svg';
 
-import { useRegisterMutation } from './__generated__/register.generated';
+import { useRegisterMutation } from 'graphql-generated';
 import { setAuthCredentials } from 'lib';
 
 type FormValues = {
@@ -64,20 +64,11 @@ function Register({ context, id: modalId }: ContextModalProps) {
       .then((response) => {
         const { data } = response;
 
-        if (data?.register && data.register.__typename === 'AuthPayload') {
-          const {
-            // token,
-            user: { id, name, picture },
-          } = data.register;
+        if (data && data?.register && data.register.__typename === 'User') {
+          const { id, name, picture } = data.register;
 
-          setAuthCredentials({
-            id,
-            isLoggedIn: true,
-            name,
-            picture,
-          });
+          setAuthCredentials({ isLoggedIn: !!id, id, name, picture });
 
-          // context.closeModal(modalId);
           context.closeAll();
 
           router.push('/');
@@ -85,7 +76,11 @@ function Register({ context, id: modalId }: ContextModalProps) {
           return;
         }
 
-        if (data?.register && data.register.__typename === 'AuthError') {
+        if (
+          data &&
+          data?.register &&
+          data.register.__typename === 'CommonError'
+        ) {
           message = data.register.message;
         }
 

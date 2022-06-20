@@ -3,6 +3,7 @@ import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { ApolloProvider } from '@apollo/client';
+import { setGlobalDateMasks } from 'fecha';
 
 import {
   MantineProvider,
@@ -19,6 +20,10 @@ import { useApollo } from '../lib/apollo';
 import { Layout, Login, Register, CreateCommunity } from 'components';
 
 import 'normalize.css/normalize.css';
+
+setGlobalDateMasks({
+  postTime: '[on] MMMM Do, YY · hh:mm A',
+});
 
 const App: NextPage<AppProps> = ({ Component, pageProps }) => {
   const apolloClient = useApollo(pageProps);

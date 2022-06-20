@@ -11,7 +11,7 @@ export {
   setAuthCredentials,
 } from './cache';
 export { handleAuth } from './fetchSSR';
-export { fetchCommunity, fetchPartialCommunity } from './fetchCommunity';
+export { fetchCommunity } from './fetchCommunity';
 export { isTokenExpired } from './isTokenExpired';
 export { fetchPost } from './fetchPost';
 export { default as voteCount } from './voteCount';

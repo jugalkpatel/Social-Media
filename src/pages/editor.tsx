@@ -13,8 +13,6 @@ export default function () {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const value = localStorage.getItem('quill');
-      const parsedValue = JSON.parse(value);
-      console.log({ parsedValue });
       setText(JSON.parse(value));
     }
   }, []);

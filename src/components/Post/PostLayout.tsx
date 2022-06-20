@@ -1,70 +1,60 @@
-import { createStyles, MediaQuery, Stack } from '@mantine/core';
-import { ContainerLayout } from 'components';
+import { createStyles } from '@mantine/core';
 
-type Props = {
+export type Props = {
+  top: React.ReactNode;
+  title: React.ReactNode;
   main: React.ReactNode;
-  right: React.ReactNode;
-  comments: React.ReactNode;
+  bottom: React.ReactNode;
+  desktopOnly: React.ReactNode;
 };
 
 const useStyles = createStyles((theme) => ({
-  grid: {
+  outerGrid: {
     display: 'grid',
     gridTemplateColumns: '1fr',
-    position: 'relative',
-    paddingTop: '2rem',
+    gridTemplateRows: 'max-content 1fr',
+    gap: '0.5rem',
+    width: '100%',
 
     [theme.fn.largerThan('lg')]: {
-      gridTemplateColumns: '2.5fr 1.1fr',
-      gap: '1rem',
+      gridTemplateColumns: 'max-content 1fr',
+      gridTemplateRows: '1fr',
+      gap: '0',
     },
   },
-  absolute: {
-    position: 'absolute',
-    top: '0',
-    // height: '2rem',
-    width: '100%',
-    backgroundColor:
-      theme.colorScheme === 'light' ? '#fff' : theme.colors.dark[7],
+  innerGrid: {
+    display: 'grid',
+    gridTemplateColumns: '1fr',
+    gridTemplateRows:
+      '1fr minmax(20px, max-content) minmax(150px, max-content)',
+    gap: '0.5rem',
+
+    [theme.fn.largerThan('lg')]: {
+      gridColumn: '2 / 3',
+      gridTemplateRows:
+        '1fr minmax(20px, max-content) minmax(150px, max-content) 0.5fr',
+    },
+  },
+  left: {
+    [theme.fn.largerThan('lg')]: {
+      gridColumn: '1 / 2',
+      gridRow: '1 / -1',
+    },
   },
 }));
 
-function PostLayout({ main, right, comments }: Props) {
+function PostLayout({ top, title, main, bottom, desktopOnly }: Props) {
   const { classes } = useStyles();
   return (
-    <ContainerLayout>
-      <div className={classes.grid}>
-        <Stack>
-          {main}
-          {comments}
-        </Stack>
-        {/* <div className={classes.absolute}>
-          <Group position="apart" noWrap={true} py={'0.5rem'}>
-            <Group noWrap={true}>
-              <BsFillFileEarmarkPostFill fontSize={'1rem'} />
-              <Text lineClamp={1} size="sm">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta,
-                ea?
-              </Text>
-            </Group>
-
-            <Button
-              leftIcon={<GrFormClose />}
-              size="xs"
-              px="xs"
-              variant="subtle"
-              color="white"
-            >
-              Close
-            </Button>
-          </Group>
-        </div> */}
-        {/* {main} */}
-        <MediaQuery smallerThan="lg" styles={{ display: 'none' }}>
-          <div>{right}</div>
-        </MediaQuery>
-      </div>
-    </ContainerLayout>
+    <div className={classes.outerGrid}>
+      <article className={classes.innerGrid}>
+        {top}
+        {title}
+        {main}
+        {desktopOnly}
+      </article>
+      <article className={classes.left}>{bottom}</article>
+    </div>
   );
 }
 

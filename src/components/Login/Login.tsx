@@ -16,7 +16,7 @@ import { showNotification } from '@mantine/notifications';
 import { IoMdClose } from 'react-icons/io';
 import WavingHand from '@/assets/waving_hand.svg';
 
-import { useLoginMutation } from './__generated__/login.generated';
+import { useLoginMutation } from 'graphql-generated';
 import { setAuthCredentials } from 'lib';
 
 type FormValues = {
@@ -59,17 +59,10 @@ function Login({ context, id: modalId }: ContextModalProps) {
       .then((response) => {
         const { data } = response;
 
-        if (data?.login && data.login.__typename === 'AuthPayload') {
-          const {
-            user: { id, name, picture },
-          } = data.login;
+        if (data && data?.login && data.login.__typename === 'User') {
+          const { id, name, picture } = data.login;
 
-          setAuthCredentials({
-            isLoggedIn: !!id,
-            id,
-            name,
-            picture,
-          });
+          setAuthCredentials({ isLoggedIn: !!id, id, name, picture });
 
           context.closeAll();
 
@@ -78,7 +71,7 @@ function Login({ context, id: modalId }: ContextModalProps) {
           return;
         }
 
-        if (data?.login && data.login.__typename === 'AuthError') {
+        if (data && data?.login && data.login.__typename === 'CommonError') {
           message = data.login.message;
         }
 

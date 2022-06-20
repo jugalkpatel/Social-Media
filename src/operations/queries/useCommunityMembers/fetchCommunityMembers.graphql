@@ -1,0 +1,13 @@
+query fetchCommunityMembers($name: String!) {
+  fetchCommunity(name: $name) {
+    ... on Community {
+      id
+      members {
+        id
+      }
+    }
+    ... on CommonError {
+      message
+    }
+  }
+}

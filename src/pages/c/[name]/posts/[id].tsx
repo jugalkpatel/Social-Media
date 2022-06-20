@@ -2,7 +2,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
 import { Community, PostParams } from 'types';
 import {
-  PostLayout,
+  PostPageLayout,
   PostContent,
   PostCommunity,
   JoinCommunity,
@@ -56,11 +56,11 @@ export default function ({
   community,
   post,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const { banner, picture, title, description, createdAt, id } =
+  const { banner, picture, title, description, createdAt, id, members } =
     community as Community;
   const { id: postId, comments } = post as IPostType;
   return (
-    <PostLayout
+    <PostPageLayout
       main={<PostContent />}
       comments={<PostComments postId={postId} commentCount={comments.length} />}
       right={

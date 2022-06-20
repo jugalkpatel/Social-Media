@@ -4,14 +4,14 @@ import { useModals } from '@mantine/modals';
 import { ApolloError } from '@apollo/client';
 import { useRouter } from 'next/router';
 
+import { useRefreshMutation, RefreshMutationFn } from 'graphql-generated';
+
 import {
   useAuthenticateMutation,
+  AuthenticateMutation,
   AuthenticateMutationFn,
-} from './__generated__/authenticate.generated';
-import {
-  RefreshMutationFn,
-  useRefreshMutation,
-} from '../../graphql-generated/refresh/__generated__/refresh.generated';
+} from 'operations';
+
 import {
   setAuthCredentials,
   authorizationVar,
@@ -20,6 +20,14 @@ import {
   isTokenExpired,
 } from 'lib';
 
+const checkAccess = (data: AuthenticateMutation) => {
+  if (data && data?.authenticate && data.authenticate.__typename === 'User') {
+    return data;
+  }
+
+  throw new ApolloError({ errorMessage: 'access failed' });
+};
+
 async function handleRequest(
   access: AuthenticateMutationFn,
   refresh: RefreshMutationFn,
@@ -27,20 +35,24 @@ async function handleRequest(
   try {
     const { data } = await access();
 
-    // handle message case;
-
-    return data;
+    return checkAccess(data);
   } catch (error) {
     console.log(`error in access token ${error}`);
     if (error instanceof ApolloError) {
       const expired = isTokenExpired(error);
 
       if (expired) {
-        await refresh();
+        const { data: refreshResponse } = await refresh();
 
-        const { data } = await access();
+        if (
+          refreshResponse &&
+          refreshResponse?.refresh &&
+          refreshResponse.refresh.__typename === 'IRefresh'
+        ) {
+          const { data } = await access();
 
-        return data;
+          return checkAccess(data);
+        }
       }
     }
 
@@ -61,13 +73,15 @@ function useAuth() {
     try {
       const response = await handleRequest(access, refresh);
 
-      const { authenticate } = response;
-      if (authenticate && authenticate.__typename === 'AuthPayload') {
-        const {
-          user: { id, name, picture },
-        } = authenticate;
+      if (
+        response &&
+        response?.authenticate &&
+        response.authenticate.__typename === 'User'
+      ) {
+        const { id, name, picture } = response.authenticate;
 
-        setAuthCredentials({ id, name, isLoggedIn: true, picture });
+        setAuthCredentials({ isLoggedIn: !!id, id, name, picture });
+
         return;
       }
 

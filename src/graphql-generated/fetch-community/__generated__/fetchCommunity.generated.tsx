@@ -8,28 +8,21 @@ export type FetchCommunityQueryVariables = Types.Exact<{
 }>;
 
 
-export type FetchCommunityQuery = { __typename?: 'Query', fetchCommunity: { __typename?: 'CommunityError', message: string } | { __typename?: 'FetchCommunityResult', id: string, title: string, createdAt: any, banner: string, description: string, updatedAt: any, picture: string, creator: { __typename?: 'CommunityUser', id: string }, members: Array<{ __typename?: 'CommunityUser', id: string } | null> } };
+export type FetchCommunityQuery = { __typename?: 'Query', fetchCommunity: { __typename?: 'CommonError', message: string } | { __typename?: 'Community', id: string, title: string, banner: string, description: string, picture: string, createdAt: any } };
 
 
 export const FetchCommunityDocument = gql`
     query FetchCommunity($name: String!) {
   fetchCommunity(name: $name) {
-    ... on FetchCommunityResult {
+    ... on Community {
       id
       title
-      createdAt
       banner
       description
-      updatedAt
       picture
-      creator {
-        id
-      }
-      members {
-        id
-      }
+      createdAt
     }
-    ... on CommunityError {
+    ... on CommonError {
       message
     }
   }

@@ -19,19 +19,14 @@ export type AllCommunities = {
   communities: Array<CommunityResult>;
 };
 
-export type AllCommunitiesResponse = AllCommunities | CommunityError;
-
-export type AuthError = CommonError & {
-  __typename?: 'AuthError';
-  message: Scalars['String'];
-};
+export type AllCommunitiesResponse = AllCommunities | CommonError;
 
 export type AuthPayload = {
   __typename?: 'AuthPayload';
   user: AuthUser;
 };
 
-export type AuthResponse = AuthError | AuthPayload;
+export type AuthResponse = AuthPayload | CommonError;
 
 export type AuthUser = {
   __typename?: 'AuthUser';
@@ -45,39 +40,39 @@ export type Comment = {
   __typename?: 'Comment';
   createdAt: Scalars['DateTime'];
   id: Scalars['String'];
-  post: PostWithId;
+  post?: Maybe<Post>;
   text: Scalars['String'];
-  updatedAt: Scalars['DateTime'];
-  user: IPostUser;
-  votes?: Maybe<Array<Maybe<ICommonVote>>>;
+  user?: Maybe<User>;
+  votes?: Maybe<Array<Maybe<CommentVote>>>;
 };
 
-export type CommentError = CommonError & {
-  __typename?: 'CommentError';
-  message: Scalars['String'];
+export type CommentResponse = Comment | CommonError;
+
+export type CommentVote = {
+  __typename?: 'CommentVote';
+  comment?: Maybe<Comment>;
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  type: VoteType;
+  votedBy?: Maybe<User>;
 };
 
 export type CommonError = {
+  __typename?: 'CommonError';
   message: Scalars['String'];
 };
 
-export type Community = ICommunity & {
+export type Community = {
   __typename?: 'Community';
   banner: Scalars['String'];
   createdAt: Scalars['DateTime'];
-  creator: User;
+  creator?: Maybe<User>;
   description: Scalars['String'];
   id: Scalars['String'];
-  members?: Maybe<Array<User>>;
+  members: Array<Maybe<User>>;
   picture: Scalars['String'];
   posts?: Maybe<Array<Maybe<Post>>>;
   title: Scalars['String'];
-  updatedAt: Scalars['DateTime'];
-};
-
-export type CommunityError = CommonError & {
-  __typename?: 'CommunityError';
-  message: Scalars['String'];
 };
 
 export type CommunityPost = {
@@ -85,7 +80,7 @@ export type CommunityPost = {
   id: Scalars['String'];
 };
 
-export type CommunityResponse = CommunityError | CommunityResult;
+export type CommunityResponse = CommonError | Community;
 
 export type CommunityResult = {
   __typename?: 'CommunityResult';
@@ -98,9 +93,9 @@ export type CommunityUser = {
   id: Scalars['String'];
 };
 
-export type CreateCommentResponse = Comment | CommentError;
+export type CreateCommentResponse = CommonError | IComment;
 
-export type CreatePostResponse = CreatePostResult | PostError;
+export type CreatePostResponse = CommonError | CreatePostResult;
 
 export type CreatePostResult = {
   __typename?: 'CreatePostResult';
@@ -109,7 +104,7 @@ export type CreatePostResult = {
   title: Scalars['String'];
 };
 
-export type FetchCommunityResponse = CommunityError | FetchCommunityResult;
+export type FetchCommunityResponse = CommonError | FetchCommunityResult;
 
 export type FetchCommunityResult = ICommunity & {
   __typename?: 'FetchCommunityResult';
@@ -125,17 +120,28 @@ export type FetchCommunityResult = ICommunity & {
   updatedAt: Scalars['DateTime'];
 };
 
-export type FetchPostCommentsResponse = CommentError | FetchPostCommentsResult;
+export type FetchPostCommentsResponse = CommonError | FetchPostCommentsResult;
 
 export type FetchPostCommentsResult = {
   __typename?: 'FetchPostCommentsResult';
-  comments?: Maybe<Array<Maybe<Comment>>>;
+  comments?: Maybe<Array<Maybe<IComment>>>;
   postId: Scalars['String'];
 };
 
-export type FetchPostResponse = IPostType | PostError;
+export type FetchPostResponse = CommonError | IPostType;
 
-export type GetUserCommunitiesResponse = IUserCommunites | UserError;
+export type GetUserCommunitiesResponse = CommonError | IUserCommunites;
+
+export type IComment = {
+  __typename?: 'IComment';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  post: PostWithId;
+  text: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+  user: IPostUser;
+  votes?: Maybe<Array<Maybe<ICommonVote>>>;
+};
 
 export type ICommonVote = {
   __typename?: 'ICommonVote';
@@ -153,6 +159,8 @@ export type ICommunity = {
   title: Scalars['String'];
   updatedAt: Scalars['DateTime'];
 };
+
+export type ICommunityResponse = CommonError | CommunityResult;
 
 export type IJoinCommunityMember = {
   __typename?: 'IJoinCommunityMember';
@@ -180,7 +188,7 @@ export type IPostCommunity = ICommunity & {
 export type IPostType = IPost & {
   __typename?: 'IPostType';
   bookmarkedBy?: Maybe<Array<Maybe<IUserWithId>>>;
-  comments?: Maybe<Array<Maybe<Comment>>>;
+  comments?: Maybe<Array<Maybe<IComment>>>;
   community: IPostCommunity;
   content: Scalars['String'];
   createdAt: Scalars['DateTime'];
@@ -232,7 +240,7 @@ export type IUserWithId = {
   id: Scalars['String'];
 };
 
-export type JoinCommunityResponse = CommunityError | IJoinCommunityMember;
+export type JoinCommunityResponse = CommonError | IJoinCommunityMember;
 
 export type JoinCommunityResult = {
   __typename?: 'JoinCommunityResult';
@@ -241,26 +249,24 @@ export type JoinCommunityResult = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  CreateCommunity: CommunityResponse;
-  JoinCommunity: JoinCommunityResponse;
-  authenticate: AuthResponse;
-  createComment: CreateCommentResponse;
+  authenticate: UserResponse;
+  createBookmark: UserResponse;
+  createComment: CommentResponse;
+  createCommunity: CommunityResponse;
   createPost: CreatePostResponse;
-  leaveCommunity: JoinCommunityResponse;
-  login: AuthResponse;
+  createUser: UserResponse;
+  createUserPost: PostResponse;
+  joinCommunity: CommunityResponse;
+  leaveCommunity: CommunityResponse;
+  login: UserResponse;
   refresh: RefreshResponse;
-  register: AuthResponse;
+  register: UserResponse;
+  removeBookmark: UserResponse;
 };
 
 
-export type MutationCreateCommunityArgs = {
-  description: Scalars['String'];
-  name: Scalars['String'];
-};
-
-
-export type MutationJoinCommunityArgs = {
-  communityId: Scalars['String'];
+export type MutationCreateBookmarkArgs = {
+  postId: Scalars['String'];
 };
 
 
@@ -270,10 +276,35 @@ export type MutationCreateCommentArgs = {
 };
 
 
+export type MutationCreateCommunityArgs = {
+  description: Scalars['String'];
+  name: Scalars['String'];
+};
+
+
 export type MutationCreatePostArgs = {
   community: Scalars['String'];
   content: Scalars['String'];
   title: Scalars['String'];
+};
+
+
+export type MutationCreateUserArgs = {
+  email: Scalars['String'];
+  name: Scalars['String'];
+  password: Scalars['String'];
+};
+
+
+export type MutationCreateUserPostArgs = {
+  community: Scalars['String'];
+  content: Scalars['String'];
+  title: Scalars['String'];
+};
+
+
+export type MutationJoinCommunityArgs = {
+  communityId: Scalars['String'];
 };
 
 
@@ -294,29 +325,32 @@ export type MutationRegisterArgs = {
   password: Scalars['String'];
 };
 
+
+export type MutationRemoveBookmarkArgs = {
+  postId: Scalars['String'];
+};
+
 export type Password = {
   __typename?: 'Password';
   id: Scalars['String'];
   password: Scalars['String'];
-  user: User;
+  user?: Maybe<User>;
 };
 
-export type Post = IPost & {
+export type Post = {
   __typename?: 'Post';
+  bookmarkedBy?: Maybe<Array<Maybe<User>>>;
   comments?: Maybe<Array<Maybe<Comment>>>;
-  community: Community;
+  community?: Maybe<Community>;
   content: Scalars['String'];
   createdAt: Scalars['DateTime'];
   id: Scalars['String'];
-  postedBy: User;
+  postedBy?: Maybe<User>;
   title: Scalars['String'];
-  votes?: Maybe<Array<Maybe<Vote>>>;
+  votes: Array<Maybe<Vote>>;
 };
 
-export type PostError = CommonError & {
-  __typename?: 'PostError';
-  message: Scalars['String'];
-};
+export type PostResponse = CommonError | Post;
 
 export type PostWithId = {
   __typename?: 'PostWithId';
@@ -327,9 +361,10 @@ export type Query = {
   __typename?: 'Query';
   allCommunities: AllCommunitiesResponse;
   authenticate: AuthResponse;
-  fetchCommunity: FetchCommunityResponse;
+  fetchCommunity: CommunityResponse;
   fetchPost: FetchPostResponse;
   fetchPostComments: FetchPostCommentsResponse;
+  getPostDetails: PostResponse;
   getUserCommunities: GetUserCommunitiesResponse;
   user: IUserQueryResult;
 };
@@ -350,42 +385,44 @@ export type QueryFetchPostCommentsArgs = {
 };
 
 
+export type QueryGetPostDetailsArgs = {
+  postId: Scalars['String'];
+};
+
+
 export type QueryUserArgs = {
   email: Scalars['String'];
 };
 
-export type RefreshResponse = AuthError | IRefresh;
+export type RefreshResponse = CommonError | IRefresh;
 
 export type User = {
   __typename?: 'User';
+  bookmarks?: Maybe<Array<Maybe<Post>>>;
+  commentVotes: Array<Maybe<CommentVote>>;
   commentedOn?: Maybe<Array<Maybe<Comment>>>;
-  communitiesCreated?: Maybe<Array<Maybe<Community>>>;
+  communitiesCreated?: Maybe<Array<Community>>;
   createdAt: Scalars['DateTime'];
   email: Scalars['String'];
   id: Scalars['String'];
-  joinedCommunities?: Maybe<Array<Maybe<Community>>>;
+  joinedCommunities?: Maybe<Array<Community>>;
   name: Scalars['String'];
-  password: Password;
+  password?: Maybe<Password>;
   picture: Scalars['String'];
   posts?: Maybe<Array<Maybe<Post>>>;
   tokenVersion: Scalars['Int'];
-  updatedAt: Scalars['DateTime'];
   votes?: Maybe<Array<Maybe<Vote>>>;
 };
 
-export type UserError = CommonError & {
-  __typename?: 'UserError';
-  message: Scalars['String'];
-};
+export type UserResponse = CommonError | User;
 
 export type Vote = {
   __typename?: 'Vote';
   createdAt: Scalars['DateTime'];
   id: Scalars['String'];
-  post: Post;
+  post?: Maybe<Post>;
   type: VoteType;
-  updatedAt: Scalars['DateTime'];
-  votedBy: User;
+  votedBy?: Maybe<User>;
 };
 
 export enum VoteType {

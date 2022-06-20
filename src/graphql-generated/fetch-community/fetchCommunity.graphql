@@ -1,21 +1,14 @@
 query FetchCommunity($name: String!) {
   fetchCommunity(name: $name) {
-    ... on FetchCommunityResult {
+    ... on Community {
       id
       title
-      createdAt
       banner
       description
-      updatedAt
       picture
-      creator {
-        id
-      }
-      members {
-        id
-      }
+      createdAt
     }
-    ... on CommunityError {
+    ... on CommonError {
       message
     }
   }

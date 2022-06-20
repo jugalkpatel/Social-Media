@@ -18,7 +18,7 @@ import { VscComment } from 'react-icons/vsc';
 import { IoBookmarkOutline } from 'react-icons/io5';
 
 import { PostParams } from 'types';
-import { PostSkeleton, ReadOnlyEditor, PostContentLayout } from 'components';
+import { PostSkeleton, ReadOnlyEditor, PostLayout } from 'components';
 import { useFetchPost } from 'operations';
 import { voteCount } from 'lib';
 
@@ -110,7 +110,7 @@ function PostContent() {
       p={3}
       spacing={0}
     >
-      <PostContentLayout
+      <PostLayout
         top={
           <Group className={classes.padding}>
             <Avatar

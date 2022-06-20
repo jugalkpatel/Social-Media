@@ -6,7 +6,7 @@ const defaultOptions = {} as const;
 export type RefreshMutationVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type RefreshMutation = { __typename?: 'Mutation', refresh: { __typename: 'AuthError', message: string } | { __typename: 'IRefresh', success: boolean } };
+export type RefreshMutation = { __typename?: 'Mutation', refresh: { __typename?: 'CommonError', message: string } | { __typename?: 'IRefresh', success: boolean } };
 
 
 export const RefreshDocument = gql`
@@ -14,11 +14,9 @@ export const RefreshDocument = gql`
   refresh {
     ... on IRefresh {
       success
-      __typename
     }
-    ... on AuthError {
+    ... on CommonError {
       message
-      __typename
     }
   }
 }
