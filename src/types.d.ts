@@ -8,6 +8,12 @@ export type AuthMode = 'LOGIN' | 'REGISTER';
 
 export type State = 'DATA' | 'LOADING' | 'ERROR';
 
+export type IPostState = {
+  community: string;
+  title: string;
+  content: string;
+};
+
 export type AuthCredentials = {
   token: string;
   id: string;

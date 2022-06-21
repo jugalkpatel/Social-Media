@@ -1,0 +1,15 @@
+query FetchUserCommunities {
+  fetchUser {
+    ... on User {
+      id
+      joinedCommunities {
+        id
+        title
+        picture
+      }
+    }
+    ... on CommonError {
+      message
+    }
+  }
+}

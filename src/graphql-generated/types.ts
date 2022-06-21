@@ -95,15 +95,6 @@ export type CommunityUser = {
 
 export type CreateCommentResponse = CommonError | IComment;
 
-export type CreatePostResponse = CommonError | CreatePostResult;
-
-export type CreatePostResult = {
-  __typename?: 'CreatePostResult';
-  community: Scalars['String'];
-  id: Scalars['String'];
-  title: Scalars['String'];
-};
-
 export type FetchCommunityResponse = CommonError | FetchCommunityResult;
 
 export type FetchCommunityResult = ICommunity & {
@@ -253,9 +244,8 @@ export type Mutation = {
   createBookmark: UserResponse;
   createComment: CommentResponse;
   createCommunity: CommunityResponse;
-  createPost: CreatePostResponse;
+  createPost: PostResponse;
   createUser: UserResponse;
-  createUserPost: PostResponse;
   joinCommunity: CommunityResponse;
   leaveCommunity: CommunityResponse;
   login: UserResponse;
@@ -293,13 +283,6 @@ export type MutationCreateUserArgs = {
   email: Scalars['String'];
   name: Scalars['String'];
   password: Scalars['String'];
-};
-
-
-export type MutationCreateUserPostArgs = {
-  community: Scalars['String'];
-  content: Scalars['String'];
-  title: Scalars['String'];
 };
 
 
@@ -359,14 +342,10 @@ export type PostWithId = {
 
 export type Query = {
   __typename?: 'Query';
-  allCommunities: AllCommunitiesResponse;
   authenticate: AuthResponse;
   fetchCommunity: CommunityResponse;
-  fetchPost: FetchPostResponse;
-  fetchPostComments: FetchPostCommentsResponse;
-  getPostDetails: PostResponse;
-  getUserCommunities: GetUserCommunitiesResponse;
-  user: IUserQueryResult;
+  fetchPost: PostResponse;
+  fetchUser: UserResponse;
 };
 
 
@@ -377,21 +356,6 @@ export type QueryFetchCommunityArgs = {
 
 export type QueryFetchPostArgs = {
   postId: Scalars['String'];
-};
-
-
-export type QueryFetchPostCommentsArgs = {
-  postId: Scalars['String'];
-};
-
-
-export type QueryGetPostDetailsArgs = {
-  postId: Scalars['String'];
-};
-
-
-export type QueryUserArgs = {
-  email: Scalars['String'];
 };
 
 export type RefreshResponse = CommonError | IRefresh;
