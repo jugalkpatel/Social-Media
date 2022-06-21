@@ -127,3 +127,22 @@ export type Vote = {
   type: Types.VoteType;
   votedBy?: { __typename?: 'User'; id: string } | null;
 };
+
+export type Comment = {
+  __typename?: 'Comment';
+  id: string;
+  text: string;
+  createdAt: any;
+  user?: {
+    __typename?: 'User';
+    id: string;
+    name: string;
+    picture: string;
+  } | null;
+  votes?: Array<{
+    __typename?: 'CommentVote';
+    id: string;
+    type: Types.VoteType;
+    votedBy?: { __typename?: 'User'; id: string } | null;
+  } | null> | null;
+};

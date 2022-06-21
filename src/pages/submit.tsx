@@ -58,7 +58,7 @@ const TITLE_LENGTH = 200;
 function Submit() {
   const { classes } = useStyles();
   const { communities, state } = useFetchUserCommunities();
-  const createPost = useCreatePost();
+  const { createPost, loading } = useCreatePost();
   const form = useForm<IPostState>({
     initialValues: {
       community: '',
@@ -152,7 +152,7 @@ function Submit() {
             <Divider my="md" size="xs" />
 
             <Stack align="flex-end">
-              <Button type="submit" variant="filled" px={25} loading={false}>
+              <Button type="submit" variant="filled" px={25} loading={loading}>
                 Post
               </Button>
             </Stack>

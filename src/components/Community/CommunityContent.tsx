@@ -11,14 +11,12 @@ import {
 import { MdCake } from 'react-icons/md';
 import { format } from 'fecha';
 
-import { CommunityPost } from 'types';
 import { ContainerLayout } from 'components';
 
 type Props = {
   data: {
     description: string;
     date: string;
-    // posts: Array<CommunityPost>;
   };
   input: React.ReactNode;
   addPost: React.ReactNode;

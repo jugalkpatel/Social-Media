@@ -2,12 +2,12 @@ import { format, setGlobalDateMasks } from 'fecha';
 import { createStyles, Avatar, Group, Text, ActionIcon } from '@mantine/core';
 import { TbArrowBigDown, TbArrowBigTop } from 'react-icons/tb';
 
+import { Comment } from 'types';
 import {
   CommentLayout,
   ReadOnlyCommentEditor,
   CommentSkeleton,
 } from 'components';
-import { Comment } from 'graphql-generated';
 import { voteCount } from 'lib';
 
 setGlobalDateMasks({
@@ -35,8 +35,6 @@ function Comment({ comment }: Props) {
     text,
   } = comment;
 
-  console.log({ id });
-
   if (!id) {
     return <CommentSkeleton />;
   }
@@ -45,7 +43,7 @@ function Comment({ comment }: Props) {
     <CommentLayout
       avatar={
         <Avatar
-          size="md"
+          size="sm"
           radius="xl"
           src={userAvatar}
           sx={{ backgroundColor: '#fff' }}
@@ -60,7 +58,7 @@ function Comment({ comment }: Props) {
           <Text size="xs">·</Text>
 
           <Text size="xs" color="gray">
-            {format(new Date(createdAt), 'commentTime')}
+            {format(new Date(createdAt), 'timeFormat')}
           </Text>
         </Group>
       }

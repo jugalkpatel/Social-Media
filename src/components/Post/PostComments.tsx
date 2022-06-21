@@ -1,14 +1,14 @@
+import { useReactiveVar } from '@apollo/client';
 import { Stack, createStyles, Divider, Center, Text } from '@mantine/core';
 import { AiOutlineComment } from 'react-icons/ai';
 
+import { Comment as CommentType } from 'types';
 import { CommentEditor, Comment } from 'components';
-import { useFetchPostComments } from 'operations';
-import { useReactiveVar } from '@apollo/client';
 import { userIdVar } from 'lib';
 
 type Props = {
   postId: string;
-  commentCount: number;
+  comments: Array<CommentType>;
 };
 
 const GRAY_COLOR = '#373A40';
@@ -31,13 +31,10 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function PostComments({ postId }: Props) {
+function PostComments({ comments, postId }: Props) {
   const { classes, cx } = useStyles();
   const userId = useReactiveVar(userIdVar);
   const isAuthenticated = !!userId;
-  const { comments } = useFetchPostComments({ postId });
-
-  console.log({ comments });
 
   return (
     <Stack

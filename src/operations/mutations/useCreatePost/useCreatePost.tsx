@@ -1,4 +1,3 @@
-import Router from 'next/router';
 import { showNotification } from '@mantine/notifications';
 import { IoMdCheckmark, IoMdClose } from 'react-icons/io';
 
@@ -43,11 +42,11 @@ function create(create: CreatePostMutationFn) {
 // make a function that takes mutation function
 // return one function that takes values and make a network call
 function useCreatePost() {
-  const [mutationFunc] = useCreatePostMutation();
+  const [mutationFunc, { loading }] = useCreatePostMutation();
 
   const createPost = create(mutationFunc);
 
-  return createPost;
+  return { createPost, loading };
 }
 
 export default useCreatePost;

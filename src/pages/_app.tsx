@@ -22,7 +22,7 @@ import { Layout, Login, Register, CreateCommunity } from 'components';
 import 'normalize.css/normalize.css';
 
 setGlobalDateMasks({
-  postTime: '[on] MMMM Do, YY · hh:mm A',
+  timeFormat: '[on] MMMM Do, YY · hh:mm A',
 });
 
 const App: NextPage<AppProps> = ({ Component, pageProps }) => {

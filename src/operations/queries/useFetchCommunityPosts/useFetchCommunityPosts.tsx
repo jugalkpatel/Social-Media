@@ -33,6 +33,7 @@ function setState(data: FetchCommunityPostsQuery, error: ApolloError) {
 function useFetchCommunityPosts({ title }: Props) {
   const { data, error } = useFetchCommunityPostsQuery({
     variables: { name: title },
+    fetchPolicy: 'cache-first',
   });
 
   const { posts, state } = setState(data, error);

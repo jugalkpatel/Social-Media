@@ -1,0 +1,50 @@
+query FetchPost($postId: String!) {
+  fetchPost(postId: $postId) {
+    ... on CommonError {
+      message
+    }
+    ... on Post {
+      id
+      title
+      content
+      createdAt
+      community {
+        id
+        title
+        picture
+      }
+      postedBy {
+        id
+        name
+        picture
+      }
+      bookmarkedBy {
+        id
+      }
+      votes {
+        id
+        type
+        votedBy {
+          id
+        }
+      }
+      comments {
+        id
+        text
+        createdAt
+        user {
+          id
+          name
+          picture
+        }
+        votes {
+          id
+          type
+          votedBy {
+            id
+          }
+        }
+      }
+    }
+  }
+}

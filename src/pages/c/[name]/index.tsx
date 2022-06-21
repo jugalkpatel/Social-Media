@@ -1,4 +1,6 @@
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { Button, createStyles } from '@mantine/core';
+import { useWindowScroll } from '@mantine/hooks';
 
 import {
   CommunityHeader,
@@ -50,12 +52,22 @@ type Parms = {
   name: string;
 };
 
+const useStyles = createStyles((theme) => ({
+  button: {
+    position: 'fixed',
+    bottom: '10px',
+    right: '10px',
+  },
+}));
+
 export default function ({
   community,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { id, title, description, banner, picture, createdAt } =
     community as Community;
 
+  const { classes } = useStyles();
+  const [, scrollTo] = useWindowScroll();
   return (
     <>
       <CommunityHeader
@@ -85,6 +97,15 @@ export default function ({
         count={<MemberCount title={title} />}
         allPosts={<CommunityPosts title={title} />}
       />
+
+      <Button
+        className={classes.button}
+        size="xs"
+        px="sm"
+        onClick={() => scrollTo({ y: 0 })}
+      >
+        Back to Top
+      </Button>
     </>
   );
 }

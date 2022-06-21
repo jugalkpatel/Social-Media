@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Router from 'next/router';
 import {
   Group,
   Avatar,
@@ -76,8 +77,18 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
+const redirect = (e: React.SyntheticEvent, url: string): void => {
+  Router.push(url);
+  // console.log(`clicked on ${url}`);
+
+  e.stopPropagation();
+};
+
 function Post({ post, list }: Props) {
   const { classes, cx } = useStyles();
+  const postUrl = list
+    ? `/c/${post.community.title}/posts/${post.id}`
+    : `/c/${post.community.title}/posts/${post.id}#comments`;
   return (
     <Group
       direction="column"
@@ -85,21 +96,34 @@ function Post({ post, list }: Props) {
       className={cx(classes.flex, classes.background, classes.border)}
       p={3}
       spacing={0}
+      onClick={(e) => {
+        if (list) {
+          redirect(e, `/c/${post.community.title}/posts/${post.id}`);
+        }
+      }}
+      sx={{ cursor: list ? 'pointer' : '' }}
     >
       <PostLayout
         top={
-          <Group className={classes.padding}>
+          <Group className={classes.padding} spacing="xs">
             <Avatar
               src={post.community.picture}
               radius="xl"
-              sx={{ backgroundColor: '#fff' }}
+              sx={{ backgroundColor: '#fff', cursor: 'pointer' }}
+              onClick={(e) => redirect(e, `/c/${post.community.title}`)}
             />
 
             <Group direction="column" sx={{ gap: '0' }}>
-              <Text weight={700}>r/{post.community.title}</Text>
+              <Text
+                weight={700}
+                onClick={(e) => redirect(e, `/c/${post.community.title}`)}
+                sx={{ cursor: 'pointer' }}
+              >
+                r/{post.community.title}
+              </Text>
               <Text size="sm">
                 u/{post.postedBy.name} ·{' '}
-                {format(new Date(post.createdAt), 'postTime')}
+                {format(new Date(post.createdAt), 'timeFormat')}
               </Text>
             </Group>
           </Group>
@@ -133,7 +157,7 @@ function Post({ post, list }: Props) {
 
             <MediaQuery largerThan="lg" styles={{ display: 'none' }}>
               <Stack spacing={0}>
-                <Link href="#comments" replace>
+                <Link href={postUrl} replace={!list}>
                   <Button
                     leftIcon={<VscComment className={classes.fontSize} />}
                     variant="subtle"
@@ -166,16 +190,18 @@ function Post({ post, list }: Props) {
         desktopOnly={
           <MediaQuery smallerThan="lg" styles={{ display: 'none' }}>
             <Group noWrap={true} spacing={5} pb={5}>
-              <Button
-                leftIcon={<VscComment className={classes.fontSize} />}
-                variant="subtle"
-                color="gray"
-                sx={{ color: 'gray' }}
-                px="sm"
-                size="xs"
-              >
-                {post.comments.length} Comments
-              </Button>
+              <Link href={postUrl} replace={!list}>
+                <Button
+                  leftIcon={<VscComment className={classes.fontSize} />}
+                  variant="subtle"
+                  color="gray"
+                  sx={{ color: 'gray' }}
+                  px="sm"
+                  size="xs"
+                >
+                  {post.comments.length} Comments
+                </Button>
+              </Link>
 
               <Button
                 leftIcon={<IoBookmarkOutline className={classes.fontSize} />}

@@ -36,7 +36,8 @@ function CommentEditor({ postId }: Props) {
 
   const handleSubmit = async () => {
     await createComment({ postId, text: form.values.text });
-    form.reset();
+    // doesn't work because quill works in uncontrolled mode
+    // form.reset();
   };
 
   return (

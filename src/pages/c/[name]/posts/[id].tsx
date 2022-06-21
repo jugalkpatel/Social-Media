@@ -1,6 +1,7 @@
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
-import { Community, PostParams } from 'types';
+import { PostParams } from 'types';
+import { Community } from 'graphql-generated';
 import {
   PostPageLayout,
   PostContent,
@@ -15,7 +16,6 @@ import {
   initializeApollo,
   fetchPost,
 } from 'lib';
-import { IPostType } from 'graphql-generated';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { params } = context;
@@ -29,16 +29,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const { name, id } = params as PostParams;
 
     const community = await fetchCommunity(name, apolloClient);
-    const post = await fetchPost(id, apolloClient);
+    // const post = await fetchPost(id, apolloClient);
 
-    if (!community || !post) {
+    if (!community) {
       return {
         notFound: true,
       };
     }
 
     const documentProps = addApolloState(apolloClient, {
-      props: { community, post },
+      props: { community, postId: id },
     });
 
     return {
@@ -54,15 +54,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 export default function ({
   community,
-  post,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const { banner, picture, title, description, createdAt, id, members } =
+  postId,
+}: // post,
+InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const { banner, picture, title, description, createdAt, id } =
     community as Community;
-  const { id: postId, comments } = post as IPostType;
+
+  console.log({ community });
+  // const { id: postId, comments } = post as IPostType;
   return (
     <PostPageLayout
-      main={<PostContent />}
-      comments={<PostComments postId={postId} commentCount={comments.length} />}
+      main={<PostContent postId={postId} />}
+      // comments={<PostComments postId={postId} commentCount={comments.length} />}
       right={
         <PostCommunity
           joinElement={
