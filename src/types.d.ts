@@ -1,3 +1,4 @@
+import { ApolloCache } from '@apollo/client';
 import * as Types from './graphql-generated/types';
 
 export interface PageProps {
@@ -7,6 +8,22 @@ export interface PageProps {
 export type AuthMode = 'LOGIN' | 'REGISTER';
 
 export type State = 'DATA' | 'LOADING' | 'ERROR';
+
+export type VoteType = 'UPVOTE' | 'DOWNVOTE';
+
+export type CacheUpdateParams = {
+  cache: ApolloCache<any>;
+  postId: string;
+  communityName: string;
+};
+
+export type RemoveVoteCacheUpdateParams = CacheUpdateParams & {
+  deletedVoteId: string;
+};
+
+export type VoteCacheUpdateParams = CacheUpdateParams & {
+  newVote: Vote;
+};
 
 export type IPostState = {
   community: string;
@@ -74,6 +91,7 @@ export type Community = {
 };
 
 // added custom post type because we're only fetching half data.
+
 export type Post = {
   __typename?: 'Post';
   id: string;
@@ -92,15 +110,12 @@ export type Post = {
     name: string;
     picture: string;
   } | null;
-  bookmarkedBy?: Array<{
-    __typename?: 'User';
-    id: string;
-  } | null> | null;
+  bookmarkedBy?: Array<{ __typename?: 'User'; id: string } | null> | null;
   votes: Array<{
     __typename?: 'Vote';
     id: string;
     type: Types.VoteType;
-    votedBy?: { __typename?: 'User'; id: string } | null;
+    voteUser?: { __typename?: 'User'; id: string } | null;
   } | null>;
   comments?: Array<{
     __typename?: 'Comment';
@@ -122,10 +137,18 @@ export type Post = {
   } | null> | null;
 };
 
-export type Vote = {
+export type CommentVote = {
+  __typename?: 'CommentVote';
   id: string;
   type: Types.VoteType;
   votedBy?: { __typename?: 'User'; id: string } | null;
+};
+
+export type Vote = {
+  __typename?: 'Vote';
+  id: string;
+  type: Types.VoteType;
+  voteUser?: { __typename?: 'User'; id: string } | null;
 };
 
 export type Comment = {

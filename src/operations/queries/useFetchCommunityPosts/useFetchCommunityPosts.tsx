@@ -3,6 +3,7 @@ import {
   useFetchCommunityPostsQuery,
   FetchCommunityPostsQuery,
 } from 'operations';
+import { useEffect } from 'react';
 import { State } from 'types';
 
 type Props = {
@@ -31,10 +32,17 @@ function setState(data: FetchCommunityPostsQuery, error: ApolloError) {
 }
 
 function useFetchCommunityPosts({ title }: Props) {
-  const { data, error } = useFetchCommunityPostsQuery({
+  const { data, error, refetch } = useFetchCommunityPostsQuery({
     variables: { name: title },
     fetchPolicy: 'cache-first',
   });
+
+  useEffect(() => {
+    if (data) {
+      console.log('refetching');
+      refetch();
+    }
+  }, []);
 
   const { posts, state } = setState(data, error);
 

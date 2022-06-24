@@ -14,7 +14,7 @@ import {
   fetchCommunity,
   addApolloState,
   initializeApollo,
-  fetchPost,
+  // fetchPost,
 } from 'lib';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -61,11 +61,9 @@ InferGetServerSidePropsType<typeof getServerSideProps>) {
     community as Community;
 
   console.log({ community });
-  // const { id: postId, comments } = post as IPostType;
   return (
     <PostPageLayout
       main={<PostContent postId={postId} />}
-      // comments={<PostComments postId={postId} commentCount={comments.length} />}
       right={
         <PostCommunity
           joinElement={

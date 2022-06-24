@@ -36,6 +36,14 @@ export type AuthUser = {
   picture: Scalars['String'];
 };
 
+export type BatchPosts = {
+  __typename?: 'BatchPosts';
+  cursorId: Scalars['String'];
+  posts?: Maybe<Array<Maybe<Post>>>;
+};
+
+export type BatchPostsResponse = BatchPosts | CommonError;
+
 export type Comment = {
   __typename?: 'Comment';
   createdAt: Scalars['DateTime'];
@@ -252,6 +260,8 @@ export type Mutation = {
   refresh: RefreshResponse;
   register: UserResponse;
   removeBookmark: UserResponse;
+  removeVote: VoteResponse;
+  vote: VoteResponse;
 };
 
 
@@ -313,6 +323,18 @@ export type MutationRemoveBookmarkArgs = {
   postId: Scalars['String'];
 };
 
+
+export type MutationRemoveVoteArgs = {
+  communityId: Scalars['String'];
+  postId: Scalars['String'];
+  voteId: Scalars['String'];
+};
+
+
+export type MutationVoteArgs = {
+  data?: InputMaybe<VoteArgs>;
+};
+
 export type Password = {
   __typename?: 'Password';
   id: Scalars['String'];
@@ -343,9 +365,25 @@ export type PostWithId = {
 export type Query = {
   __typename?: 'Query';
   authenticate: AuthResponse;
+  fetchAllPosts: BatchPostsResponse;
+  fetchAllUserPosts: BatchPostsResponse;
   fetchCommunity: CommunityResponse;
   fetchPost: PostResponse;
   fetchUser: UserResponse;
+};
+
+
+export type QueryFetchAllPostsArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take: Scalars['Int'];
+};
+
+
+export type QueryFetchAllUserPostsArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take: Scalars['Int'];
 };
 
 
@@ -386,8 +424,16 @@ export type Vote = {
   id: Scalars['String'];
   post?: Maybe<Post>;
   type: VoteType;
-  votedBy?: Maybe<User>;
+  voteUser?: Maybe<User>;
 };
+
+export type VoteArgs = {
+  communityId: Scalars['String'];
+  postId: Scalars['String'];
+  type: VoteType;
+};
+
+export type VoteResponse = CommonError | Vote;
 
 export enum VoteType {
   Downvote = 'DOWNVOTE',

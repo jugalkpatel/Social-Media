@@ -1,3 +1,4 @@
+import Router from 'next/router';
 import { showNotification } from '@mantine/notifications';
 import { IoMdCheckmark, IoMdClose } from 'react-icons/io';
 
@@ -17,7 +18,10 @@ function create(create: CreatePostMutationFn) {
       });
 
       if (data && data?.createPost && data.createPost.__typename === 'Post') {
-        const { id, community } = data.createPost;
+        const {
+          id,
+          community: { title },
+        } = data.createPost;
 
         showNotification({
           message: 'post created successfully',
@@ -26,8 +30,19 @@ function create(create: CreatePostMutationFn) {
           color: 'green',
         });
 
-        // Router.push(`/c/${community}/posts/${id}`);
+        Router.push(`/c/${title}/posts/${id}`);
+        return;
       }
+
+      if (
+        data &&
+        data?.createPost &&
+        data.createPost.__typename === 'CommonError'
+      ) {
+        errorMessage = data.createPost.message;
+      }
+
+      throw new Error(errorMessage);
     } catch (error) {
       showNotification({
         message: errorMessage,

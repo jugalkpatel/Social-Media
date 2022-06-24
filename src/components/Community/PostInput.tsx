@@ -50,7 +50,12 @@ function PostInput({ title }: { title: string }) {
             classes.border,
           )}
           direction="row"
-          sx={{ flexWrap: 'nowrap', gridRow: '1/2', gridColumn: '1/2' }}
+          sx={{
+            flexWrap: 'nowrap',
+            gridRow: '1/2',
+            gridColumn: '1/2',
+            height: 'max-content',
+          }}
         >
           <UserAvatar />
           <Input

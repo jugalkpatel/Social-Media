@@ -10,7 +10,7 @@ export type CreatePostMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'CommonError' } | { __typename?: 'Post', id: string, community?: { __typename?: 'Community', title: string } | null } };
+export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'CommonError', message: string } | { __typename?: 'Post', id: string, community?: { __typename?: 'Community', title: string } | null } };
 
 
 export const CreatePostDocument = gql`
@@ -21,6 +21,9 @@ export const CreatePostDocument = gql`
       community {
         title
       }
+    }
+    ... on CommonError {
+      message
     }
   }
 }

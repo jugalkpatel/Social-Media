@@ -7,3 +7,4 @@ export { default as PostLayout } from './PostLayout';
 export { default as PostComments } from './PostComments';
 export { default as Post } from './Post';
 export { default as PostNotFound } from './PostNotFound';
+export { default as PostVotes } from './PostVotes';

@@ -1,7 +1,8 @@
 import { Stack, Container, createStyles } from '@mantine/core';
 
 type Props = {
-  children: JSX.Element | JSX.Element[];
+  // children: JSX.Element | JSX.Element[];
+  children: React.ReactNode | React.ReactNode[];
 };
 
 const useStyles = createStyles((theme) => ({

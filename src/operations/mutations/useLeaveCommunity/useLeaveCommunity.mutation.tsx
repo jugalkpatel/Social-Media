@@ -37,8 +37,12 @@ const onLeaveCommunityClick = async (
           });
 
           if (fetchCommunity.__typename === 'Community') {
-            cache.writeQuery<FetchCommunityMembersQuery>({
+            cache.writeQuery<
+              FetchCommunityMembersQuery,
+              FetchCommunityMembersQueryVariables
+            >({
               query: FetchCommunityMembersDocument,
+              variables: { name: title },
               data: {
                 fetchCommunity: {
                   ...fetchCommunity,

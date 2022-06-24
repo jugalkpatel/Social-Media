@@ -6,5 +6,8 @@ mutation CreatePost($title: String!, $content: String!, $community: String!) {
         title
       }
     }
+    ... on CommonError {
+      message
+    }
   }
 }

@@ -8,7 +8,7 @@ import {
   ReadOnlyCommentEditor,
   CommentSkeleton,
 } from 'components';
-import { voteCount } from 'lib';
+import { voteCount, commentVoteCount } from 'lib';
 
 setGlobalDateMasks({
   commentTime: '[on] MMMM Do, YY · hh:mm A',
@@ -70,7 +70,7 @@ function Comment({ comment }: Props) {
           </ActionIcon>
 
           <Text weight={700} size="sm" color="gray">
-            {voteCount(votes)}
+            {commentVoteCount(votes)}
           </Text>
 
           <ActionIcon size="sm">

@@ -1,0 +1,14 @@
+mutation Vote($data: VoteArgs) {
+  vote(data: $data) {
+    ... on Vote {
+      id
+      type
+      voteUser {
+        id
+      }
+    }
+    ... on CommonError {
+      message
+    }
+  }
+}

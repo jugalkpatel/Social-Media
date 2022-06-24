@@ -24,7 +24,7 @@ query FetchPost($postId: String!) {
       votes {
         id
         type
-        votedBy {
+        voteUser {
           id
         }
       }

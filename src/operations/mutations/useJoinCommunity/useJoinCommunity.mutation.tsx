@@ -88,32 +88,3 @@ function useJoinCommunity({ id, title }: Props) {
 }
 
 export default useJoinCommunity;
-
-// console.log({ title });
-// const { fetchCommunity } = cache.readQuery<
-//   FetchCommunityQuery,
-//   FetchCommunityQueryVariables
-// >({
-//   query: FetchCommunityDocument,
-//   variables: { name: title },
-// });
-
-// console.log({ fetchCommunity });
-
-// if (fetchCommunity.__typename === 'Community') {
-//   cache.writeQuery<FetchCommunityQuery>({
-//     query: FetchCommunityDocument,
-//     data: {
-//       fetchCommunity: {
-//         ...fetchCommunity,
-//         members: updatedMembers,
-//       },
-//     },
-//   });
-
-//   showNotification({
-//     message: `successfully joined ${title}`,
-//     autoClose: 3000,
-//     icon: <IoMdCheckmark />,
-//     color: 'green',
-//   });

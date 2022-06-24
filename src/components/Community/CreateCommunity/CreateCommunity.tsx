@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useRouter } from 'next/router';
 import { ContextModalProps } from '@mantine/modals';
 import {
   Divider,
@@ -10,11 +9,8 @@ import {
   Text,
   Stack,
 } from '@mantine/core';
-import { IoMdClose, IoMdCheckmark } from 'react-icons/io';
 
-import { showNotification } from '@mantine/notifications';
-
-// import { useCreateCommunityMutation } from './__generated__/create-community.generated';
+import { useCreateCommunity } from 'operations';
 
 const NAME_LENGTH = 20;
 const DESC_LENGTH = 180;
@@ -24,70 +20,17 @@ function CreateCommunityModal({ id, context }: ContextModalProps) {
     name: '',
     description: '',
   });
-  // const [createCommunityMutation, { loading }] = useCreateCommunityMutation();
-  const router = useRouter();
+  const { createCommunity, loading } = useCreateCommunity();
 
-  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   let message = 'something went wrong!';
-  //   e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-  //   createCommunityMutation({
-  //     variables: {
-  //       description: description,
-  //       name: name.toLowerCase(),
-  //     },
-  //   })
-  //     .then((response) => {
-  //       const { data } = response;
+    await createCommunity({ name: name.toLowerCase(), description });
 
-  //       if (
-  //         data?.CreateCommunity &&
-  //         data.CreateCommunity.__typename === 'CommunityResult'
-  //       ) {
-  //         const { id, title } = data.CreateCommunity;
+    context.closeModal(id);
 
-  //         showNotification({
-  //           message: 'community created successfully',
-  //           autoClose: 3000,
-  //           icon: <IoMdCheckmark />,
-  //           color: 'green',
-  //         });
-
-  //         // close the modal
-  //         context.closeModal(id);
-
-  //         // redirect to community page
-  //         router.push(`/c/${title}`);
-
-  //         return;
-  //       }
-
-  //       if (
-  //         data?.CreateCommunity &&
-  //         data?.CreateCommunity.__typename === 'CommunityError'
-  //       ) {
-  //         message = data.CreateCommunity.message;
-  //       }
-
-  //       setCommuntunityFields({ name: '', description: '' });
-
-  //       showNotification({
-  //         message,
-  //         autoClose: 3000,
-  //         icon: <IoMdClose />,
-  //         color: 'red',
-  //       });
-  //     })
-  //     .catch((err) => {
-  //       setCommuntunityFields({ name: '', description: '' });
-  //       showNotification({
-  //         message,
-  //         autoClose: 3000,
-  //         icon: <IoMdClose />,
-  //         color: 'red',
-  //       });
-  //     });
-  // };
+    setCommuntunityFields({ name: '', description: '' });
+  };
 
   return (
     <>
@@ -140,8 +83,8 @@ function CreateCommunityModal({ id, context }: ContextModalProps) {
             <Button
               variant="filled"
               type="submit"
-              // loading={loading}
-              // disabled={loading}
+              loading={loading}
+              disabled={loading}
             >
               Create Community
             </Button>

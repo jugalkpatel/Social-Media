@@ -1,6 +1,8 @@
 import type { NextPage } from 'next';
 import { gql, useQuery } from '@apollo/client';
-import { ContainerLayout } from 'components';
+import { Tabs } from '@mantine/core';
+import { ContainerLayout, Feed } from 'components';
+import { useState } from 'react';
 
 const IS_LOGGED_IN = gql`
   query getIsLoggedIn {
@@ -11,29 +13,28 @@ const IS_LOGGED_IN = gql`
 `;
 
 const IndexPage: NextPage = () => {
-  const { data, loading, error } = useQuery(IS_LOGGED_IN);
-
+  // const { data, loading, error } = useQuery(IS_LOGGED_IN);
   // console.log({ data });
 
-  if (loading) {
-    return <h1>Loading....</h1>;
-  }
+  return <Feed />;
 
-  if (data) {
-    return (
-      <ContainerLayout>
-        <pre>{JSON.stringify(data, null, 2)}</pre>
-      </ContainerLayout>
-    );
-  }
+  // if (loading) {
+  //   return <h1>Loading....</h1>;
+  // }
 
-  return (
-    <ContainerLayout>
-      <h1>Something went wrong</h1>
-    </ContainerLayout>
-  );
+  // if (data) {
+  //   return (
+  //     <ContainerLayout>
+  //       <pre>{JSON.stringify(data, null, 2)}</pre>
+  //     </ContainerLayout>
+  //   );
+  // }
 
-  return;
+  // return (
+  //   <ContainerLayout>
+  //     <h1>Something went wrong</h1>
+  //   </ContainerLayout>
+  // );
 };
 
 export default IndexPage;

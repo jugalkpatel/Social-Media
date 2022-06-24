@@ -4,7 +4,6 @@ import {
   Group,
   Avatar,
   Title,
-  ActionIcon,
   MediaQuery,
   Stack,
   Button,
@@ -13,16 +12,15 @@ import {
 } from '@mantine/core';
 import { format } from 'fecha';
 import { IoBookmarkOutline } from 'react-icons/io5';
-import { TbArrowBigTop, TbArrowBigDown } from 'react-icons/tb';
 import { VscComment } from 'react-icons/vsc';
 
 import { Post } from 'types';
-import { PostLayout, ReadOnlyEditor } from 'components';
-import { voteCount } from 'lib';
+import { PostLayout, ReadOnlyEditor, PostVotes } from 'components';
 
 type Props = {
   post: Post;
   list?: boolean;
+  votes: React.ReactNode;
 };
 
 const useStyles = createStyles((theme) => ({
@@ -84,7 +82,7 @@ const redirect = (e: React.SyntheticEvent, url: string): void => {
   e.stopPropagation();
 };
 
-function Post({ post, list }: Props) {
+function Post({ post, list, votes }: Props) {
   const { classes, cx } = useStyles();
   const postUrl = list
     ? `/c/${post.community.title}/posts/${post.id}`
@@ -142,17 +140,7 @@ function Post({ post, list }: Props) {
         bottom={
           <Group noWrap={true} className={classes.margin}>
             <Group align="center" noWrap={true} className={classes.desktop}>
-              <ActionIcon variant="transparent" size="sm">
-                <TbArrowBigTop className={classes.arrow} />
-              </ActionIcon>
-
-              <Text weight={700} size="sm" color="gray">
-                {voteCount(post.votes)}
-              </Text>
-
-              <ActionIcon size="sm">
-                <TbArrowBigDown className={classes.arrow} />
-              </ActionIcon>
+              {votes}
             </Group>
 
             <MediaQuery largerThan="lg" styles={{ display: 'none' }}>

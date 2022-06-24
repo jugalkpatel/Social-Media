@@ -1,0 +1,10 @@
+mutation RemoveVote($postId: String!, $voteId: String!, $communityId: String!) {
+  removeVote(postId: $postId, voteId: $voteId, communityId: $communityId) {
+    ... on CommonError {
+      message
+    }
+    ... on Vote {
+      id
+    }
+  }
+}

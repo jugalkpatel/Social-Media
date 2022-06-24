@@ -33,6 +33,15 @@ export const cache: InMemoryCache = new InMemoryCache({
         },
       },
     },
+    Post: {
+      fields: {
+        votes: {
+          merge(existing = [], incoming: any[]) {
+            return incoming;
+          },
+        },
+      },
+    },
     // Community: {
     //   fields: {
     //     members: {

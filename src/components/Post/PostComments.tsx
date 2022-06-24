@@ -1,17 +1,16 @@
 import { useReactiveVar } from '@apollo/client';
-import { Stack, createStyles, Divider, Center, Text } from '@mantine/core';
-import { AiOutlineComment } from 'react-icons/ai';
+import { Stack, createStyles, Divider } from '@mantine/core';
 
 import { Comment as CommentType } from 'types';
-import { CommentEditor, Comment } from 'components';
+import { CommentEditor, Comment, EmptyPlaceholder } from 'components';
 import { userIdVar } from 'lib';
+import { useCheckUserInCommunity } from 'hooks';
 
 type Props = {
   postId: string;
   comments: Array<CommentType>;
+  communityName: string;
 };
-
-const GRAY_COLOR = '#373A40';
 
 const useStyles = createStyles((theme) => ({
   background: {
@@ -31,10 +30,13 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function PostComments({ comments, postId }: Props) {
+function PostComments({ comments, postId, communityName }: Props) {
   const { classes, cx } = useStyles();
   const userId = useReactiveVar(userIdVar);
   const isAuthenticated = !!userId;
+  const { isUserInCommunity } = useCheckUserInCommunity({
+    title: communityName,
+  });
 
   return (
     <Stack
@@ -43,7 +45,7 @@ function PostComments({ comments, postId }: Props) {
       px="sm"
       py="xs"
     >
-      {isAuthenticated ? (
+      {isAuthenticated && isUserInCommunity ? (
         <>
           <CommentEditor postId={postId} />
           <Divider size="xs" />
@@ -52,14 +54,7 @@ function PostComments({ comments, postId }: Props) {
 
       <Stack id="comments" py="sm">
         {!comments.length ? (
-          <Center style={{ height: 200 }}>
-            <Stack align="center">
-              <AiOutlineComment fontSize={40} style={{ color: GRAY_COLOR }} />
-              <Text size="lg" weight={700} sx={{ color: GRAY_COLOR }}>
-                No Comments Yet
-              </Text>
-            </Stack>
-          </Center>
+          <EmptyPlaceholder message="No Comments Yet" />
         ) : (
           comments.map((comment) => {
             return <Comment key={comment.id} comment={comment} />;
