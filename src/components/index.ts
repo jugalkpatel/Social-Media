@@ -7,6 +7,7 @@ export { ContainerLayout } from './ContainerLayout';
 export { UserAvatar } from './UserAvatar';
 export { default as EmptyPlaceholder } from './EmptyPlaceholder';
 export { default as PostsSkeleton } from './PostsSkeleton';
+export { default as Filters } from './Filters';
 export * from './Community';
 export * from './Post';
 export * from './Comment';

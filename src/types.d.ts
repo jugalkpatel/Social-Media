@@ -11,6 +11,8 @@ export type State = 'DATA' | 'LOADING' | 'ERROR';
 
 export type VoteType = 'UPVOTE' | 'DOWNVOTE';
 
+export type FILTER = 'NEW' | 'TOP';
+
 export type CacheUpdateParams = {
   cache: ApolloCache<any>;
   postId: string;
@@ -167,5 +169,57 @@ export type Comment = {
     id: string;
     type: Types.VoteType;
     votedBy?: { __typename?: 'User'; id: string } | null;
+  } | null> | null;
+};
+
+export type BatchPosts = {
+  __typename?: 'BatchPosts';
+  cursorId: string;
+  posts?: Array<{
+    __typename?: 'Post';
+    id: string;
+    title: string;
+    content: string;
+    createdAt: any;
+    community?: {
+      __typename?: 'Community';
+      id: string;
+      title: string;
+      picture: string;
+    } | null;
+    postedBy?: {
+      __typename?: 'User';
+      id: string;
+      name: string;
+      picture: string;
+    } | null;
+    bookmarkedBy?: Array<{
+      __typename?: 'User';
+      id: string;
+    } | null> | null;
+    votes: Array<{
+      __typename?: 'Vote';
+      id: string;
+      type: Types.VoteType;
+      voteUser?: { __typename?: 'User'; id: string } | null;
+    } | null>;
+    comments?: Array<{
+      __typename?: 'Comment';
+      id: string;
+      text: string;
+      createdAt: any;
+      user?: {
+        __typename?: 'User';
+        id: string;
+        name: string;
+        picture: string;
+      } | null;
+      votes?: Array<{
+        __typename?: 'CommentVote';
+        id: string;
+        type: Types.VoteType;
+        votedBy?: { __typename?: 'User'; id: string } | null;
+      } | null> | null;
+    } | null> | null;
   } | null> | null;
 };

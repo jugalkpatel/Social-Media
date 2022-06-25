@@ -15,7 +15,7 @@ import { IoBookmarkOutline } from 'react-icons/io5';
 import { VscComment } from 'react-icons/vsc';
 
 import { Post } from 'types';
-import { PostLayout, ReadOnlyEditor, PostVotes } from 'components';
+import { PostLayout, ReadOnlyEditor } from 'components';
 
 type Props = {
   post: Post;

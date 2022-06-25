@@ -1,5 +1,7 @@
 import { InMemoryCache, makeVar } from '@apollo/client';
 
+import { BatchPosts } from 'types';
+
 type UserCredentials = {
   isLoggedIn: boolean;
   id: string;
@@ -29,6 +31,27 @@ export const cache: InMemoryCache = new InMemoryCache({
         picture: {
           read() {
             return userPictureVar();
+          },
+        },
+        fetchAllPosts: {
+          keyArgs: false,
+          merge(existing: BatchPosts, incoming: BatchPosts) {
+            console.log({ existing });
+            console.log({ incoming });
+
+            const exisingPosts =
+              existing && existing?.posts ? existing.posts : [];
+
+            const incomingPosts =
+              incoming && incoming?.posts ? incoming.posts : [];
+
+            const newPosts: BatchPosts = {
+              __typename: incoming.__typename,
+              cursorId: incoming.cursorId,
+              posts: [...exisingPosts, ...incomingPosts],
+            };
+
+            return newPosts;
           },
         },
       },
