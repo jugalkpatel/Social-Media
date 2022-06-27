@@ -1,0 +1,15 @@
+mutation VoteComment($type: VoteType!, $commentId: String!) {
+  voteComment(type: $type, commentId: $commentId) {
+    ... on CommonError {
+      message
+    }
+    ... on CommentVote {
+      id
+      type
+      createdAt
+      votedBy {
+        id
+      }
+    }
+  }
+}

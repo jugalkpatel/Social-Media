@@ -33,7 +33,28 @@ export const cache: InMemoryCache = new InMemoryCache({
             return userPictureVar();
           },
         },
-        fetchAllPosts: {
+        fetchAllPostsByVotes: {
+          keyArgs: false,
+          merge(existing: BatchPosts, incoming: BatchPosts) {
+            console.log({ existing });
+            console.log({ incoming });
+
+            const exisingPosts =
+              existing && existing?.posts ? existing.posts : [];
+
+            const incomingPosts =
+              incoming && incoming?.posts ? incoming.posts : [];
+
+            const newPosts: BatchPosts = {
+              __typename: incoming.__typename,
+              cursorId: incoming.cursorId,
+              posts: [...exisingPosts, ...incomingPosts],
+            };
+
+            return newPosts;
+          },
+        },
+        fetchAllPostsByTime: {
           keyArgs: false,
           merge(existing: BatchPosts, incoming: BatchPosts) {
             console.log({ existing });

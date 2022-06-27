@@ -1,10 +1,20 @@
 import { useReactiveVar } from '@apollo/client';
 import { Stack, createStyles, Divider } from '@mantine/core';
 
-import { Comment as CommentType } from 'types';
-import { CommentEditor, Comment, EmptyPlaceholder } from 'components';
+import { Comment as CommentType, VoteCommentCacheParams } from 'types';
+import {
+  CommentEditor,
+  Comment,
+  EmptyPlaceholder,
+  CommentVotes,
+} from 'components';
 import { userIdVar } from 'lib';
 import { useCheckUserInCommunity } from 'hooks';
+import {
+  FetchPostDocument,
+  FetchPostQuery,
+  FetchPostQueryVariables,
+} from 'operations';
 
 type Props = {
   postId: string;
@@ -57,12 +67,74 @@ function PostComments({ comments, postId, communityName }: Props) {
           <EmptyPlaceholder message="No Comments Yet" />
         ) : (
           comments.map((comment) => {
-            return <Comment key={comment.id} comment={comment} />;
+            return (
+              <Comment
+                key={comment.id}
+                comment={comment}
+                votes={
+                  <CommentVotes
+                    commentId={comment.id}
+                    votes={comment.votes}
+                    updateCacheOnVote={updateCacheOnVote}
+                    communityName={communityName}
+                    postId={postId}
+                  />
+                }
+              />
+            );
           })
         )}
       </Stack>
     </Stack>
   );
+}
+
+function updateCacheOnVote({
+  cache,
+  commentId,
+  newCommentVote,
+  postId,
+}: VoteCommentCacheParams) {
+  const post = cache.readQuery<FetchPostQuery, FetchPostQueryVariables>({
+    query: FetchPostDocument,
+    variables: { postId },
+  });
+
+  if (post && post?.fetchPost && post.fetchPost.__typename === 'CommonError') {
+    throw new Error(post.fetchPost.message);
+  }
+
+  if (post && post?.fetchPost && post.fetchPost.__typename === 'Post') {
+    const isCommentExists = post.fetchPost.comments.find(
+      ({ id }) => id === commentId,
+    );
+
+    if (!isCommentExists) {
+      cache.writeQuery<FetchPostQuery, FetchPostQueryVariables>({
+        query: FetchPostDocument,
+        variables: { postId },
+        data: {
+          fetchPost: {
+            ...post.fetchPost,
+            comments: post.fetchPost.comments.map((comment) => {
+              if (comment.id === commentId) {
+                const votes =
+                  comment?.votes && comment.votes.length
+                    ? comment.votes.concat(newCommentVote)
+                    : comment.votes;
+                return { ...comment, votes };
+              }
+              return comment;
+            }),
+          },
+        },
+      });
+    }
+
+    return;
+  }
+
+  throw new Error();
 }
 
 export default PostComments;

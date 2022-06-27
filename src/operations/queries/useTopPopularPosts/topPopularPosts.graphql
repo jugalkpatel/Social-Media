@@ -1,5 +1,5 @@
-query FetchAllPosts($take: Int!, $skip: Int, $cursorId: String) {
-  fetchAllPosts(take: $take, skip: $skip, cursorId: $cursorId) {
+query FetchAllPostsByVotes($take: Int!, $cursorId: String) {
+  fetchAllPostsByVotes(take: $take, cursorId: $cursorId) {
     ... on BatchPosts {
       cursorId
       posts {

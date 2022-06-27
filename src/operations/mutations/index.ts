@@ -6,3 +6,4 @@ export * from './useCreateComment';
 export * from './useRemoveVote';
 export * from './useVote';
 export * from './useCreateCommunity';
+export * from './useVoteComment';

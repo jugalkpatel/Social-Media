@@ -65,6 +65,8 @@ export type CommentVote = {
   votedBy?: Maybe<User>;
 };
 
+export type CommentVoteResponse = CommentVote | CommonError;
+
 export type CommonError = {
   __typename?: 'CommonError';
   message: Scalars['String'];
@@ -128,6 +130,11 @@ export type FetchPostCommentsResult = {
 };
 
 export type FetchPostResponse = CommonError | IPostType;
+
+export enum FilterType {
+  New = 'NEW',
+  Top = 'TOP'
+}
 
 export type GetUserCommunitiesResponse = CommonError | IUserCommunites;
 
@@ -260,8 +267,10 @@ export type Mutation = {
   refresh: RefreshResponse;
   register: UserResponse;
   removeBookmark: UserResponse;
+  removeCommentVote: CommentVoteResponse;
   removeVote: VoteResponse;
   vote: VoteResponse;
+  voteComment: CommentVoteResponse;
 };
 
 
@@ -324,6 +333,12 @@ export type MutationRemoveBookmarkArgs = {
 };
 
 
+export type MutationRemoveCommentVoteArgs = {
+  commentId: Scalars['String'];
+  voteId: Scalars['String'];
+};
+
+
 export type MutationRemoveVoteArgs = {
   communityId: Scalars['String'];
   postId: Scalars['String'];
@@ -333,6 +348,12 @@ export type MutationRemoveVoteArgs = {
 
 export type MutationVoteArgs = {
   data?: InputMaybe<VoteArgs>;
+};
+
+
+export type MutationVoteCommentArgs = {
+  commentId: Scalars['String'];
+  type: VoteType;
 };
 
 export type Password = {
@@ -365,7 +386,8 @@ export type PostWithId = {
 export type Query = {
   __typename?: 'Query';
   authenticate: AuthResponse;
-  fetchAllPosts: BatchPostsResponse;
+  fetchAllPostsByTime: BatchPostsResponse;
+  fetchAllPostsByVotes: BatchPostsResponse;
   fetchAllUserPosts: BatchPostsResponse;
   fetchCommunity: CommunityResponse;
   fetchPost: PostResponse;
@@ -373,9 +395,15 @@ export type Query = {
 };
 
 
-export type QueryFetchAllPostsArgs = {
+export type QueryFetchAllPostsByTimeArgs = {
   cursorId?: InputMaybe<Scalars['String']>;
   skip?: InputMaybe<Scalars['Int']>;
+  take: Scalars['Int'];
+};
+
+
+export type QueryFetchAllPostsByVotesArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
   take: Scalars['Int'];
 };
 

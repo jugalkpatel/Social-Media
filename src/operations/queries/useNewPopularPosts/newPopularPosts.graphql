@@ -1,0 +1,53 @@
+query FetchAllPostsByTime($take: Int!, $skip: Int, $cursorId: String) {
+  fetchAllPostsByTime(take: $take, skip: $skip, cursorId: $cursorId) {
+    ... on BatchPosts {
+      cursorId
+      posts {
+        id
+        title
+        content
+        createdAt
+        community {
+          id
+          title
+          picture
+        }
+        postedBy {
+          id
+          name
+          picture
+        }
+        bookmarkedBy {
+          id
+        }
+        votes {
+          id
+          type
+          voteUser {
+            id
+          }
+        }
+        comments {
+          id
+          text
+          createdAt
+          user {
+            id
+            name
+            picture
+          }
+          votes {
+            id
+            type
+            votedBy {
+              id
+            }
+          }
+        }
+      }
+    }
+    ... on CommonError {
+      message
+    }
+  }
+}

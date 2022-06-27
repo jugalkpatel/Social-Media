@@ -1,6 +1,5 @@
 import { format, setGlobalDateMasks } from 'fecha';
-import { createStyles, Avatar, Group, Text, ActionIcon } from '@mantine/core';
-import { TbArrowBigDown, TbArrowBigTop } from 'react-icons/tb';
+import { Avatar, Group, Text } from '@mantine/core';
 
 import { Comment } from 'types';
 import {
@@ -8,7 +7,6 @@ import {
   ReadOnlyCommentEditor,
   CommentSkeleton,
 } from 'components';
-import { voteCount, commentVoteCount } from 'lib';
 
 setGlobalDateMasks({
   commentTime: '[on] MMMM Do, YY · hh:mm A',
@@ -16,17 +14,10 @@ setGlobalDateMasks({
 
 type Props = {
   comment: Comment;
+  votes: React.ReactNode;
 };
 
-const useStyles = createStyles((theme) => ({
-  arrow: {
-    color: 'grey',
-    fontSize: '30px',
-  },
-}));
-
-function Comment({ comment }: Props) {
-  const { classes } = useStyles();
+function Comment({ comment, votes: VotesComponent }: Props) {
   const {
     id,
     createdAt,
@@ -65,17 +56,7 @@ function Comment({ comment }: Props) {
       main={<ReadOnlyCommentEditor content={text} />}
       votes={
         <Group align="center" noWrap={true} spacing={4}>
-          <ActionIcon variant="transparent" size="sm">
-            <TbArrowBigTop className={classes.arrow} />
-          </ActionIcon>
-
-          <Text weight={700} size="sm" color="gray">
-            {commentVoteCount(votes)}
-          </Text>
-
-          <ActionIcon size="sm">
-            <TbArrowBigDown className={classes.arrow} />
-          </ActionIcon>
+          {VotesComponent}
         </Group>
       }
     />

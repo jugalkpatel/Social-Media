@@ -27,6 +27,20 @@ export type VoteCacheUpdateParams = CacheUpdateParams & {
   newVote: Vote;
 };
 
+export type CommentCacheParams = {
+  commentId: string;
+  cache: ApolloCache<any>;
+  postId: string;
+};
+
+export type VoteCommentCacheParams = CommentCacheParams & {
+  newCommentVote: CommentVote;
+};
+
+export type RemoveVoteCommentCacheParams = CommentCacheParams & {
+  voteId: string;
+};
+
 export type IPostState = {
   community: string;
   title: string;

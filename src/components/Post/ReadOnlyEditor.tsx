@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { createStyles, Skeleton } from '@mantine/core';
-import { DeltaStatic } from 'quill';
 
 import { Wysiwyg } from 'components';
 
@@ -22,15 +21,15 @@ const useStyles = createStyles((theme) => ({
 
 function ReadOnlyEditor({ content, variant = 'DEFAULT' }: Props) {
   const { classes, cx } = useStyles();
-  const [text, setText] = useState<DeltaStatic>(null);
+  const [text, setText] = useState(content);
 
   const handleText = (value, delta, sources, editor) => {
     setText(editor.getContents());
   };
 
-  useEffect(() => {
-    setText(JSON.parse(content));
-  }, [content]);
+  // useEffect(() => {
+  //   setText(JSON.parse(content));
+  // }, [content]);
 
   const variantClass = variant === 'LIST' ? classes.listVarient : null;
 

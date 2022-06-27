@@ -87,6 +87,7 @@ function Post({ post, list, votes }: Props) {
   const postUrl = list
     ? `/c/${post.community.title}/posts/${post.id}`
     : `/c/${post.community.title}/posts/${post.id}#comments`;
+  const content = JSON.parse(post.content);
   return (
     <Group
       direction="column"
@@ -133,7 +134,7 @@ function Post({ post, list, votes }: Props) {
         }
         main={
           <ReadOnlyEditor
-            content={post.content}
+            content={content}
             variant={list ? 'LIST' : 'DEFAULT'}
           />
         }
