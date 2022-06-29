@@ -388,10 +388,12 @@ export type Query = {
   authenticate: AuthResponse;
   fetchAllPostsByTime: BatchPostsResponse;
   fetchAllPostsByVotes: BatchPostsResponse;
-  fetchAllUserPosts: BatchPostsResponse;
+  fetchAllUserPostsByTime: BatchPostsResponse;
+  fetchAllUserPostsByVote: BatchPostsResponse;
   fetchCommunity: CommunityResponse;
   fetchPost: PostResponse;
   fetchUser: UserResponse;
+  fetchUserBookmarks: BatchPostsResponse;
 };
 
 
@@ -408,7 +410,14 @@ export type QueryFetchAllPostsByVotesArgs = {
 };
 
 
-export type QueryFetchAllUserPostsArgs = {
+export type QueryFetchAllUserPostsByTimeArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take: Scalars['Int'];
+};
+
+
+export type QueryFetchAllUserPostsByVoteArgs = {
   cursorId?: InputMaybe<Scalars['String']>;
   skip?: InputMaybe<Scalars['Int']>;
   take: Scalars['Int'];
@@ -422,6 +431,12 @@ export type QueryFetchCommunityArgs = {
 
 export type QueryFetchPostArgs = {
   postId: Scalars['String'];
+};
+
+
+export type QueryFetchUserBookmarksArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  take: Scalars['Int'];
 };
 
 export type RefreshResponse = CommonError | IRefresh;

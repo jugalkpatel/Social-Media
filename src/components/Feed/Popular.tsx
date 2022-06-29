@@ -12,7 +12,7 @@ function Popular({ byVotes, byTime }: Props) {
   const [filter, setFilter] = useState(0);
 
   return (
-    <Tabs active={filter} onTabChange={setFilter} variant="pills" grow>
+    <Tabs active={filter} onTabChange={setFilter} grow>
       <Tabs.Tab label="NEW" icon={<CgToday size={16} />}>
         {byTime}
       </Tabs.Tab>

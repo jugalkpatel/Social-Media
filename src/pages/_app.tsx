@@ -16,7 +16,7 @@ import { ModalsProvider } from '@mantine/modals';
 
 import theme from '../styles/theme';
 
-import { useApollo } from '../lib/apollo';
+import { useApollo } from 'lib';
 import { Layout, Login, Register, CreateCommunity } from 'components';
 
 import 'normalize.css/normalize.css';

@@ -1,4 +1,4 @@
-import * as Types from '../../types';
+import * as Types from '../../../../graphql-generated/types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
@@ -9,7 +9,7 @@ export type LoginMutationVariables = Types.Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'CommonError', message: string } | { __typename?: 'User', id: string, name: string, picture: string } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'CommonError', message: string } | { __typename?: 'User', id: string, name: string, picture: string, bookmarks?: Array<{ __typename?: 'Post', id: string } | null> | null } };
 
 
 export const LoginDocument = gql`
@@ -19,6 +19,9 @@ export const LoginDocument = gql`
       id
       name
       picture
+      bookmarks {
+        id
+      }
     }
     ... on CommonError {
       message

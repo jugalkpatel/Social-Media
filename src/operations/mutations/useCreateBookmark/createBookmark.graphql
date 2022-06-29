@@ -1,0 +1,13 @@
+mutation CreateBookmark($postId: String!) {
+  createBookmark(postId: $postId) {
+    ... on CommonError {
+      message
+    }
+    ... on User {
+      id
+      bookmarks {
+        id
+      }
+    }
+  }
+}

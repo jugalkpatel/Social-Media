@@ -1,5 +1,9 @@
-export { default as Feed } from './Feed';
+export { default as PopularFeed } from './PopularFeed';
+export { default as UserFeed } from './UserFeed';
 export { default as FeedLayout } from './FeedLayout';
 export { default as Popular } from './Popular';
 export { default as PopularTopPosts } from './PopularTopPosts';
 export { default as PopularNewPosts } from './PopularNewPosts';
+export { default as Personalised } from './Personalised';
+export { default as PersonalisedTopPosts } from './PersonalisedTopPosts';
+export { default as PersonalisedNewPosts } from './PersonalisedNewPosts';

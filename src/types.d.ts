@@ -41,6 +41,22 @@ export type RemoveVoteCommentCacheParams = CommentCacheParams & {
   voteId: string;
 };
 
+export type LoginFormValues = {
+  email: string;
+  password: string;
+};
+
+export type RegisterFormValues = {
+  name: string;
+  email: string;
+  password: string;
+};
+
+export type RegisterFormValues = {
+  name: string;
+  email;
+};
+
 export type IPostState = {
   community: string;
   title: string;
@@ -56,6 +72,11 @@ export type AuthCredentials = {
 export type PostParams = {
   name: string;
   id: string;
+};
+
+export type UpdateBookmarksInCacheParams = {
+  cache: ApolloCache<any>;
+  newBookmarks: Array<Bookmark>;
 };
 
 export type ICommunityMember = {
@@ -237,3 +258,5 @@ export type BatchPosts = {
     } | null> | null;
   } | null> | null;
 };
+
+export type Bookmark = { __typename?: 'Post'; id: string };

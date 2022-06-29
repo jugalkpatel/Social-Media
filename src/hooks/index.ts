@@ -5,3 +5,4 @@ export { default as showProgressNotifications } from './showProgressNotification
 export type { ProgressNotificationsParams } from './showProgressNotifications.hook';
 export type { CommonNotificationParms } from './useCommonNotifications';
 export { default as useCommonNotifications } from './useCommonNotifications';
+export { default as useCheckBookmarks } from './useCheckBookmarks';

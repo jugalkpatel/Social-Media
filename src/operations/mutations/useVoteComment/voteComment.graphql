@@ -6,7 +6,6 @@ mutation VoteComment($type: VoteType!, $commentId: String!) {
     ... on CommentVote {
       id
       type
-      createdAt
       votedBy {
         id
       }

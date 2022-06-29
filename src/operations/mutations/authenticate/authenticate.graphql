@@ -4,6 +4,9 @@ mutation Authenticate {
       id
       name
       picture
+      bookmarks {
+        id
+      }
     }
     ... on CommonError {
       message

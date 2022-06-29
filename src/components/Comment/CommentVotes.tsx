@@ -3,9 +3,13 @@ import { ActionIcon, Text, createStyles } from '@mantine/core';
 import { TiArrowSortedUp, TiArrowSortedDown } from 'react-icons/ti';
 
 import { commentVoteCount, userIdVar } from 'lib';
-import { CommentVote, VoteCommentCacheParams } from 'types';
+import {
+  CommentVote,
+  RemoveVoteCommentCacheParams,
+  VoteCommentCacheParams,
+} from 'types';
 import { VoteType } from 'graphql-generated';
-import { useVoteComment } from 'operations';
+import { useVoteComment, useRemoveCommentVote } from 'operations';
 import { useCheckUserInCommunity } from 'hooks';
 
 type Props = {
@@ -14,6 +18,7 @@ type Props = {
   communityName: string;
   postId: string;
   updateCacheOnVote: (args: VoteCommentCacheParams) => void;
+  updateCacheOnRemoveVote: (args: RemoveVoteCommentCacheParams) => void;
 };
 
 const useStyles = createStyles((theme) => ({
@@ -55,6 +60,7 @@ function CommentVotes({
   updateCacheOnVote,
   communityName,
   postId,
+  updateCacheOnRemoveVote,
 }: Props) {
   const { classes } = useStyles();
   const userId = useReactiveVar(userIdVar);
@@ -62,6 +68,8 @@ function CommentVotes({
     title: communityName,
   });
   const { vote: submitVote, loading: voteCommentLoading } = useVoteComment();
+  const { removeVote, loading: removeCommentVoteLoading } =
+    useRemoveCommentVote();
 
   const onVoteClick = (type: VoteType) => {
     if (!userId || !isUserInCommunity) {
@@ -73,17 +81,25 @@ function CommentVotes({
 
     if (vote) {
       console.log('remove vote');
+      removeVote({
+        commentId,
+        postId,
+        voteId: vote.id,
+        updateCache: updateCacheOnRemoveVote,
+      });
     } else {
       console.log(`comment vote with type ${type}`);
       submitVote({ commentId, postId, type, updateCache: updateCacheOnVote });
     }
   };
+
+  const isLoading = removeCommentVoteLoading || voteCommentLoading;
   return (
     <>
       <ActionIcon
         variant="transparent"
         size="sm"
-        loading={voteCommentLoading}
+        loading={isLoading}
         onClick={() => onVoteClick(VoteType.Upvote)}
       >
         <TiArrowSortedUp className={classes.arrow} />
@@ -95,7 +111,7 @@ function CommentVotes({
 
       <ActionIcon
         size="sm"
-        loading={voteCommentLoading}
+        loading={isLoading}
         onClick={() => onVoteClick(VoteType.Downvote)}
       >
         <TiArrowSortedDown className={classes.arrow} />

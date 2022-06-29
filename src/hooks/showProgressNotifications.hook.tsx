@@ -1,16 +1,20 @@
 import { showNotification, updateNotification } from '@mantine/notifications';
 import { IoMdCheckmark, IoMdClose } from 'react-icons/io';
 
+type Props = {
+  id: string;
+};
+
 export type ProgressNotificationsParams = {
   start: (startMessage: string) => void;
   success: (successMessage: string) => void;
   error: (errorMessage: string) => void;
 };
 
-function showProgressNotifications() {
+function showProgressNotifications({ id }: Props) {
   const start = (startMessage: string) => {
     showNotification({
-      id: 'load-data',
+      id,
       loading: true,
       autoClose: false,
       message: startMessage,
@@ -20,7 +24,7 @@ function showProgressNotifications() {
 
   const success = (successMessage: string) => {
     updateNotification({
-      id: 'load-data',
+      id,
       color: 'green',
       message: successMessage,
       icon: <IoMdCheckmark />,
@@ -30,7 +34,7 @@ function showProgressNotifications() {
 
   const error = (errorMessage: string) => {
     updateNotification({
-      id: 'load-data',
+      id,
       color: 'red',
       message: errorMessage,
       icon: <IoMdClose />,

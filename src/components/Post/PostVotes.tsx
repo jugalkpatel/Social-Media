@@ -1,13 +1,14 @@
 import { useReactiveVar } from '@apollo/client';
 import { ActionIcon, Text, createStyles } from '@mantine/core';
+import { useModals } from '@mantine/modals';
 import { TiArrowSortedUp, TiArrowSortedDown } from 'react-icons/ti';
 
+import { VoteType } from 'graphql-generated';
 import {
   RemoveVoteCacheUpdateParams,
   Vote,
   VoteCacheUpdateParams,
 } from 'types';
-import { VoteType } from 'graphql-generated';
 import { useCheckUserInCommunity } from 'hooks';
 import { useRemoveVote, useVote } from 'operations';
 import { userIdVar, voteCount } from 'lib';
@@ -39,7 +40,6 @@ function checkExistingVote({
   userId: string;
   type: VoteType;
 }) {
-  // const userVote = votes.find(({ voteUser }) => vote)
   const userVote = votes.length
     ? votes.find((voteItem) => {
         if (
@@ -77,13 +77,14 @@ function PostVotes({
   const { removeVote, loading: removeVoteLoading } = useRemoveVote();
   const { vote: voteFn, loading: voteLoading } = useVote();
   const userId = useReactiveVar(userIdVar);
+  const modals = useModals();
   const { isUserInCommunity } = useCheckUserInCommunity({
     title: communityName,
   });
 
   const onVoteClick = (type: VoteType) => {
     if (!userId || !isUserInCommunity) {
-      console.log("you're not loggin in");
+      modals.openContextModal('LOGIN', { innerProps: {} });
       return;
     }
 

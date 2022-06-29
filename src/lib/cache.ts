@@ -1,12 +1,13 @@
 import { InMemoryCache, makeVar } from '@apollo/client';
 
-import { BatchPosts } from 'types';
+import { BatchPosts, Bookmark } from 'types';
 
 type UserCredentials = {
   isLoggedIn: boolean;
   id: string;
   name: string;
   picture: string;
+  bookmarks: Array<Bookmark>;
 };
 
 export const cache: InMemoryCache = new InMemoryCache({
@@ -33,12 +34,14 @@ export const cache: InMemoryCache = new InMemoryCache({
             return userPictureVar();
           },
         },
+        bookmarks: {
+          read() {
+            return userBookmarksVar();
+          },
+        },
         fetchAllPostsByVotes: {
           keyArgs: false,
           merge(existing: BatchPosts, incoming: BatchPosts) {
-            console.log({ existing });
-            console.log({ incoming });
-
             const exisingPosts =
               existing && existing?.posts ? existing.posts : [];
 
@@ -57,9 +60,24 @@ export const cache: InMemoryCache = new InMemoryCache({
         fetchAllPostsByTime: {
           keyArgs: false,
           merge(existing: BatchPosts, incoming: BatchPosts) {
-            console.log({ existing });
-            console.log({ incoming });
+            const exisingPosts =
+              existing && existing?.posts ? existing.posts : [];
 
+            const incomingPosts =
+              incoming && incoming?.posts ? incoming.posts : [];
+
+            const newPosts: BatchPosts = {
+              __typename: incoming.__typename,
+              cursorId: incoming.cursorId,
+              posts: [...exisingPosts, ...incomingPosts],
+            };
+
+            return newPosts;
+          },
+        },
+        fetchAllUserPostsByTime: {
+          keyArgs: false,
+          merge(existing: BatchPosts, incoming: BatchPosts) {
             const exisingPosts =
               existing && existing?.posts ? existing.posts : [];
 
@@ -86,15 +104,15 @@ export const cache: InMemoryCache = new InMemoryCache({
         },
       },
     },
-    // Community: {
-    //   fields: {
-    //     members: {
-    //       merge(existing = [], incoming: any[]) {
-    //         return [...existing, ...incoming];
-    //       },
-    //     },
-    //   },
-    // },
+    Comment: {
+      fields: {
+        votes: {
+          merge(exising = [], incoming: any[]) {
+            return incoming;
+          },
+        },
+      },
+    },
   },
 });
 
@@ -106,11 +124,14 @@ export const userNameVar = makeVar<string>('');
 
 export const userPictureVar = makeVar<string>('');
 
+export const userBookmarksVar = makeVar<Array<Bookmark>>([]);
+
 export function setAuthCredentials({
   isLoggedIn,
   id,
   name,
   picture,
+  bookmarks,
 }: UserCredentials): void {
   authorizationVar(isLoggedIn);
 
@@ -119,4 +140,6 @@ export function setAuthCredentials({
   userNameVar(name);
 
   userPictureVar(picture);
+
+  userBookmarksVar(bookmarks);
 }

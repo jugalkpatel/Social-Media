@@ -4,6 +4,9 @@ mutation Register($name: String!, $email: String!, $password: String!) {
       id
       name
       picture
+      bookmarks {
+        id
+      }
     }
     ... on CommonError {
       message

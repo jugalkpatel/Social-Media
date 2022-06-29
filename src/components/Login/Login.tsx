@@ -1,5 +1,4 @@
-import { useRouter } from 'next/router';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { ContextModalProps, useModals } from '@mantine/modals';
 
 import {
@@ -12,76 +11,23 @@ import {
   Anchor,
   Title,
 } from '@mantine/core';
-import { showNotification } from '@mantine/notifications';
-import { IoMdClose } from 'react-icons/io';
 import WavingHand from '@/assets/waving_hand.svg';
 
-import { useLoginMutation } from 'graphql-generated';
-import { setAuthCredentials } from 'lib';
-
-type FormValues = {
-  email: string;
-  password: string;
-};
-
-function toast(msg: string) {
-  showNotification({
-    message: msg,
-    autoClose: 3000,
-    icon: <IoMdClose />,
-    color: 'red',
-  });
-}
+import { LoginFormValues } from 'types';
+import { useLogin } from 'operations';
 
 function Login({ context, id: modalId }: ContextModalProps) {
-  const router = useRouter();
+  // const router = useRouter();
   const modals = useModals();
   const {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
-  } = useForm<FormValues>({
+  } = useForm<LoginFormValues>({
     mode: 'onBlur',
     defaultValues: { email: '', password: '' },
   });
-
-  const [loginUser, { loading }] = useLoginMutation();
-
-  const onSubmit: SubmitHandler<FormValues> = async (values: FormValues) => {
-    let message = 'something went wrong!';
-
-    loginUser({
-      variables: {
-        email: values.email,
-        password: values.password,
-      },
-    })
-      .then((response) => {
-        const { data } = response;
-
-        if (data && data?.login && data.login.__typename === 'User') {
-          const { id, name, picture } = data.login;
-
-          setAuthCredentials({ isLoggedIn: !!id, id, name, picture });
-
-          context.closeAll();
-
-          router.push('/');
-
-          return;
-        }
-
-        if (data && data?.login && data.login.__typename === 'CommonError') {
-          message = data.login.message;
-        }
-
-        toast(message);
-      })
-      .catch((err) => {
-        // for unknown errors
-        toast(message);
-      });
-  };
+  const { onSubmit, loading } = useLogin({ context });
 
   const switchModal = () => {
     context.closeModal(modalId);

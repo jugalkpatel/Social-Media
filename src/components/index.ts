@@ -9,6 +9,7 @@ export { default as EmptyPlaceholder } from './EmptyPlaceholder';
 export { default as PostsSkeleton } from './PostsSkeleton';
 export { default as Filters } from './Filters';
 export { default as ObserveScroll } from './ObserveScroll';
+export { default as AuthWrapper } from './AuthWrapper';
 export * from './Community';
 export * from './Post';
 export * from './Comment';

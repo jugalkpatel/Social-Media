@@ -1,23 +1,7 @@
 import { VoteType } from 'graphql-generated';
 import { VoteCommentCacheParams } from 'types';
-// import { CommentVote } from 'types';
 import { useCommonNotifications, CommonNotificationParms } from 'hooks';
 import { useVoteCommentMutation, VoteCommentMutationFn } from 'operations';
-// import { ApolloCache } from '@apollo/client';
-
-// type CommentCacheParams = {
-//   commentId: string;
-//   cache: ApolloCache<any>;
-//   postId: string;
-// };
-
-// type VoteCommentCacheParams = CommentCacheParams & {
-//   newCommentVote: CommentVote;
-// };
-
-// type RemoveVoteCommentCacheParams = CommentCacheParams & {
-//   voteId: string;
-// };
 
 type VoteParams = {
   type: VoteType;

@@ -1,0 +1,14 @@
+mutation RemoveCommentVote($commentId: String!, $voteId: String!) {
+  removeCommentVote(commentId: $commentId, voteId: $voteId) {
+    ... on CommonError {
+      message
+    }
+    ... on CommentVote {
+      id
+      type
+      votedBy {
+        id
+      }
+    }
+  }
+}

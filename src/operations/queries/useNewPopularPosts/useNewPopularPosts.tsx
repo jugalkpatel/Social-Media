@@ -50,8 +50,6 @@ function useNewPopularPosts() {
   const { success, error } = useCommonNotifications();
   const { posts, state, cursor } = setState({ data, isError, success, error });
 
-  console.log({ cursor });
-
   const fetchMorePosts = async () => {
     if (cursor) {
       await fetchMore({

@@ -55,6 +55,12 @@ function PopularNewPosts() {
           </div>
         );
       })}
+
+      {/* {loadMore ? (
+        <Center>
+          <Loader />
+        </Center>
+      ) : null} */}
     </Stack>
   );
 }
@@ -147,7 +153,7 @@ function updateCacheOnRemove({
   ) {
     const { posts } = data.fetchAllPostsByTime;
 
-    if (posts.length) {
+    if (posts && posts.length) {
       cache.writeQuery<
         FetchAllPostsByTimeQuery,
         FetchAllPostsByTimeQueryVariables

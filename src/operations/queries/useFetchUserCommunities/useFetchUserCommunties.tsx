@@ -4,6 +4,7 @@ import {
   useFetchUserCommunitiesQuery,
   FetchUserCommunitiesQuery,
 } from 'operations';
+import { useEffect } from 'react';
 import { State } from 'types';
 
 function setState(data: FetchUserCommunitiesQuery, error: ApolloError) {
@@ -25,9 +26,15 @@ function setState(data: FetchUserCommunitiesQuery, error: ApolloError) {
 }
 
 function useFetchUserCommunities() {
-  const { data, error } = useFetchUserCommunitiesQuery();
+  const { data, error, refetch } = useFetchUserCommunitiesQuery();
 
   const { communities, state } = setState(data, error);
+
+  useEffect(() => {
+    if (state === 'DATA') {
+      refetch();
+    }
+  }, []);
 
   return { communities, state };
 }

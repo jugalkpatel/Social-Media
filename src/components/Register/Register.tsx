@@ -1,5 +1,4 @@
-import { useRouter } from 'next/router';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { ContextModalProps } from '@mantine/modals';
 
 import {
@@ -13,85 +12,24 @@ import {
   PasswordInput,
   Box,
 } from '@mantine/core';
-import { showNotification } from '@mantine/notifications';
 import { useModals } from '@mantine/modals';
-import { IoMdClose } from 'react-icons/io';
 import Rocket from '@/assets/rocket.svg';
 
-import { useRegisterMutation } from 'graphql-generated';
-import { setAuthCredentials } from 'lib';
-
-type FormValues = {
-  name: string;
-  email: string;
-  password: string;
-};
-
-function toast(msg: string) {
-  console.log({ msg });
-  showNotification({
-    message: msg,
-    autoClose: false,
-    icon: <IoMdClose />,
-    color: 'red',
-  });
-}
+import { RegisterFormValues } from 'types';
+import { useRegister } from 'operations';
 
 function Register({ context, id: modalId }: ContextModalProps) {
-  const router = useRouter();
+  // const router = useRouter();
   const modals = useModals();
   const {
     handleSubmit,
     register,
-    formState: { errors, isSubmitting },
-  } = useForm<FormValues>({
+    formState: { errors },
+  } = useForm<RegisterFormValues>({
     mode: 'onBlur',
     defaultValues: { name: '', email: '', password: '' },
   });
-
-  const [registerUser, { loading }] = useRegisterMutation();
-
-  const onSubmit: SubmitHandler<FormValues> = async (values: FormValues) => {
-    let message = 'something went wrong!';
-
-    registerUser({
-      variables: {
-        name: values.name,
-        email: values.email,
-        password: values.password,
-      },
-    })
-      .then((response) => {
-        const { data } = response;
-
-        if (data && data?.register && data.register.__typename === 'User') {
-          const { id, name, picture } = data.register;
-
-          setAuthCredentials({ isLoggedIn: !!id, id, name, picture });
-
-          context.closeAll();
-
-          router.push('/');
-
-          return;
-        }
-
-        if (
-          data &&
-          data?.register &&
-          data.register.__typename === 'CommonError'
-        ) {
-          message = data.register.message;
-        }
-
-        toast(message);
-      })
-      .catch((error) => {
-        console.log({ error });
-        // unhandled errors
-        toast(message);
-      });
-  };
+  const { onSubmit, loading } = useRegister({ context });
 
   const switchModal = () => {
     context.closeModal(modalId);

@@ -1,17 +1,14 @@
 import { useEffect } from 'react';
-import { useReactiveVar } from '@apollo/client';
+import { useReactiveVar, ApolloError } from '@apollo/client';
 import { useModals } from '@mantine/modals';
-import { ApolloError } from '@apollo/client';
 import { useRouter } from 'next/router';
 
 import { useRefreshMutation, RefreshMutationFn } from 'graphql-generated';
-
 import {
   useAuthenticateMutation,
   AuthenticateMutation,
   AuthenticateMutationFn,
 } from 'operations';
-
 import {
   setAuthCredentials,
   authorizationVar,
@@ -78,9 +75,9 @@ function useAuth() {
         response?.authenticate &&
         response.authenticate.__typename === 'User'
       ) {
-        const { id, name, picture } = response.authenticate;
+        const { id, name, picture, bookmarks } = response.authenticate;
 
-        setAuthCredentials({ isLoggedIn: !!id, id, name, picture });
+        setAuthCredentials({ isLoggedIn: !!id, id, name, picture, bookmarks });
 
         return;
       }

@@ -1,7 +1,11 @@
 import { useReactiveVar } from '@apollo/client';
 import { Stack, createStyles, Divider } from '@mantine/core';
 
-import { Comment as CommentType, VoteCommentCacheParams } from 'types';
+import {
+  Comment as CommentType,
+  VoteCommentCacheParams,
+  RemoveVoteCommentCacheParams,
+} from 'types';
 import {
   CommentEditor,
   Comment,
@@ -78,6 +82,7 @@ function PostComments({ comments, postId, communityName }: Props) {
                     updateCacheOnVote={updateCacheOnVote}
                     communityName={communityName}
                     postId={postId}
+                    updateCacheOnRemoveVote={updateCacheOnRemoveVote}
                   />
                 }
               />
@@ -137,4 +142,49 @@ function updateCacheOnVote({
   throw new Error();
 }
 
+function updateCacheOnRemoveVote({
+  cache,
+  commentId,
+  postId,
+  voteId,
+}: RemoveVoteCommentCacheParams) {
+  const post = cache.readQuery<FetchPostQuery, FetchPostQueryVariables>({
+    query: FetchPostDocument,
+    variables: { postId },
+  });
+
+  if (post && post?.fetchPost && post.fetchPost.__typename === 'CommonError') {
+    throw new Error(post.fetchPost.message);
+  }
+
+  if (post && post?.fetchPost && post.fetchPost.__typename === 'Post') {
+    cache.writeQuery<FetchPostQuery, FetchPostQueryVariables>({
+      query: FetchPostDocument,
+      variables: { postId },
+      data: {
+        fetchPost: {
+          ...post.fetchPost,
+          comments:
+            post.fetchPost?.comments && post.fetchPost.comments.length
+              ? post.fetchPost.comments.map((comment) => {
+                  if (comment.id === commentId) {
+                    const votes = comment.votes.filter(
+                      ({ id }) => id !== voteId,
+                    );
+
+                    return { ...comment, votes };
+                  }
+
+                  return comment;
+                })
+              : post.fetchPost.comments,
+        },
+      },
+    });
+
+    return;
+  }
+
+  throw new Error();
+}
 export default PostComments;

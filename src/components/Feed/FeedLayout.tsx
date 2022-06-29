@@ -6,7 +6,7 @@ import { ContainerLayout } from 'components';
 import { authorizationVar } from 'lib';
 
 type Props = {
-  popular: React.ReactNode;
+  children: React.ReactNode;
 };
 
 const useStyles = createStyles((theme) => ({
@@ -33,20 +33,20 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function FeedLayout({ popular }: Props) {
+function FeedLayout({ children }: Props) {
   const { classes } = useStyles();
-  const [activeTab, setActiveTab] = useState(0);
-  const isAuthorized = useReactiveVar(authorizationVar);
+  // const [activeTab, setActiveTab] = useState(0);
+  // const isAuthorized = useReactiveVar(authorizationVar);
 
-  const onChange = (active: number, tabKey: string) => {
-    setActiveTab(active);
-  };
+  // const onChange = (active: number, tabKey: string) => {
+  //   setActiveTab(active);
+  // };
 
   return (
     <ContainerLayout>
       <div className={classes.grid}>
         <Stack sx={{ gridRow: '1/-1' }}>
-          <Tabs active={activeTab} onTabChange={onChange}>
+          {/* <Tabs active={activeTab} onTabChange={onChange}>
             {isAuthorized ? (
               <Tabs.Tab label="For you" tabKey="first">
                 First Tab
@@ -54,9 +54,10 @@ function FeedLayout({ popular }: Props) {
             ) : null}
 
             <Tabs.Tab label="Popular" tabKey="second">
-              {popular}
             </Tabs.Tab>
-          </Tabs>
+          </Tabs> */}
+          {/* {popular} */}
+          {children}
         </Stack>
 
         <MediaQuery smallerThan="lg" styles={{ display: 'none' }}>

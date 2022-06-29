@@ -65,7 +65,9 @@ function remove({
 }
 
 function useRemoveVote() {
-  const { start, error, success } = showProgressNotifications();
+  const { start, error, success } = showProgressNotifications({
+    id: 'post-vote',
+  });
   const [mutationFn, { loading }] = useRemoveVoteMutation();
 
   const removeVote = remove({ mutationFn, start, success, error });

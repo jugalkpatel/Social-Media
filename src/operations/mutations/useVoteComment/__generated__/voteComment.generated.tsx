@@ -9,7 +9,7 @@ export type VoteCommentMutationVariables = Types.Exact<{
 }>;
 
 
-export type VoteCommentMutation = { __typename?: 'Mutation', voteComment: { __typename?: 'CommentVote', id: string, type: Types.VoteType, createdAt: any, votedBy?: { __typename?: 'User', id: string } | null } | { __typename?: 'CommonError', message: string } };
+export type VoteCommentMutation = { __typename?: 'Mutation', voteComment: { __typename?: 'CommentVote', id: string, type: Types.VoteType, votedBy?: { __typename?: 'User', id: string } | null } | { __typename?: 'CommonError', message: string } };
 
 
 export const VoteCommentDocument = gql`
@@ -21,7 +21,6 @@ export const VoteCommentDocument = gql`
     ... on CommentVote {
       id
       type
-      createdAt
       votedBy {
         id
       }

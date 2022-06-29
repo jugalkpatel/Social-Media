@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import { gql, useQuery } from '@apollo/client';
 import { Tabs } from '@mantine/core';
-import { ContainerLayout, Feed } from 'components';
+import { AuthWrapper, UserFeed } from 'components';
 import { useState } from 'react';
 
 const IS_LOGGED_IN = gql`
@@ -16,7 +16,11 @@ const IndexPage: NextPage = () => {
   // const { data, loading, error } = useQuery(IS_LOGGED_IN);
   // console.log({ data });
 
-  return <Feed />;
+  return (
+    <AuthWrapper>
+      <UserFeed />;
+    </AuthWrapper>
+  );
 
   // if (loading) {
   //   return <h1>Loading....</h1>;

@@ -6,7 +6,7 @@ const defaultOptions = {} as const;
 export type AuthenticateMutationVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type AuthenticateMutation = { __typename?: 'Mutation', authenticate: { __typename?: 'CommonError', message: string } | { __typename?: 'User', id: string, name: string, picture: string } };
+export type AuthenticateMutation = { __typename?: 'Mutation', authenticate: { __typename?: 'CommonError', message: string } | { __typename?: 'User', id: string, name: string, picture: string, bookmarks?: Array<{ __typename?: 'Post', id: string } | null> | null } };
 
 
 export const AuthenticateDocument = gql`
@@ -16,6 +16,9 @@ export const AuthenticateDocument = gql`
       id
       name
       picture
+      bookmarks {
+        id
+      }
     }
     ... on CommonError {
       message
