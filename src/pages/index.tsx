@@ -13,32 +13,11 @@ const IS_LOGGED_IN = gql`
 `;
 
 const IndexPage: NextPage = () => {
-  // const { data, loading, error } = useQuery(IS_LOGGED_IN);
-  // console.log({ data });
-
   return (
     <AuthWrapper>
       <UserFeed />;
     </AuthWrapper>
   );
-
-  // if (loading) {
-  //   return <h1>Loading....</h1>;
-  // }
-
-  // if (data) {
-  //   return (
-  //     <ContainerLayout>
-  //       <pre>{JSON.stringify(data, null, 2)}</pre>
-  //     </ContainerLayout>
-  //   );
-  // }
-
-  // return (
-  //   <ContainerLayout>
-  //     <h1>Something went wrong</h1>
-  //   </ContainerLayout>
-  // );
 };
 
 export default IndexPage;

@@ -11,3 +11,4 @@ export * from './useRemoveCommentVote';
 export * from './useLogin';
 export * from './useRegister';
 export * from './useCreateBookmark';
+export * from './useRemoveBookmark';

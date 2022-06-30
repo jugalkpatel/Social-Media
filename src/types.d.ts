@@ -76,7 +76,12 @@ export type PostParams = {
 
 export type UpdateBookmarksInCacheParams = {
   cache: ApolloCache<any>;
-  newBookmarks: Array<Bookmark>;
+  bookmark: Post;
+};
+
+export type BookmarkParams = {
+  postId: string;
+  updateCache: (args: UpdateBookmarksInCacheParams) => void;
 };
 
 export type ICommunityMember = {

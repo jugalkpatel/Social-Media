@@ -1,5 +1,5 @@
-mutation CreateBookmark($postId: String!) {
-  createBookmark(postId: $postId) {
+mutation RemoveBookmark($postId: String!) {
+  removeBookmark(postId: $postId) {
     ... on CommonError {
       message
     }

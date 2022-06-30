@@ -6,3 +6,4 @@ export * from './useTopPopularPosts';
 export * from './useNewPopularPosts';
 export * from './useNewUserPosts';
 export * from './useTopUserPosts';
+export * from './useFetchUserBookmarks';

@@ -15,7 +15,6 @@ import { VscComment } from 'react-icons/vsc';
 
 import { Post } from 'types';
 import { PostLayout, ReadOnlyEditor, Bookmark } from 'components';
-import { useCheckBookmarks } from 'hooks';
 
 type Props = {
   post: Post;
@@ -84,12 +83,10 @@ const redirect = (e: React.SyntheticEvent, url: string): void => {
 
 function Post({ post, list, votes }: Props) {
   const { classes, cx } = useStyles();
-  const checkBookmark = useCheckBookmarks();
   const postUrl = list
     ? `/c/${post.community.title}/posts/${post.id}`
     : `/c/${post.community.title}/posts/${post.id}#comments`;
   const content = JSON.parse(post.content);
-  const isPostBookmarked = checkBookmark(post.id);
   return (
     <Group
       direction="column"

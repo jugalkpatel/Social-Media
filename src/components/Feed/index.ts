@@ -7,3 +7,4 @@ export { default as PopularNewPosts } from './PopularNewPosts';
 export { default as Personalised } from './Personalised';
 export { default as PersonalisedTopPosts } from './PersonalisedTopPosts';
 export { default as PersonalisedNewPosts } from './PersonalisedNewPosts';
+export { default as FeaturedCommunities } from './FeaturedCommunities';

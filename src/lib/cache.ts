@@ -51,7 +51,7 @@ export const cache: InMemoryCache = new InMemoryCache({
             const newPosts: BatchPosts = {
               __typename: incoming.__typename,
               cursorId: incoming.cursorId,
-              posts: [...exisingPosts, ...incomingPosts],
+              posts: [...new Set([...exisingPosts, ...incomingPosts])],
             };
 
             return newPosts;
@@ -69,7 +69,7 @@ export const cache: InMemoryCache = new InMemoryCache({
             const newPosts: BatchPosts = {
               __typename: incoming.__typename,
               cursorId: incoming.cursorId,
-              posts: [...exisingPosts, ...incomingPosts],
+              posts: [...new Set([...exisingPosts, ...incomingPosts])],
             };
 
             return newPosts;
@@ -87,7 +87,43 @@ export const cache: InMemoryCache = new InMemoryCache({
             const newPosts: BatchPosts = {
               __typename: incoming.__typename,
               cursorId: incoming.cursorId,
-              posts: [...exisingPosts, ...incomingPosts],
+              posts: [...new Set([...exisingPosts, ...incomingPosts])],
+            };
+
+            return newPosts;
+          },
+        },
+        fetchAllUserPostsByVote: {
+          keyArgs: false,
+          merge(existing: BatchPosts, incoming: BatchPosts) {
+            const exisingPosts =
+              existing && existing?.posts ? existing.posts : [];
+
+            const incomingPosts =
+              incoming && incoming?.posts ? incoming.posts : [];
+
+            const newPosts: BatchPosts = {
+              __typename: incoming.__typename,
+              cursorId: incoming.cursorId,
+              posts: [...new Set([...exisingPosts, ...incomingPosts])],
+            };
+
+            return newPosts;
+          },
+        },
+        fetchUserBookmarks: {
+          keyArgs: false,
+          merge(existing: BatchPosts, incoming: BatchPosts) {
+            const exisingPosts =
+              existing && existing?.posts ? existing.posts : [];
+
+            const incomingPosts =
+              incoming && incoming?.posts ? incoming.posts : [];
+
+            const newPosts: BatchPosts = {
+              __typename: incoming.__typename,
+              cursorId: incoming.cursorId,
+              posts: [...new Set([...exisingPosts, ...incomingPosts])],
             };
 
             return newPosts;
@@ -99,6 +135,11 @@ export const cache: InMemoryCache = new InMemoryCache({
       fields: {
         votes: {
           merge(existing = [], incoming: any[]) {
+            return incoming;
+          },
+        },
+        bookmarkedBy: {
+          merge(exising = [], incoming: any[]) {
             return incoming;
           },
         },

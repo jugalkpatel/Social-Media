@@ -8,7 +8,7 @@ export type CreateBookmarkMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateBookmarkMutation = { __typename?: 'Mutation', createBookmark: { __typename?: 'CommonError', message: string } | { __typename?: 'User', id: string, bookmarks?: Array<{ __typename?: 'Post', id: string } | null> | null } };
+export type CreateBookmarkMutation = { __typename?: 'Mutation', createBookmark: { __typename?: 'CommonError', message: string } | { __typename?: 'Post', id: string, title: string, content: string, createdAt: any, community?: { __typename?: 'Community', id: string, title: string, picture: string } | null, postedBy?: { __typename?: 'User', id: string, name: string, picture: string } | null, bookmarkedBy?: Array<{ __typename?: 'User', id: string } | null> | null, votes: Array<{ __typename?: 'Vote', id: string, type: Types.VoteType, voteUser?: { __typename?: 'User', id: string } | null } | null>, comments?: Array<{ __typename?: 'Comment', id: string, text: string, createdAt: any, user?: { __typename?: 'User', id: string, name: string, picture: string } | null, votes?: Array<{ __typename?: 'CommentVote', id: string, type: Types.VoteType, votedBy?: { __typename?: 'User', id: string } | null } | null> | null } | null> | null } };
 
 
 export const CreateBookmarkDocument = gql`
@@ -17,10 +17,47 @@ export const CreateBookmarkDocument = gql`
     ... on CommonError {
       message
     }
-    ... on User {
+    ... on Post {
       id
-      bookmarks {
+      title
+      content
+      createdAt
+      community {
         id
+        title
+        picture
+      }
+      postedBy {
+        id
+        name
+        picture
+      }
+      bookmarkedBy {
+        id
+      }
+      votes {
+        id
+        type
+        voteUser {
+          id
+        }
+      }
+      comments {
+        id
+        text
+        createdAt
+        user {
+          id
+          name
+          picture
+        }
+        votes {
+          id
+          type
+          votedBy {
+            id
+          }
+        }
       }
     }
   }

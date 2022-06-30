@@ -3,16 +3,20 @@ import {
   FeedLayout,
   PersonalisedNewPosts,
   PersonalisedTopPosts,
+  FeaturedCommunities,
 } from 'components';
 
 function UserFeed() {
   return (
-    <FeedLayout>
-      <Personalised
-        byTime={<PersonalisedNewPosts />}
-        byVotes={<PersonalisedTopPosts />}
-      />
-    </FeedLayout>
+    <FeedLayout
+      main={
+        <Personalised
+          byTime={<PersonalisedNewPosts />}
+          byVotes={<PersonalisedTopPosts />}
+        />
+      }
+      featured={<FeaturedCommunities />}
+    />
   );
 }
 

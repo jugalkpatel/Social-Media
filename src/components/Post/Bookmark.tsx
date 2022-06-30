@@ -1,11 +1,17 @@
+import { useReactiveVar } from '@apollo/client';
 import { Button, createStyles } from '@mantine/core';
 import { useModals } from '@mantine/modals';
 import { IoBookmarkOutline, IoBookmarksOutline } from 'react-icons/io5';
 
 import { Bookmark, UpdateBookmarksInCacheParams } from 'types';
-import { useCreateBookmark } from 'operations';
-import { useReactiveVar } from '@apollo/client';
-import { userBookmarksVar, userIdVar } from 'lib';
+import {
+  FetchUserBookmarksDocument,
+  FetchUserBookmarksQuery,
+  FetchUserBookmarksQueryVariables,
+  useCreateBookmark,
+  useRemoveBookmark,
+} from 'operations';
+import { NO_OF_POSTS_AT_A_TIME, userBookmarksVar, userIdVar } from 'lib';
 
 const useStyles = createStyles((theme) => ({
   fontSize: {
@@ -17,7 +23,105 @@ type Props = {
   postId: string;
 };
 
-function updateCache({ cache, newBookmarks }: UpdateBookmarksInCacheParams) {}
+function updateCacheOnCreate({
+  cache,
+  bookmark: newBookmark,
+}: UpdateBookmarksInCacheParams) {
+  const data = cache.readQuery<
+    FetchUserBookmarksQuery,
+    FetchUserBookmarksQueryVariables
+  >({
+    query: FetchUserBookmarksDocument,
+    variables: { take: NO_OF_POSTS_AT_A_TIME },
+  });
+
+  if (
+    data &&
+    data?.fetchUserBookmarks &&
+    data.fetchUserBookmarks.__typename === 'BatchPosts'
+  ) {
+    const { posts } = data.fetchUserBookmarks;
+
+    if (posts && posts.length) {
+      cache.writeQuery<
+        FetchUserBookmarksQuery,
+        FetchUserBookmarksQueryVariables
+      >({
+        query: FetchUserBookmarksDocument,
+        variables: { take: NO_OF_POSTS_AT_A_TIME },
+        data: {
+          fetchUserBookmarks: {
+            ...data.fetchUserBookmarks,
+            posts: data.fetchUserBookmarks.posts.concat(newBookmark),
+          },
+        },
+        overwrite: true,
+      });
+
+      return;
+    }
+  }
+
+  if (
+    data &&
+    data?.fetchUserBookmarks &&
+    data.fetchUserBookmarks.__typename === 'CommonError'
+  ) {
+    throw new Error(data.fetchUserBookmarks.message);
+  }
+}
+
+function updateCacheOnRemove({
+  cache,
+  bookmark: deletedBookmark,
+}: UpdateBookmarksInCacheParams) {
+  const data = cache.readQuery<
+    FetchUserBookmarksQuery,
+    FetchUserBookmarksQueryVariables
+  >({
+    query: FetchUserBookmarksDocument,
+    variables: { take: NO_OF_POSTS_AT_A_TIME },
+  });
+
+  if (
+    data &&
+    data?.fetchUserBookmarks &&
+    data?.fetchUserBookmarks.__typename === 'BatchPosts'
+  ) {
+    const { posts } = data.fetchUserBookmarks;
+
+    if (posts && posts.length) {
+      cache.writeQuery<
+        FetchUserBookmarksQuery,
+        FetchUserBookmarksQueryVariables
+      >({
+        query: FetchUserBookmarksDocument,
+        variables: { take: NO_OF_POSTS_AT_A_TIME },
+        data: {
+          fetchUserBookmarks: {
+            ...data.fetchUserBookmarks,
+            posts: data.fetchUserBookmarks.posts.filter(
+              ({ id }) => id !== deletedBookmark.id,
+            ),
+          },
+        },
+        overwrite: true,
+      });
+
+      console.log('should remove successfully');
+
+      return;
+    }
+  }
+
+  if (
+    data &&
+    data?.fetchUserBookmarks &&
+    data.fetchUserBookmarks.__typename === 'CommonError'
+  ) {
+    throw new Error(data.fetchUserBookmarks.message);
+  }
+}
 
 const checkBookmark = (postId: string, bookmarks: Array<Bookmark>) => {
   const post =
@@ -28,12 +132,20 @@ const checkBookmark = (postId: string, bookmarks: Array<Bookmark>) => {
   return !!post;
 };
 
+const handleOnClick = (e: React.MouseEvent, callback: () => void) => {
+  callback();
+
+  e.stopPropagation();
+};
+
 function Bookmark({ postId }: Props) {
   const { classes } = useStyles();
   const modals = useModals();
   const { createBookmark, loading: createBookmarkLoading } =
     useCreateBookmark();
-  const isLoading = createBookmarkLoading;
+  const { deleteBookmark, loading: removeBookmarkLoading } =
+    useRemoveBookmark();
+  const isLoading = createBookmarkLoading || removeBookmarkLoading;
 
   const userId = useReactiveVar(userIdVar);
   const bookmarks = useReactiveVar(userBookmarksVar);
@@ -47,15 +159,12 @@ function Bookmark({ postId }: Props) {
     }
 
     if (!isPostBookmarked) {
-      await createBookmark({ postId });
+      await createBookmark({ postId, updateCache: updateCacheOnCreate });
+    } else {
+      await deleteBookmark({ postId, updateCache: updateCacheOnRemove });
     }
   };
 
-  const handleOnClick = (e: React.MouseEvent, callback: () => void) => {
-    callback();
-
-    e.stopPropagation();
-  };
   return (
     <Button
       leftIcon={

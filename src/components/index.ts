@@ -10,6 +10,7 @@ export { default as PostsSkeleton } from './PostsSkeleton';
 export { default as Filters } from './Filters';
 export { default as ObserveScroll } from './ObserveScroll';
 export { default as AuthWrapper } from './AuthWrapper';
+export { default as BookmarkPosts } from './BookmarkPosts';
 export * from './Community';
 export * from './Post';
 export * from './Comment';

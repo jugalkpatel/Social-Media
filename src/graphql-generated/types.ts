@@ -256,7 +256,7 @@ export type JoinCommunityResult = {
 export type Mutation = {
   __typename?: 'Mutation';
   authenticate: UserResponse;
-  createBookmark: UserResponse;
+  createBookmark: PostResponse;
   createComment: CommentResponse;
   createCommunity: CommunityResponse;
   createPost: PostResponse;
@@ -266,7 +266,7 @@ export type Mutation = {
   login: UserResponse;
   refresh: RefreshResponse;
   register: UserResponse;
-  removeBookmark: UserResponse;
+  removeBookmark: PostResponse;
   removeCommentVote: CommentVoteResponse;
   removeVote: VoteResponse;
   vote: VoteResponse;

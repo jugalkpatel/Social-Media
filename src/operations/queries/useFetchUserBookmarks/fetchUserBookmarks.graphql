@@ -1,0 +1,53 @@
+query FetchUserBookmarks($take: Int!, $cursorId: String) {
+  fetchUserBookmarks(take: $take, cursorId: $cursorId) {
+    ... on CommonError {
+      message
+    }
+    ... on BatchPosts {
+      cursorId
+      posts {
+        id
+        title
+        content
+        createdAt
+        community {
+          id
+          title
+          picture
+        }
+        postedBy {
+          id
+          name
+          picture
+        }
+        bookmarkedBy {
+          id
+        }
+        votes {
+          id
+          type
+          voteUser {
+            id
+          }
+        }
+        comments {
+          id
+          text
+          createdAt
+          user {
+            id
+            name
+            picture
+          }
+          votes {
+            id
+            type
+            votedBy {
+              id
+            }
+          }
+        }
+      }
+    }
+  }
+}

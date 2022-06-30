@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 // two ways
 // persist in a cookie or fetch cookie in useEffect by creating custom hook with local state
 
@@ -22,7 +23,7 @@ import {
 } from '@mantine/core';
 import { useModals } from '@mantine/modals';
 import { IoIosSunny, IoMdAdd, IoMdExit } from 'react-icons/io';
-import { MdNightsStay } from 'react-icons/md';
+import { MdNightsStay, MdOutlineCollectionsBookmark } from 'react-icons/md';
 import { BsPlusCircleDotted } from 'react-icons/bs';
 import { AiOutlineUser } from 'react-icons/ai';
 
@@ -43,6 +44,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 function Navbar() {
+  const router = useRouter();
   const {
     data: { isAuthorized, name, picture },
     loading,
@@ -137,9 +139,20 @@ function Navbar() {
               </Menu.Item>
             ) : null}
 
-            <Menu.Item icon={<IoMdExit />} onClick={openAuthModal}>
-              Login / Register
-            </Menu.Item>
+            {isAuthorized ? (
+              <Menu.Item
+                icon={<MdOutlineCollectionsBookmark />}
+                onClick={() => router.push('/bookmarks')}
+              >
+                Bookmarks
+              </Menu.Item>
+            ) : null}
+
+            {!isAuthorized ? (
+              <Menu.Item icon={<IoMdExit />} onClick={openAuthModal}>
+                Login / Register
+              </Menu.Item>
+            ) : null}
           </Menu>
         </Group>
       </Group>

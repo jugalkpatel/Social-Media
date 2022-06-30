@@ -1,7 +1,6 @@
-import { Stack, Container, createStyles } from '@mantine/core';
+import { Container, createStyles } from '@mantine/core';
 
 type Props = {
-  // children: JSX.Element | JSX.Element[];
   children: React.ReactNode | React.ReactNode[];
 };
 
@@ -26,9 +25,5 @@ const useStyles = createStyles((theme) => ({
 export function ContainerLayout({ children }: Props) {
   const { classes } = useStyles();
 
-  return (
-    // <Stack justify="center" mt="lg">
-    <Container className={classes.width}>{children}</Container>
-    // </Stack>
-  );
+  return <Container className={classes.width}>{children}</Container>;
 }

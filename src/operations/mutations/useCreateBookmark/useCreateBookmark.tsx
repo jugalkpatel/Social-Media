@@ -1,4 +1,6 @@
-import { Bookmark, UpdateBookmarksInCacheParams } from 'types';
+import { ReactiveVar } from '@apollo/client';
+
+import { Bookmark, BookmarkParams } from 'types';
 import { userBookmarksVar } from 'lib';
 import {
   useCreateBookmarkMutation,
@@ -8,20 +10,16 @@ import { CommonNotificationParms, useCommonNotifications } from 'hooks';
 
 type CreateParams = CommonNotificationParms & {
   create: CreateBookmarkMutationFn;
-  updateLocalBookmarks: (args: Array<Bookmark>) => void;
-};
-
-type CreateBookmarkParams = {
-  postId: string;
-  //   updateCache: (args: UpdateBookmarksInCacheParams) => void;
+  updateLocalBookmarks: (args: Bookmark) => void;
 };
 
 function create({
   create,
+  success,
   error: showError,
   updateLocalBookmarks,
 }: CreateParams) {
-  return async ({ postId }: CreateBookmarkParams) => {
+  return async ({ postId, updateCache }: BookmarkParams) => {
     try {
       await create({
         variables: { postId },
@@ -30,12 +28,17 @@ function create({
             throw new Error(createBookmark.message);
           }
 
-          if (createBookmark.__typename === 'User') {
-            const { bookmarks } = createBookmark;
+          if (createBookmark.__typename === 'Post') {
+            const bookmarkedPost = createBookmark;
 
-            updateLocalBookmarks(bookmarks);
+            updateLocalBookmarks({
+              __typename: 'Post',
+              id: bookmarkedPost.id,
+            });
 
-            // updateCache({ cache, newBookmarks: bookmarks });
+            updateCache({ cache, bookmark: bookmarkedPost });
+
+            success('Added post in bookmarks');
 
             return;
           }
@@ -44,28 +47,34 @@ function create({
         },
       });
     } catch (error) {
+      console.log({ error });
       const errorMessage = error?.message || 'something went wrong!';
       showError(errorMessage);
     }
   };
 }
 
+function addBookmark(bookmarkFunc: ReactiveVar<Bookmark[]>) {
+  const existingBookmarks = bookmarkFunc();
+
+  return (newBookmark: Bookmark) => {
+    bookmarkFunc(existingBookmarks.concat(newBookmark));
+  };
+}
+
 function useCreateBookmark() {
   const [muationFn, { loading }] = useCreateBookmarkMutation();
   const { success, error } = useCommonNotifications();
+  const updateLocalBookmarks = addBookmark(userBookmarksVar);
 
   const createBookmark = create({
     create: muationFn,
     success,
     error,
-    updateLocalBookmarks: (newBookmarks: Array<Bookmark>) =>
-      userBookmarksVar(newBookmarks),
+    updateLocalBookmarks,
   });
 
   return { createBookmark, loading };
 }
-
-// create a function that adds return a function that takes, cache update function and postid
-// a function that accepts new array of bookmarks and set it.
 
 export default useCreateBookmark;
