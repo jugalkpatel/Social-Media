@@ -26,9 +26,16 @@ function submit({ submit, error: showError, context }: SubmitParams) {
       }
 
       if (data && data?.login && data.login.__typename === 'User') {
-        const { id, name, picture, bookmarks } = data.login;
+        const { id, name, picture, bookmarks, joinedCommunities } = data.login;
 
-        setAuthCredentials({ isLoggedIn: !!id, id, name, picture, bookmarks });
+        setAuthCredentials({
+          isLoggedIn: !!id,
+          id,
+          name,
+          picture,
+          bookmarks,
+          joinedCommunities,
+        });
 
         context.closeAll();
 

@@ -102,7 +102,7 @@ function CommunityContent({
               About Community
             </Text>
 
-            <Text lineClamp={5}>{description}</Text>
+            <Text lineClamp={4}>{description}</Text>
 
             {count}
 

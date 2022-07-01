@@ -84,40 +84,15 @@ export type BookmarkParams = {
   updateCache: (args: UpdateBookmarksInCacheParams) => void;
 };
 
+export type UpdateCacheOnCommunityOperation = {
+  title: string;
+  cache: ApolloCache<any>;
+  updatedCommunityMembers: Array<CommunityMember>;
+};
+
 export type ICommunityMember = {
   id: string;
 };
-
-export type CommunityPost = {
-  id: string;
-  title: string;
-  content: string;
-  createdAt: string;
-  postedBy: {
-    id: string;
-    name: string;
-  };
-};
-
-export type GetComunityResult = {
-  id: string;
-  title: string;
-  picture: string;
-  banner: string;
-  description: string;
-  createdAt: string;
-  updatedAt: string;
-  members: Array<ICommunityMember>;
-  posts: Array<CommunityPost>;
-};
-
-export type CommunityError = {
-  message: string;
-};
-
-export type AllCommunitiesResponse = AllCommunities | CommunityError;
-
-export type CommunityVar = Array<Community> | [];
 
 export type Community = {
   __typename?: 'FetchCommunityResult';
@@ -131,8 +106,6 @@ export type Community = {
   creator: { __typename?: 'CommunityUser'; id: string };
   members: Array<{ __typename?: 'CommunityUser'; id: string } | null>;
 };
-
-// added custom post type because we're only fetching half data.
 
 export type Post = {
   __typename?: 'Post';
@@ -265,3 +238,7 @@ export type BatchPosts = {
 };
 
 export type Bookmark = { __typename?: 'Post'; id: string };
+
+export type UserCommunity = { __typename?: 'Community'; id: string };
+
+export type CommunityMember = { __typename?: 'User'; id: string };

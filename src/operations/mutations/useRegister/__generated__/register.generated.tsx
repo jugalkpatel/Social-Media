@@ -10,7 +10,7 @@ export type RegisterMutationVariables = Types.Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'CommonError', message: string } | { __typename?: 'User', id: string, name: string, picture: string, bookmarks?: Array<{ __typename?: 'Post', id: string } | null> | null } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'CommonError', message: string } | { __typename?: 'User', id: string, name: string, picture: string, bookmarks?: Array<{ __typename?: 'Post', id: string } | null> | null, joinedCommunities?: Array<{ __typename?: 'Community', id: string }> | null } };
 
 
 export const RegisterDocument = gql`
@@ -21,6 +21,9 @@ export const RegisterDocument = gql`
       name
       picture
       bookmarks {
+        id
+      }
+      joinedCommunities {
         id
       }
     }

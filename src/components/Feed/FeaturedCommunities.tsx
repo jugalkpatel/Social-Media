@@ -1,4 +1,19 @@
-import { createStyles, Stack, Text } from '@mantine/core';
+import {
+  createStyles,
+  Stack,
+  Text,
+  Title,
+  Loader,
+  Center,
+  Group,
+  Avatar,
+  Divider,
+  Button,
+  ScrollArea,
+} from '@mantine/core';
+
+import { JoinCommunity } from 'components';
+import { useFetchAllCommunities } from 'operations';
 
 const useStyles = createStyles((theme) => ({
   border: {
@@ -9,13 +24,77 @@ const useStyles = createStyles((theme) => ({
     }`,
     borderRadius: '0.3rem',
   },
+  background: {
+    backgroundColor:
+      theme.colorScheme === 'light' ? '#fff' : theme.colors.dark[7],
+  },
 }));
+
+type CommunityTileProps = {
+  picture: string;
+  name: string;
+  id: string;
+};
+
+function CommunityTile({ id, name, picture }: CommunityTileProps) {
+  return (
+    <>
+      <Group sx={{ justifyContent: 'space-between' }} px="md">
+        <Group spacing="xs">
+          <Avatar
+            src={picture}
+            sx={{ backgroundColor: 'white' }}
+            size="sm"
+            radius="lg"
+          />
+          <Text lineClamp={1} weight={700} size="sm" sx={{ maxWidth: '6rem' }}>
+            c/{name}
+          </Text>
+        </Group>
+
+        <JoinCommunity
+          data={{ communityId: id, title: name }}
+          fullWidth={false}
+        />
+      </Group>
+      <Divider size="xs" />
+    </>
+  );
+}
 
 function FeaturedCommunities() {
   const { classes } = useStyles();
+  const { communities, state } = useFetchAllCommunities();
+
+  if (state === 'ERROR') {
+    return null;
+  }
+
   return (
-    <Stack className={classes.border} p="md">
-      <Text>Featured Communities</Text>
+    <Stack className={classes.border} p={0} sx={{ gap: '0' }}>
+      <Title order={6} px="md" py="xs" className={classes.background}>
+        Featured Communities
+      </Title>
+
+      {state === 'LOADING' ? (
+        <Center sx={{ height: '70%' }}>
+          <Loader />
+        </Center>
+      ) : null}
+
+      <ScrollArea style={{ height: '20rem' }} type="auto" scrollbarSize={1}>
+        <Stack spacing="xs" py="xs" sx={{ maxHeight: '20rem' }}>
+          {communities && communities.length
+            ? communities.map(({ id, picture, title }) => {
+                return (
+                  <>
+                    <CommunityTile id={id} picture={picture} name={title} />
+                  </>
+                );
+              })
+            : null}
+        </Stack>
+      </ScrollArea>
     </Stack>
   );
 }

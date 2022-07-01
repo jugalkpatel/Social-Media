@@ -34,9 +34,17 @@ function register({ submit, error: showError, context }: RegisterParams) {
       }
 
       if (data && data?.register && data.register.__typename === 'User') {
-        const { id, name, picture, bookmarks } = data.register;
+        const { id, name, picture, bookmarks, joinedCommunities } =
+          data.register;
 
-        setAuthCredentials({ isLoggedIn: !!id, id, name, picture, bookmarks });
+        setAuthCredentials({
+          isLoggedIn: !!id,
+          id,
+          name,
+          picture,
+          bookmarks,
+          joinedCommunities,
+        });
 
         context.closeAll();
 

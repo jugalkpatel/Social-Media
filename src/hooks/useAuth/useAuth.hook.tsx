@@ -75,9 +75,17 @@ function useAuth() {
         response?.authenticate &&
         response.authenticate.__typename === 'User'
       ) {
-        const { id, name, picture, bookmarks } = response.authenticate;
+        const { id, name, picture, bookmarks, joinedCommunities } =
+          response.authenticate;
 
-        setAuthCredentials({ isLoggedIn: !!id, id, name, picture, bookmarks });
+        setAuthCredentials({
+          isLoggedIn: !!id,
+          id,
+          name,
+          picture,
+          bookmarks,
+          joinedCommunities,
+        });
 
         return;
       }

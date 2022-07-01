@@ -7,6 +7,9 @@ mutation Register($name: String!, $email: String!, $password: String!) {
       bookmarks {
         id
       }
+      joinedCommunities {
+        id
+      }
     }
     ... on CommonError {
       message

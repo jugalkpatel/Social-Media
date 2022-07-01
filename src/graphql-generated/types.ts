@@ -85,6 +85,13 @@ export type Community = {
   title: Scalars['String'];
 };
 
+export type CommunityList = {
+  __typename?: 'CommunityList';
+  communities?: Maybe<Array<Maybe<Community>>>;
+};
+
+export type CommunityListResponse = CommonError | CommunityList;
+
 export type CommunityPost = {
   __typename?: 'CommunityPost';
   id: Scalars['String'];
@@ -386,6 +393,7 @@ export type PostWithId = {
 export type Query = {
   __typename?: 'Query';
   authenticate: AuthResponse;
+  fetchAllCommunities: CommunityListResponse;
   fetchAllPostsByTime: BatchPostsResponse;
   fetchAllPostsByVotes: BatchPostsResponse;
   fetchAllUserPostsByTime: BatchPostsResponse;

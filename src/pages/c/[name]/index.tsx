@@ -92,8 +92,8 @@ export default function ({
           description,
           date: createdAt,
         }}
-        input={<PostInput title={title} />}
-        addPost={<AddPost title={title} />}
+        input={<PostInput communityId={id} />}
+        addPost={<AddPost communityId={id} />}
         count={<MemberCount title={title} />}
         allPosts={<CommunityPosts title={title} />}
       />

@@ -2,7 +2,7 @@ import { useReactiveVar } from '@apollo/client';
 import { ActionIcon, Text, createStyles } from '@mantine/core';
 import { TiArrowSortedUp, TiArrowSortedDown } from 'react-icons/ti';
 
-import { commentVoteCount, userIdVar } from 'lib';
+import { commentVoteCount, userCommunitiesVar, userIdVar } from 'lib';
 import {
   CommentVote,
   RemoveVoteCommentCacheParams,
@@ -15,7 +15,7 @@ import { useCheckUserInCommunity } from 'hooks';
 type Props = {
   votes: Array<CommentVote>;
   commentId: string;
-  communityName: string;
+  communityId: string;
   postId: string;
   updateCacheOnVote: (args: VoteCommentCacheParams) => void;
   updateCacheOnRemoveVote: (args: RemoveVoteCommentCacheParams) => void;
@@ -58,14 +58,14 @@ function CommentVotes({
   votes,
   commentId,
   updateCacheOnVote,
-  communityName,
+  communityId,
   postId,
   updateCacheOnRemoveVote,
 }: Props) {
   const { classes } = useStyles();
   const userId = useReactiveVar(userIdVar);
   const { isUserInCommunity } = useCheckUserInCommunity({
-    title: communityName,
+    communityId,
   });
   const { vote: submitVote, loading: voteCommentLoading } = useVoteComment();
   const { removeVote, loading: removeCommentVoteLoading } =

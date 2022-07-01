@@ -1,14 +1,12 @@
 import { useReactiveVar } from '@apollo/client';
-import { userIdVar } from 'lib';
-import { useCommunityMembers } from 'operations';
+import { userCommunitiesVar } from 'lib';
 
-function useCheckUserInCommunity({ title }: { title: string }) {
-  const userId = useReactiveVar(userIdVar);
-  const { members } = useCommunityMembers({ title });
+function useCheckUserInCommunity({ communityId }: { communityId: string }) {
+  const joinedCommunities = useReactiveVar(userCommunitiesVar);
 
   const isUserInCommunity =
-    members.length && userId
-      ? !!members.find(({ id }) => id === userId)
+    joinedCommunities && joinedCommunities.length
+      ? !!joinedCommunities.find(({ id }) => id === communityId)
       : false;
 
   return { isUserInCommunity };

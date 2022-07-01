@@ -1,6 +1,6 @@
 import { InMemoryCache, makeVar } from '@apollo/client';
 
-import { BatchPosts, Bookmark } from 'types';
+import { BatchPosts, Bookmark, UserCommunity } from 'types';
 
 type UserCredentials = {
   isLoggedIn: boolean;
@@ -8,6 +8,7 @@ type UserCredentials = {
   name: string;
   picture: string;
   bookmarks: Array<Bookmark>;
+  joinedCommunities: Array<UserCommunity>;
 };
 
 export const cache: InMemoryCache = new InMemoryCache({
@@ -37,6 +38,11 @@ export const cache: InMemoryCache = new InMemoryCache({
         bookmarks: {
           read() {
             return userBookmarksVar();
+          },
+        },
+        joinedCommunities: {
+          read() {
+            return userCommunitiesVar();
           },
         },
         fetchAllPostsByVotes: {
@@ -167,12 +173,15 @@ export const userPictureVar = makeVar<string>('');
 
 export const userBookmarksVar = makeVar<Array<Bookmark>>([]);
 
+export const userCommunitiesVar = makeVar<Array<UserCommunity>>([]);
+
 export function setAuthCredentials({
   isLoggedIn,
   id,
   name,
   picture,
   bookmarks,
+  joinedCommunities,
 }: UserCredentials): void {
   authorizationVar(isLoggedIn);
 
@@ -183,4 +192,6 @@ export function setAuthCredentials({
   userPictureVar(picture);
 
   userBookmarksVar(bookmarks);
+
+  userCommunitiesVar(joinedCommunities);
 }

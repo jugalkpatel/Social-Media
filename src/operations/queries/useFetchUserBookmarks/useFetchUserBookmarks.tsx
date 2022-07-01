@@ -41,19 +41,12 @@ function useFetchUserBookmarks() {
   const {
     data,
     error: isError,
-    refetch,
     fetchMore,
   } = useFetchUserBookmarksQuery({
     variables: { take: NO_OF_POSTS_AT_A_TIME },
   });
 
   const { posts, cursor, state } = setState({ data, isError });
-
-  // useEffect(() => {
-  //   if (state === 'DATA') {
-  //     refetch();
-  //   }
-  // }, []);
 
   const fetchMorePosts = async () => {
     if (cursor) {

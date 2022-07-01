@@ -23,7 +23,7 @@ import {
 type Props = {
   postId: string;
   comments: Array<CommentType>;
-  communityName: string;
+  communityId: string;
 };
 
 const useStyles = createStyles((theme) => ({
@@ -44,12 +44,12 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function PostComments({ comments, postId, communityName }: Props) {
+function PostComments({ comments, postId, communityId }: Props) {
   const { classes, cx } = useStyles();
   const userId = useReactiveVar(userIdVar);
   const isAuthenticated = !!userId;
   const { isUserInCommunity } = useCheckUserInCommunity({
-    title: communityName,
+    communityId,
   });
 
   return (
@@ -80,7 +80,7 @@ function PostComments({ comments, postId, communityName }: Props) {
                     commentId={comment.id}
                     votes={comment.votes}
                     updateCacheOnVote={updateCacheOnVote}
-                    communityName={communityName}
+                    communityId={communityId}
                     postId={postId}
                     updateCacheOnRemoveVote={updateCacheOnRemoveVote}
                   />

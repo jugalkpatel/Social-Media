@@ -9,7 +9,7 @@ export type LoginMutationVariables = Types.Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'CommonError', message: string } | { __typename?: 'User', id: string, name: string, picture: string, bookmarks?: Array<{ __typename?: 'Post', id: string } | null> | null } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'CommonError', message: string } | { __typename?: 'User', id: string, name: string, picture: string, bookmarks?: Array<{ __typename?: 'Post', id: string } | null> | null, joinedCommunities?: Array<{ __typename?: 'Community', id: string }> | null } };
 
 
 export const LoginDocument = gql`
@@ -20,6 +20,9 @@ export const LoginDocument = gql`
       name
       picture
       bookmarks {
+        id
+      }
+      joinedCommunities {
         id
       }
     }

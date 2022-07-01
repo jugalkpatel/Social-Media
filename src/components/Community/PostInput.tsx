@@ -5,6 +5,7 @@ import { IoMdClose } from 'react-icons/io';
 
 import { useCheckUserInCommunity } from 'hooks';
 import { UserAvatar } from 'components';
+// import { isUserPartOfCommunity, userCommunitiesVar } from 'lib';
 
 const useStyles = createStyles((theme) => ({
   background: {
@@ -23,10 +24,10 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function PostInput({ title }: { title: string }) {
+function PostInput({ communityId }: { communityId: string }) {
   const router = useRouter();
   const { classes, cx } = useStyles();
-  const { isUserInCommunity } = useCheckUserInCommunity({ title });
+  const { isUserInCommunity } = useCheckUserInCommunity({ communityId });
 
   const onCreatePost = () => {
     if (isUserInCommunity) {

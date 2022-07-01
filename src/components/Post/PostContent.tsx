@@ -125,7 +125,8 @@ function PostContent({ postId }: Props) {
       <PostComments
         comments={post.comments}
         postId={post.id}
-        communityName={post.community.title}
+        // communityName={post.community.title}
+        communityId={post.community.id}
       />
     </Stack>
   );

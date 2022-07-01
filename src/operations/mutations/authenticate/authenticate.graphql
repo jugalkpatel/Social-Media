@@ -7,6 +7,9 @@ mutation Authenticate {
       bookmarks {
         id
       }
+      joinedCommunities {
+        id
+      }
     }
     ... on CommonError {
       message

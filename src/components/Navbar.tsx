@@ -1,15 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-// two ways
-// persist in a cookie or fetch cookie in useEffect by creating custom hook with local state
-
-// check cookies are being set or not.
-// fetch authenticated state from cookie
-
-// our login fn is working, we have a problem with refresh.
-// since we're using cookies we can now make a request again on the refresh which validates the user and if access token expires then check refresh token.
-
 import {
   ActionIcon,
   Group,
@@ -32,6 +23,11 @@ import logo from '@/assets/LogoImg.png';
 import { useAuth } from 'hooks';
 
 const useStyles = createStyles((theme) => ({
+  sticky: {
+    position: 'sticky',
+    top: 0,
+    zIndex: 1,
+  },
   border: {
     borderBottom: `1px solid ${
       theme.colors.gray[theme.colorScheme === 'light' ? 3 : 8]
@@ -71,7 +67,7 @@ function Navbar() {
     <Group
       position="apart"
       p="xs"
-      className={cx(classes.border, classes.background)}
+      className={cx(classes.border, classes.background, classes.sticky)}
     >
       <Link href="/" passHref>
         <a style={{ display: 'flex', alignItems: 'center' }}>
@@ -87,10 +83,6 @@ function Navbar() {
             </ActionIcon>
           </Link>
         ) : null}
-
-        {/* <ActionIcon variant="outline" title="notifications">
-          <IoMdNotifications />
-        </ActionIcon> */}
 
         <Group
           pl={14}

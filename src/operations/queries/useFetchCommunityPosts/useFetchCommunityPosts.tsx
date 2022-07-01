@@ -40,7 +40,7 @@ function useFetchCommunityPosts({ title }: Props) {
   useEffect(() => {
     if (data) {
       console.log('refetching');
-      refetch();
+      refetch({ name: title });
     }
   }, []);
 

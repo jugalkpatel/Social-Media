@@ -5,9 +5,9 @@ import { IoMdClose } from 'react-icons/io';
 
 import { useCheckUserInCommunity } from 'hooks';
 
-function AddPost({ title }: { title: string }) {
+function AddPost({ communityId }: { communityId: string }) {
   const router = useRouter();
-  const { isUserInCommunity } = useCheckUserInCommunity({ title });
+  const { isUserInCommunity } = useCheckUserInCommunity({ communityId });
 
   const onCreatePost = () => {
     if (isUserInCommunity) {

@@ -1,88 +1,83 @@
-import { showNotification } from '@mantine/notifications';
-import { IoMdCheckmark, IoMdClose } from 'react-icons/io';
+import { ReactiveVar } from '@apollo/client';
 
-import {
-  FetchCommunityMembersQuery,
-  FetchCommunityMembersQueryVariables,
-  JoinCommunityMutationFn,
-  FetchCommunityMembersDocument,
-  useJoinCommunityMutation,
-} from 'operations';
-import { FetchCommunityDocument } from 'graphql-generated';
+import { UserCommunity, UpdateCacheOnCommunityOperation } from 'types';
+import { JoinCommunityMutationFn, useJoinCommunityMutation } from 'operations';
+import { CommonNotificationParms, useCommonNotifications } from 'hooks';
+import { userCommunitiesVar } from 'lib';
 
 type Props = {
   id: string;
-  title: string;
 };
 
-const onJoinCommunityClick = async (
-  join: JoinCommunityMutationFn,
-  title: string,
-) => {
-  try {
-    await join({
-      update: (cache, { data: { joinCommunity } }) => {
-        if (joinCommunity.__typename === 'CommonError') {
-          throw new Error(joinCommunity.message);
-        }
+type JoinCommunityParams = CommonNotificationParms & {
+  join: JoinCommunityMutationFn;
+  updateLocalCommunities: (newCommunity: UserCommunity) => void;
+};
 
-        if (joinCommunity.__typename === 'Community') {
-          const { members: updatedMembers } = joinCommunity;
+type JoinParams = {
+  title: string;
+  updateCache: (args: UpdateCacheOnCommunityOperation) => void;
+  communityId: string;
+};
 
-          const { fetchCommunity } = cache.readQuery<
-            FetchCommunityMembersQuery,
-            FetchCommunityMembersQueryVariables
-          >({
-            query: FetchCommunityMembersDocument,
-            variables: { name: title },
-          });
+function addCommunity(userCommunitiesFunc: ReactiveVar<UserCommunity[]>) {
+  const existingCommunities = userCommunitiesFunc();
 
-          if (fetchCommunity.__typename === 'Community') {
-            cache.writeQuery<FetchCommunityMembersQuery>({
-              query: FetchCommunityMembersDocument,
-              data: {
-                fetchCommunity: {
-                  ...fetchCommunity,
-                  members: updatedMembers,
-                },
-              },
-            });
+  return (newCommunity: UserCommunity) => {
+    userCommunitiesFunc(existingCommunities.concat(newCommunity));
+  };
+}
 
-            showNotification({
-              message: `successfully joined ${title}`,
-              autoClose: 3000,
-              icon: <IoMdCheckmark />,
-              color: 'green',
-            });
+function joinCommunity({
+  join,
+  success,
+  error: showError,
+  updateLocalCommunities,
+}: JoinCommunityParams) {
+  return async ({ title, communityId, updateCache }: JoinParams) => {
+    try {
+      await join({
+        variables: { communityId },
+        update: (cache, { data: { joinCommunity } }) => {
+          if (joinCommunity.__typename === 'CommonError') {
+            throw new Error(joinCommunity.message);
+          }
+
+          if (joinCommunity.__typename === 'Community') {
+            const { id, members } = joinCommunity;
+
+            updateLocalCommunities({ __typename: 'Community', id });
+
+            updateCache({ cache, title, updatedCommunityMembers: members });
+
+            success(`Successfully joined ${title}`);
 
             return;
           }
 
-          if (fetchCommunity.__typename === 'CommonError') {
-            throw new Error(fetchCommunity.message);
-          }
-        }
+          throw new Error();
+        },
+      });
+    } catch (error) {
+      const errorMessage = error?.message || 'something went wrong';
+      showError(errorMessage);
+    }
+  };
+}
 
-        throw new Error();
-      },
-    });
-  } catch (error) {
-    console.log({ error });
-    showNotification({
-      message: error?.message || 'something went wrong!',
-      autoClose: 3000,
-      icon: <IoMdClose />,
-      color: 'red',
-    });
-  }
-};
-
-function useJoinCommunity({ id, title }: Props) {
+function useJoinCommunity({ id }: Props) {
   const [mutationFunc, { loading }] = useJoinCommunityMutation({
     variables: { communityId: id },
   });
+  const { success, error } = useCommonNotifications();
+  const updateLocalCommunities = addCommunity(userCommunitiesVar);
 
-  const join = () => onJoinCommunityClick(mutationFunc, title);
+  const join = joinCommunity({
+    join: mutationFunc,
+    success,
+    error,
+    updateLocalCommunities,
+  });
 
   return { join, loading };
 }

@@ -7,32 +7,25 @@ export type FetchCommunityMembersQueryVariables = Types.Exact<{
   name: Types.Scalars['String'];
 }>;
 
-export type FetchCommunityMembersQuery = {
-  __typename?: 'Query';
-  fetchCommunity:
-    | { __typename?: 'CommonError'; message: string }
-    | {
-        __typename?: 'Community';
-        id: string;
-        members: Array<{ __typename?: 'User'; id: string } | null>;
-      };
-};
+
+export type FetchCommunityMembersQuery = { __typename?: 'Query', fetchCommunity: { __typename?: 'CommonError', message: string } | { __typename?: 'Community', id: string, members: Array<{ __typename?: 'User', id: string } | null> } };
+
 
 export const FetchCommunityMembersDocument = gql`
-  query fetchCommunityMembers($name: String!) {
-    fetchCommunity(name: $name) {
-      ... on Community {
+    query fetchCommunityMembers($name: String!) {
+  fetchCommunity(name: $name) {
+    ... on Community {
+      id
+      members {
         id
-        members {
-          id
-        }
-      }
-      ... on CommonError {
-        message
       }
     }
+    ... on CommonError {
+      message
+    }
   }
-`;
+}
+    `;
 
 /**
  * __useFetchCommunityMembersQuery__
@@ -50,37 +43,14 @@ export const FetchCommunityMembersDocument = gql`
  *   },
  * });
  */
-export function useFetchCommunityMembersQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    FetchCommunityMembersQuery,
-    FetchCommunityMembersQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    FetchCommunityMembersQuery,
-    FetchCommunityMembersQueryVariables
-  >(FetchCommunityMembersDocument, options);
-}
-export function useFetchCommunityMembersLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    FetchCommunityMembersQuery,
-    FetchCommunityMembersQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    FetchCommunityMembersQuery,
-    FetchCommunityMembersQueryVariables
-  >(FetchCommunityMembersDocument, options);
-}
-export type FetchCommunityMembersQueryHookResult = ReturnType<
-  typeof useFetchCommunityMembersQuery
->;
-export type FetchCommunityMembersLazyQueryHookResult = ReturnType<
-  typeof useFetchCommunityMembersLazyQuery
->;
-export type FetchCommunityMembersQueryResult = Apollo.QueryResult<
-  FetchCommunityMembersQuery,
-  FetchCommunityMembersQueryVariables
->;
+export function useFetchCommunityMembersQuery(baseOptions: Apollo.QueryHookOptions<FetchCommunityMembersQuery, FetchCommunityMembersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FetchCommunityMembersQuery, FetchCommunityMembersQueryVariables>(FetchCommunityMembersDocument, options);
+      }
+export function useFetchCommunityMembersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FetchCommunityMembersQuery, FetchCommunityMembersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FetchCommunityMembersQuery, FetchCommunityMembersQueryVariables>(FetchCommunityMembersDocument, options);
+        }
+export type FetchCommunityMembersQueryHookResult = ReturnType<typeof useFetchCommunityMembersQuery>;
+export type FetchCommunityMembersLazyQueryHookResult = ReturnType<typeof useFetchCommunityMembersLazyQuery>;
+export type FetchCommunityMembersQueryResult = Apollo.QueryResult<FetchCommunityMembersQuery, FetchCommunityMembersQueryVariables>;

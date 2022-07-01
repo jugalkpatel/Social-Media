@@ -1,0 +1,17 @@
+query FetchAllCommunities {
+  fetchAllCommunities {
+    ... on CommonError {
+      message
+    }
+    ... on CommunityList {
+      communities {
+        id
+        title
+        picture
+        members {
+          id
+        }
+      }
+    }
+  }
+}

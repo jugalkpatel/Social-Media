@@ -3,13 +3,17 @@ import {
   PopularTopPosts,
   PopularNewPosts,
   FeedLayout,
+  FeaturedCommunities,
 } from 'components';
 
 function PopularFeed() {
   return (
-    <FeedLayout>
-      <Popular byVotes={<PopularTopPosts />} byTime={<PopularNewPosts />} />
-    </FeedLayout>
+    <FeedLayout
+      main={
+        <Popular byVotes={<PopularTopPosts />} byTime={<PopularNewPosts />} />
+      }
+      featured={<FeaturedCommunities />}
+    />
   );
 }
 

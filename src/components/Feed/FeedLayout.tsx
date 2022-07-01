@@ -1,4 +1,5 @@
-import { createStyles, Stack, Text, MediaQuery } from '@mantine/core';
+import { createStyles, Stack, Text, MediaQuery, Button } from '@mantine/core';
+import { useWindowScroll } from '@mantine/hooks';
 
 import { ContainerLayout } from 'components';
 
@@ -21,11 +22,16 @@ const useStyles = createStyles((theme) => ({
       padding: '1rem 0',
     },
   },
+  button: {
+    position: 'fixed',
+    bottom: '10px',
+    right: '10px',
+  },
 }));
 
 function FeedLayout({ main, featured }: Props) {
   const { classes } = useStyles();
-
+  const [, scrollTo] = useWindowScroll();
   return (
     <ContainerLayout>
       <div className={classes.grid}>
@@ -34,6 +40,15 @@ function FeedLayout({ main, featured }: Props) {
         <MediaQuery smallerThan="lg" styles={{ display: 'none' }}>
           <Stack sx={{ gridRow: '1/2' }}>{featured}</Stack>
         </MediaQuery>
+
+        <Button
+          className={classes.button}
+          size="xs"
+          px="sm"
+          onClick={() => scrollTo({ y: 0 })}
+        >
+          Back to Top
+        </Button>
       </div>
     </ContainerLayout>
   );

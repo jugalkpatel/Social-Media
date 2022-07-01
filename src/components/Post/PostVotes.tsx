@@ -9,7 +9,7 @@ import {
   Vote,
   VoteCacheUpdateParams,
 } from 'types';
-import { useCheckUserInCommunity } from 'hooks';
+import { useCheckUserInCommunity, useCommonNotifications } from 'hooks';
 import { useRemoveVote, useVote } from 'operations';
 import { userIdVar, voteCount } from 'lib';
 
@@ -74,17 +74,23 @@ function PostVotes({
   },
 }: Props) {
   const { classes } = useStyles();
+  const { error } = useCommonNotifications();
   const { removeVote, loading: removeVoteLoading } = useRemoveVote();
   const { vote: voteFn, loading: voteLoading } = useVote();
   const userId = useReactiveVar(userIdVar);
   const modals = useModals();
   const { isUserInCommunity } = useCheckUserInCommunity({
-    title: communityName,
+    communityId,
   });
 
   const onVoteClick = (type: VoteType) => {
-    if (!userId || !isUserInCommunity) {
+    if (!userId) {
       modals.openContextModal('LOGIN', { innerProps: {} });
+      return;
+    }
+
+    if (!isUserInCommunity) {
+      error("You're not a member of this community");
       return;
     }
 
