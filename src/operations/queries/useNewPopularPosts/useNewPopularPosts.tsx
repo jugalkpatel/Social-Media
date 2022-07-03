@@ -6,7 +6,11 @@ import {
   FetchAllPostsByTimeQuery,
 } from 'operations';
 import { NO_OF_POSTS_AT_A_TIME } from 'lib';
-import { useCommonNotifications, CommonNotificationParms } from 'hooks';
+import {
+  useCommonNotifications,
+  CommonNotificationParms,
+  showProgressNotifications,
+} from 'hooks';
 
 type SetStateParams = CommonNotificationParms & {
   data: FetchAllPostsByTimeQuery;
@@ -48,13 +52,20 @@ function useNewPopularPosts() {
     variables: { take: NO_OF_POSTS_AT_A_TIME },
   });
   const { success, error } = useCommonNotifications();
+  const {
+    start: fetchMorePostsStart,
+    success: fetchMoreSuccess,
+    error: fetchMoreError,
+  } = showProgressNotifications({ id: 'popular-top', time: 500 });
   const { posts, state, cursor } = setState({ data, isError, success, error });
 
   const fetchMorePosts = async () => {
     if (cursor) {
+      fetchMorePostsStart('hang on! fetching more posts');
       await fetchMore({
         variables: { cursorId: cursor, take: NO_OF_POSTS_AT_A_TIME },
       });
+      fetchMoreSuccess('New posts are added');
     }
   };
 

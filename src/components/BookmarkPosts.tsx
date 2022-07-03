@@ -14,6 +14,7 @@ import {
   ObserveScroll,
   Post,
   PostVotes,
+  ContainerLayout,
 } from 'components';
 import { NO_OF_POSTS_AT_A_TIME } from 'lib';
 
@@ -21,45 +22,55 @@ function BookmarkPosts() {
   const { posts, state, fetchMorePosts } = useFetchUserBookmarks();
 
   return (
-    <Stack py="xl">
-      <Title order={1}>Bookmarks</Title>
+    <ContainerLayout>
+      <Stack py="xl">
+        <Title order={1}>Bookmarks</Title>
 
-      {state === 'LOADING' ? <PostsSkeleton /> : null}
+        {state === 'LOADING' ? <PostsSkeleton /> : null}
 
-      {state === 'ERROR' ? (
-        <EmptyPlaceholder message="there are not bookmarked posts" />
-      ) : null}
+        {state === 'ERROR' ? (
+          <EmptyPlaceholder message="there are not bookmarked posts" />
+        ) : null}
 
-      {state === 'DATA' ? (
-        <Stack>
-          {posts.map((post, index) => {
-            return (
-              <div key={nanoid()}>
-                {index === posts.length - 1 ? (
-                  <ObserveScroll fetchMorePosts={fetchMorePosts} />
-                ) : null}
-                <Post
-                  post={post}
-                  list={true}
-                  votes={
-                    <PostVotes
-                      data={{
-                        communityId: post.community.id,
-                        communityName: post.community.title,
-                        votes: post.votes,
-                        postId: post.id,
-                        updateCacheOnVote,
-                        updateCacheOnRemove,
-                      }}
+        {state === 'DATA' ? (
+          <Stack>
+            {posts.length ? (
+              posts.map((post, index) => {
+                return (
+                  <div key={nanoid()}>
+                    {index === posts.length - 1 ? (
+                      <ObserveScroll fetchMorePosts={fetchMorePosts} />
+                    ) : null}
+                    <Post
+                      post={post}
+                      list={true}
+                      votes={
+                        <PostVotes
+                          data={{
+                            communityId: post.community.id,
+                            communityName: post.community.title,
+                            votes: post.votes,
+                            postId: post.id,
+                            updateCacheOnVote,
+                            updateCacheOnRemove,
+                          }}
+                        />
+                      }
                     />
-                  }
-                />
-              </div>
-            );
-          })}
-        </Stack>
-      ) : null}
-    </Stack>
+                  </div>
+                );
+              })
+            ) : (
+              <EmptyPlaceholder
+                message="There are no bookmarked posts"
+                height={300}
+                noBorder={true}
+              />
+            )}
+          </Stack>
+        ) : null}
+      </Stack>
+    </ContainerLayout>
   );
 }
 

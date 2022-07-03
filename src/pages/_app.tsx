@@ -17,9 +17,16 @@ import { ModalsProvider } from '@mantine/modals';
 import theme from '../styles/theme';
 
 import { useApollo } from 'lib';
-import { Layout, Login, Register, CreateCommunity } from 'components';
+import {
+  Layout,
+  Login,
+  Register,
+  CreateCommunity,
+  WithRouterEvents,
+} from 'components';
 
 import 'normalize.css/normalize.css';
+import '../public/nprogress.css';
 
 setGlobalDateMasks({
   timeFormat: '[on] MMMM Do, YY · hh:mm A',
@@ -77,9 +84,11 @@ const App: NextPage<AppProps> = ({ Component, pageProps }) => {
                     },
                   })}
                 />
-                <Layout>
-                  <Component {...pageProps} />
-                </Layout>
+                <WithRouterEvents>
+                  <Layout>
+                    <Component {...pageProps} />
+                  </Layout>
+                </WithRouterEvents>
               </ModalsProvider>
             </NotificationsProvider>
           </MantineProvider>

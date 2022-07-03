@@ -1,3 +1,4 @@
+import Router from 'next/router';
 import { SubmitHandler } from 'react-hook-form';
 import { ModalsContextProps } from '@mantine/modals/lib/context';
 
@@ -39,7 +40,8 @@ function submit({ submit, error: showError, context }: SubmitParams) {
 
         context.closeAll();
 
-        //   router.push('/');
+        Router.back();
+
         return;
       }
     } catch (error) {

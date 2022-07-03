@@ -1,3 +1,4 @@
+import { nanoid } from 'nanoid';
 import {
   createStyles,
   Stack,
@@ -87,9 +88,12 @@ function FeaturedCommunities() {
           {communities && communities.length
             ? communities.map(({ id, picture, title }) => {
                 return (
-                  <>
-                    <CommunityTile id={id} picture={picture} name={title} />
-                  </>
+                  <CommunityTile
+                    key={nanoid()}
+                    id={id}
+                    picture={picture}
+                    name={title}
+                  />
                 );
               })
             : null}

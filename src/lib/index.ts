@@ -5,4 +5,5 @@ export { isTokenExpired } from './isTokenExpired';
 export { default as voteCount } from './voteCount';
 export { default as commentVoteCount } from './commentVoteCount';
 export { topFilter, timeFilter } from './filters';
+export { default as withAuth } from './authWrapper';
 export * from './constants';

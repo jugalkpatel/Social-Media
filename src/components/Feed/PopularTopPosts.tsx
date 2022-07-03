@@ -30,31 +30,39 @@ function PopularTopPosts() {
 
   return (
     <Stack pb="xl">
-      {posts.map((post, index) => {
-        return (
-          <div key={nanoid()}>
-            {index === posts.length - 1 ? (
-              <ObserveScroll fetchMorePosts={fetchMorePosts} />
-            ) : null}
-            <Post
-              post={post}
-              list={true}
-              votes={
-                <PostVotes
-                  data={{
-                    communityId: post.community.id,
-                    communityName: post.community.title,
-                    votes: post.votes,
-                    postId: post.id,
-                    updateCacheOnRemove,
-                    updateCacheOnVote,
-                  }}
-                />
-              }
-            />
-          </div>
-        );
-      })}
+      {posts.length ? (
+        posts.map((post, index) => {
+          return (
+            <div key={nanoid()}>
+              {index === posts.length - 1 ? (
+                <ObserveScroll fetchMorePosts={fetchMorePosts} />
+              ) : null}
+              <Post
+                post={post}
+                list={true}
+                votes={
+                  <PostVotes
+                    data={{
+                      communityId: post.community.id,
+                      communityName: post.community.title,
+                      votes: post.votes,
+                      postId: post.id,
+                      updateCacheOnRemove,
+                      updateCacheOnVote,
+                    }}
+                  />
+                }
+              />
+            </div>
+          );
+        })
+      ) : (
+        <EmptyPlaceholder
+          message="there are no posts. Please Join Community"
+          height={300}
+          noBorder={true}
+        />
+      )}
     </Stack>
   );
 }

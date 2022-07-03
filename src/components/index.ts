@@ -12,6 +12,8 @@ export { default as ObserveScroll } from './ObserveScroll';
 export { default as AuthWrapper } from './AuthWrapper';
 export { default as BookmarkPosts } from './BookmarkPosts';
 export { default as Profile } from './Profile';
+export { default as CreatePost } from './CreatePost';
+export { default as WithRouterEvents } from './WithRouterEvents';
 export * from './Community';
 export * from './Post';
 export * from './Comment';

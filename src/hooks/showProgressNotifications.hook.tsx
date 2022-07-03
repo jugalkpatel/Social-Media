@@ -3,6 +3,7 @@ import { IoMdCheckmark, IoMdClose } from 'react-icons/io';
 
 type Props = {
   id: string;
+  time?: number;
 };
 
 export type ProgressNotificationsParams = {
@@ -11,7 +12,7 @@ export type ProgressNotificationsParams = {
   error: (errorMessage: string) => void;
 };
 
-function showProgressNotifications({ id }: Props) {
+function showProgressNotifications({ id, time }: Props) {
   const start = (startMessage: string) => {
     showNotification({
       id,
@@ -28,7 +29,7 @@ function showProgressNotifications({ id }: Props) {
       color: 'green',
       message: successMessage,
       icon: <IoMdCheckmark />,
-      autoClose: 2000,
+      autoClose: time || 2000,
     });
   };
 
@@ -38,7 +39,7 @@ function showProgressNotifications({ id }: Props) {
       color: 'red',
       message: errorMessage,
       icon: <IoMdClose />,
-      autoClose: 2000,
+      autoClose: time || 2000,
     });
   };
 

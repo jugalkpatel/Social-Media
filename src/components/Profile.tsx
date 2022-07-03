@@ -12,7 +12,7 @@ import {
 } from '@mantine/core';
 
 import { ContainerLayout } from 'components';
-import { useFetchUserDetails } from 'operations';
+import { useFetchUserDetails, useLogout } from 'operations';
 
 const useStyles = createStyles((theme) => ({
   background: {
@@ -67,8 +67,9 @@ function ProfileTile({ label, value }: ProfileTileProps) {
 }
 
 function Profile() {
-  const { classes, cx } = useStyles();
+  const { classes } = useStyles();
   const { user, state } = useFetchUserDetails();
+  const { logout, loading } = useLogout();
 
   if (state === 'LOADING') {
     return (
@@ -81,8 +82,6 @@ function Profile() {
   if (state === 'ERROR') {
     return null;
   }
-
-  console.log({ user, state });
 
   return (
     <ContainerLayout>
@@ -118,7 +117,12 @@ function Profile() {
           </Stack>
 
           <Center>
-            <Button sx={{ width: 'fit-content' }} uppercase>
+            <Button
+              sx={{ width: 'fit-content' }}
+              uppercase={true}
+              loading={loading}
+              onClick={logout}
+            >
               Logout
             </Button>
           </Center>

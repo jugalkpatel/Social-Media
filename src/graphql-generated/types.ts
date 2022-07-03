@@ -260,6 +260,8 @@ export type JoinCommunityResult = {
   members: Array<Maybe<IJoinCommunityMember>>;
 };
 
+export type LogoutResponse = CommonError | Success;
+
 export type Mutation = {
   __typename?: 'Mutation';
   authenticate: UserResponse;
@@ -271,6 +273,7 @@ export type Mutation = {
   joinCommunity: CommunityResponse;
   leaveCommunity: CommunityResponse;
   login: UserResponse;
+  logout: LogoutResponse;
   refresh: RefreshResponse;
   register: UserResponse;
   removeBookmark: PostResponse;
@@ -448,6 +451,11 @@ export type QueryFetchUserBookmarksArgs = {
 };
 
 export type RefreshResponse = CommonError | IRefresh;
+
+export type Success = {
+  __typename?: 'Success';
+  success: Scalars['Boolean'];
+};
 
 export type User = {
   __typename?: 'User';

@@ -34,7 +34,7 @@ async function handleRequest(
 
     return checkAccess(data);
   } catch (error) {
-    console.log(`error in access token ${error}`);
+    // console.log(`error in access token ${error}`);
     if (error instanceof ApolloError) {
       const expired = isTokenExpired(error);
 
@@ -92,6 +92,7 @@ function useAuth() {
 
       throw new Error('something went wrong!');
     } catch (error) {
+      console.log({ error });
       // router.push('/');
       // hits when refresh token throws error: refresh token expires
       // logout and redirect to the login modal

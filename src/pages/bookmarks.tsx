@@ -1,15 +1,12 @@
 import type { NextPage } from 'next';
 
-import { AuthWrapper, BookmarkPosts, ContainerLayout } from 'components';
+import { BookmarkPosts } from 'components';
+import { withAuth } from 'lib';
+
+const BookmarksPageWithAuth = withAuth(BookmarkPosts);
 
 const BookmarksPage: NextPage = () => {
-  return (
-    <ContainerLayout>
-      {/* <AuthWrapper> */}
-      <BookmarkPosts />
-      {/* </AuthWrapper> */}
-    </ContainerLayout>
-  );
+  return <BookmarksPageWithAuth />;
 };
 
 export default BookmarksPage;

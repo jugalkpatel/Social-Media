@@ -135,7 +135,6 @@ function updateCacheOnVote({
 
 function CommunityPosts({ title }: Props) {
   const { posts, state } = useFetchCommunityPosts({ title });
-  console.log({ posts, state });
 
   if (state === 'ERROR') {
     return null;

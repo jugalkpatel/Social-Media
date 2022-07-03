@@ -1,13 +1,12 @@
 import type { NextPage } from 'next';
 
-import { AuthWrapper, UserFeed } from 'components';
+import { UserFeed } from 'components';
+import { withAuth } from 'lib';
+
+const UserFeedWithAuth = withAuth(UserFeed);
 
 const IndexPage: NextPage = () => {
-  return (
-    <AuthWrapper>
-      <UserFeed />;
-    </AuthWrapper>
-  );
+  return <UserFeedWithAuth />;
 };
 
 export default IndexPage;

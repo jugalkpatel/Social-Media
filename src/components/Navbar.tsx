@@ -16,7 +16,8 @@ import { useModals } from '@mantine/modals';
 import { IoIosSunny, IoMdAdd, IoMdExit } from 'react-icons/io';
 import { MdNightsStay, MdOutlineCollectionsBookmark } from 'react-icons/md';
 import { BsPlusCircleDotted } from 'react-icons/bs';
-import { AiOutlineUser } from 'react-icons/ai';
+import { AiOutlineUser, AiOutlineCompass } from 'react-icons/ai';
+import { RiProfileFill } from 'react-icons/ri';
 
 import logo from '@/assets/LogoImg.png';
 
@@ -43,7 +44,6 @@ function Navbar() {
   const router = useRouter();
   const {
     data: { isAuthorized, name, picture },
-    loading,
   } = useAuth();
   const { classes, cx } = useStyles();
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
@@ -80,6 +80,14 @@ function Navbar() {
           <Link href="/submit" passHref>
             <ActionIcon variant="outline" title="create post" component="a">
               <IoMdAdd />
+            </ActionIcon>
+          </Link>
+        ) : null}
+
+        {router.pathname !== '/popular' ? (
+          <Link href="/popular" passHref>
+            <ActionIcon variant="outline" title="create post" component="a">
+              <AiOutlineCompass />
             </ActionIcon>
           </Link>
         ) : null}
@@ -137,6 +145,15 @@ function Navbar() {
                 onClick={() => router.push('/bookmarks')}
               >
                 Bookmarks
+              </Menu.Item>
+            ) : null}
+
+            {isAuthorized ? (
+              <Menu.Item
+                icon={<RiProfileFill />}
+                onClick={() => router.push('/profile')}
+              >
+                Profile
               </Menu.Item>
             ) : null}
 

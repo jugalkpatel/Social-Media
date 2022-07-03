@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { ContextModalProps, useModals } from '@mantine/modals';
 
 import {
@@ -10,6 +10,7 @@ import {
   Button,
   Anchor,
   Title,
+  Stack,
 } from '@mantine/core';
 import WavingHand from '@/assets/waving_hand.svg';
 
@@ -23,6 +24,9 @@ function Login({ context, id: modalId }: ContextModalProps) {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
+    setValue,
+    getValues,
+    control,
   } = useForm<LoginFormValues>({
     mode: 'onBlur',
     defaultValues: { email: '', password: '' },
@@ -32,6 +36,14 @@ function Login({ context, id: modalId }: ContextModalProps) {
   const switchModal = () => {
     context.closeModal(modalId);
     modals.openContextModal('REGISTER', { innerProps: {} });
+  };
+
+  const autofill = () => {
+    setValue('email', 'guest@gmail.com', { shouldValidate: true });
+
+    setValue('password', 'guest12345', { shouldValidate: true });
+
+    handleSubmit(onSubmit)();
   };
 
   return (
@@ -119,9 +131,17 @@ function Login({ context, id: modalId }: ContextModalProps) {
               />
             </div>
 
-            <Button type="submit" loading={loading}>
-              Login
-            </Button>
+            <Stack spacing="xs">
+              <Button type="submit" loading={loading}>
+                Login
+              </Button>
+
+              {!loading ? (
+                <Button variant="subtle" onClick={autofill}>
+                  Login as Guest
+                </Button>
+              ) : null}
+            </Stack>
           </Group>
         </form>
       </Group>

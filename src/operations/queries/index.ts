@@ -9,3 +9,4 @@ export * from './useTopUserPosts';
 export * from './useFetchUserBookmarks';
 export * from './useFetchAllCommunities';
 export * from './useFetchUserDetails';
+export * from './useLogout';

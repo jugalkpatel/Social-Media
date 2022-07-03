@@ -3,6 +3,7 @@ import { AiOutlineComment } from 'react-icons/ai';
 
 type Props = {
   height?: number;
+  noBorder?: boolean;
   message: string;
 };
 
@@ -23,18 +24,18 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function EmptyPlaceholder({ message, height }: Props) {
+function EmptyPlaceholder({ message, height, noBorder }: Props) {
   const { classes } = useStyles();
   return (
     <Center
       style={{
         height: height || 200,
       }}
-      className={classes.border}
+      className={!noBorder ? classes.border : null}
     >
       <Stack align="center">
         <AiOutlineComment fontSize={40} className={classes.color} />
-        <Text size="lg" weight={700} className={classes.color}>
+        <Text size="lg" weight={700} className={classes.color} align="center">
           {message}
         </Text>
       </Stack>

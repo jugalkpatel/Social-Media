@@ -1,10 +1,11 @@
+import { useEffect } from 'react';
 import { ApolloError } from '@apollo/client';
+
+import { State } from 'types';
 import {
   useFetchCommunityPostsQuery,
   FetchCommunityPostsQuery,
 } from 'operations';
-import { useEffect } from 'react';
-import { State } from 'types';
 
 type Props = {
   title: string;
@@ -39,7 +40,6 @@ function useFetchCommunityPosts({ title }: Props) {
 
   useEffect(() => {
     if (data) {
-      console.log('refetching');
       refetch({ name: title });
     }
   }, []);

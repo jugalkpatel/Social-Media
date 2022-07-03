@@ -1,0 +1,10 @@
+mutation Logout {
+  logout {
+    ... on CommonError {
+      message
+    }
+    ... on Success {
+      success
+    }
+  }
+}
