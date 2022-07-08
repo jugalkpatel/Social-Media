@@ -49,10 +49,8 @@ function submitVote({
         },
       });
     } catch (error) {
-      console.log({ error });
       const errorMessage = error?.message || 'something went wrong!';
 
-      //error notif
       showError(errorMessage);
     }
   };

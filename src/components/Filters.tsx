@@ -1,9 +1,10 @@
 import { Dispatch, SetStateAction } from 'react';
 import { SegmentedControl, Center, Box } from '@mantine/core';
 
-import { FILTER } from 'types';
 import { AiOutlineStock } from 'react-icons/ai';
 import { CgToday } from 'react-icons/cg';
+
+import { FILTER } from 'types';
 
 export type Props = {
   value: FILTER;

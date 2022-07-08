@@ -1,4 +1,4 @@
-import { createStyles, Stack, Text, MediaQuery, Button } from '@mantine/core';
+import { createStyles, Stack, MediaQuery, Button } from '@mantine/core';
 import { useWindowScroll } from '@mantine/hooks';
 
 import { ContainerLayout } from 'components';

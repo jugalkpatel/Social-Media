@@ -1,5 +1,6 @@
 import { useReactiveVar } from '@apollo/client';
 import { Avatar } from '@mantine/core';
+
 import { userPictureVar } from 'lib';
 
 export function UserAvatar() {

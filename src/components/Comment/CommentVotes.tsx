@@ -1,8 +1,8 @@
 import { useReactiveVar } from '@apollo/client';
+import { useModals } from '@mantine/modals';
 import { ActionIcon, Text, createStyles } from '@mantine/core';
 import { TiArrowSortedUp, TiArrowSortedDown } from 'react-icons/ti';
 
-import { commentVoteCount, userCommunitiesVar, userIdVar } from 'lib';
 import {
   CommentVote,
   RemoveVoteCommentCacheParams,
@@ -10,7 +10,8 @@ import {
 } from 'types';
 import { VoteType } from 'graphql-generated';
 import { useVoteComment, useRemoveCommentVote } from 'operations';
-import { useCheckUserInCommunity } from 'hooks';
+import { useCheckUserInCommunity, useCommonNotifications } from 'hooks';
+import { commentVoteCount, userIdVar } from 'lib';
 
 type Props = {
   votes: Array<CommentVote>;
@@ -63,6 +64,8 @@ function CommentVotes({
   updateCacheOnRemoveVote,
 }: Props) {
   const { classes } = useStyles();
+  const { error } = useCommonNotifications();
+  const modals = useModals();
   const userId = useReactiveVar(userIdVar);
   const { isUserInCommunity } = useCheckUserInCommunity({
     communityId,
@@ -72,15 +75,19 @@ function CommentVotes({
     useRemoveCommentVote();
 
   const onVoteClick = (type: VoteType) => {
-    if (!userId || !isUserInCommunity) {
-      console.log("you're not logged in");
+    if (!userId) {
+      modals.openContextModal('LOGIN', { innerProps: {} });
+      return;
+    }
+
+    if (!isUserInCommunity) {
+      error("You're not a member of this community");
       return;
     }
 
     const vote = checkExistingVote({ type, userId, votes });
 
     if (vote) {
-      console.log('remove vote');
       removeVote({
         commentId,
         postId,
@@ -88,7 +95,6 @@ function CommentVotes({
         updateCache: updateCacheOnRemoveVote,
       });
     } else {
-      console.log(`comment vote with type ${type}`);
       submitVote({ commentId, postId, type, updateCache: updateCacheOnVote });
     }
   };

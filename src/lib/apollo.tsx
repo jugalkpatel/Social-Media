@@ -13,24 +13,6 @@ import { cache } from 'lib';
 import { PageProps } from 'types';
 
 export const APOLLO_STATE_PROPERTY_NAME = '__APOLLO_STATE__';
-// export const COOKIES_TOKEN_NAME = 'access';
-
-// const errorLink = onError(({ graphQLErrors, networkError }) => {
-//   if (graphQLErrors) {
-//     graphQLErrors.forEach((err) => {
-//       if (err.extensions.code === 'TOKEN_EXPIRED') {
-//         // hit refresh route
-//         // if error again hit logout route
-//         // set localstate to ""
-//         // redirect to login
-//       }
-//     });
-//   }
-// });
-
-// function getCookie(req: IncomingMessage): string {
-//   return req ? req.headers.cookie : '';
-// }
 
 let apolloClient: ApolloClient<NormalizedCacheObject> = null;
 

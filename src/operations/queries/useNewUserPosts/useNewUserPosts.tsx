@@ -1,4 +1,5 @@
-import { ApolloError } from '@apollo/client';
+import { useEffect } from 'react';
+import { ApolloError, useReactiveVar } from '@apollo/client';
 
 import { State } from 'types';
 import {
@@ -6,7 +7,7 @@ import {
   useFetchAllUserPostsByTimeQuery,
 } from 'operations';
 import { CommonNotificationParms, useCommonNotifications } from 'hooks';
-import { NO_OF_POSTS_AT_A_TIME } from 'lib';
+import { NO_OF_POSTS_AT_A_TIME, userCommunitiesVar } from 'lib';
 
 type SetStateParams = CommonNotificationParms & {
   data: FetchAllUserPostsByTimeQuery;
@@ -44,6 +45,7 @@ function useNewUserPosts() {
     data,
     error: isError,
     fetchMore,
+    refetch,
   } = useFetchAllUserPostsByTimeQuery({
     variables: {
       take: NO_OF_POSTS_AT_A_TIME,
@@ -51,6 +53,13 @@ function useNewUserPosts() {
   });
   const { success, error } = useCommonNotifications();
   const { posts, state, cursor } = setState({ data, isError, success, error });
+  const joinedCommunities = useReactiveVar(userCommunitiesVar);
+
+  useEffect(() => {
+    if (state === 'DATA') {
+      refetch({ take: posts.length > 5 ? posts.length : 5 });
+    }
+  }, [joinedCommunities.length]);
 
   const fetchMorePosts = async () => {
     if (cursor) {

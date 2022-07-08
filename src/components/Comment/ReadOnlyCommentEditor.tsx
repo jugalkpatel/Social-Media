@@ -1,5 +1,5 @@
-import { Skeleton } from '@mantine/core';
 import { useState } from 'react';
+import { Skeleton } from '@mantine/core';
 import { DeltaStatic } from 'quill';
 
 import { CommentWysiwyg } from 'components';

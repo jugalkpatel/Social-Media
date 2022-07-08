@@ -9,9 +9,9 @@ import {
   Group,
   Avatar,
   Divider,
-  Button,
   ScrollArea,
 } from '@mantine/core';
+import { useRouter } from 'next/router';
 
 import { JoinCommunity } from 'components';
 import { useFetchAllCommunities } from 'operations';
@@ -38,6 +38,7 @@ type CommunityTileProps = {
 };
 
 function CommunityTile({ id, name, picture }: CommunityTileProps) {
+  const router = useRouter();
   return (
     <>
       <Group sx={{ justifyContent: 'space-between' }} px="md">
@@ -48,7 +49,13 @@ function CommunityTile({ id, name, picture }: CommunityTileProps) {
             size="sm"
             radius="lg"
           />
-          <Text lineClamp={1} weight={700} size="sm" sx={{ maxWidth: '6rem' }}>
+          <Text
+            lineClamp={1}
+            weight={700}
+            size="sm"
+            sx={{ maxWidth: '6rem', cursor: 'pointer' }}
+            onClick={() => router.push(`/c/${name}`)}
+          >
             c/{name}
           </Text>
         </Group>
@@ -83,7 +90,7 @@ function FeaturedCommunities() {
         </Center>
       ) : null}
 
-      <ScrollArea style={{ height: '20rem' }} type="auto" scrollbarSize={1}>
+      <ScrollArea style={{ maxHeight: '20rem' }} type="auto" scrollbarSize={1}>
         <Stack spacing="xs" py="xs" sx={{ maxHeight: '20rem' }}>
           {communities && communities.length
             ? communities.map(({ id, picture, title }) => {

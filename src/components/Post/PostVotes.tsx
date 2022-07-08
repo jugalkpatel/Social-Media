@@ -3,12 +3,12 @@ import { ActionIcon, Text, createStyles } from '@mantine/core';
 import { useModals } from '@mantine/modals';
 import { TiArrowSortedUp, TiArrowSortedDown } from 'react-icons/ti';
 
-import { VoteType } from 'graphql-generated';
 import {
   RemoveVoteCacheUpdateParams,
   Vote,
   VoteCacheUpdateParams,
 } from 'types';
+import { VoteType } from 'graphql-generated';
 import { useCheckUserInCommunity, useCommonNotifications } from 'hooks';
 import { useRemoveVote, useVote } from 'operations';
 import { userIdVar, voteCount } from 'lib';
@@ -24,7 +24,7 @@ type Props = {
   };
 };
 
-const useStyles = createStyles((theme) => ({
+const useStyles = createStyles((_theme) => ({
   arrow: {
     color: 'grey',
     fontSize: '20px',
@@ -57,12 +57,6 @@ function checkExistingVote({
   return userVote;
 }
 
-const handleOnClick = (e: React.MouseEvent, callback: () => void) => {
-  callback();
-
-  e.stopPropagation();
-};
-
 function PostVotes({
   data: {
     votes,
@@ -82,66 +76,59 @@ function PostVotes({
   const { isUserInCommunity } = useCheckUserInCommunity({
     communityId,
   });
-
-  const onVoteClick = (type: VoteType) => {
-    if (!userId) {
-      modals.openContextModal('LOGIN', { innerProps: {} });
-      return;
-    }
-
-    if (!isUserInCommunity) {
-      error("You're not a member of this community");
-      return;
-    }
-
-    const vote = checkExistingVote({
-      votes,
-      userId,
-      type,
-    });
-
-    if (vote) {
-      const { id: voteId } = vote;
-      console.log('remove  vote');
-      removeVote({
-        communityId,
-        postId,
-        voteId,
-        communityName,
-        updateCache: updateCacheOnRemove,
-      });
-    } else {
-      console.log(`vote function with type ${type}`);
-      voteFn({
-        communityId,
-        postId,
-        type,
-        communityName,
-        updateCache: updateCacheOnVote,
-      });
-    }
-  };
-
-  const upVote = () => {
-    onVoteClick(VoteType.Upvote);
-  };
-
-  const downVote = () => {
-    onVoteClick(VoteType.Downvote);
-  };
+  const isUpvoted = checkExistingVote({ votes, userId, type: VoteType.Upvote });
+  const isDownvoted = checkExistingVote({
+    votes,
+    userId,
+    type: VoteType.Downvote,
+  });
 
   const isLoading = removeVoteLoading || voteLoading;
 
+  const handleClick = (type: VoteType) => {
+    return async (e: React.MouseEvent) => {
+      e.stopPropagation();
+
+      if (!userId) {
+        modals.openContextModal('LOGIN', { innerProps: {} });
+        return;
+      }
+
+      if (!isUserInCommunity) {
+        error("You're not a member of this community");
+        return;
+      }
+      const vote = checkExistingVote({ votes, userId, type });
+
+      if (vote) {
+        const { id: voteId } = vote;
+        removeVote({
+          communityId,
+          postId,
+          voteId,
+          communityName,
+          updateCache: updateCacheOnRemove,
+        });
+      } else {
+        voteFn({
+          communityId,
+          postId,
+          type,
+          communityName,
+          updateCache: updateCacheOnVote,
+        });
+      }
+    };
+  };
+
+  const onUpvoteClick = handleClick(VoteType.Upvote);
+  const onDownvoteClick = handleClick(VoteType.Downvote);
   return (
     <>
-      <ActionIcon
-        size="sm"
-        disabled={isLoading}
-        onClick={(e: React.MouseEvent) => handleOnClick(e, upVote)}
-      >
+      <ActionIcon size="sm" disabled={isLoading} onClick={onUpvoteClick}>
         <TiArrowSortedUp
           className={classes.arrow}
-          // style={{ color: 'orange' }}
+          style={isUpvoted ? { color: 'orange' } : null}
         />
       </ActionIcon>
 
@@ -149,12 +136,11 @@ function PostVotes({
         {voteCount(votes)}
       </Text>
 
-      <ActionIcon
-        size="sm"
-        disabled={isLoading}
-        onClick={(e: React.MouseEvent) => handleOnClick(e, downVote)}
-      >
-        <TiArrowSortedDown className={classes.arrow} />
+      <ActionIcon size="sm" disabled={isLoading} onClick={onDownvoteClick}>
+        <TiArrowSortedDown
+          className={classes.arrow}
+          style={isDownvoted ? { color: 'orange' } : null}
+        />
       </ActionIcon>
     </>
   );

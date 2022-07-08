@@ -76,7 +76,6 @@ const useStyles = createStyles((theme) => ({
 
 const redirect = (e: React.SyntheticEvent, url: string): void => {
   Router.push(url);
-  // console.log(`clicked on ${url}`);
 
   e.stopPropagation();
 };

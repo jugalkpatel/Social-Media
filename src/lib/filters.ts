@@ -34,7 +34,6 @@ function timeFilter(posts: Array<Post>): Array<Post> {
       return 1;
     }
 
-    // console.log(`current post time ${Date.parse(current.createdAt)}`);
     return 0;
   });
 

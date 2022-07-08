@@ -1,4 +1,3 @@
-import { useReactiveVar } from '@apollo/client';
 import { useForm } from '@mantine/form';
 import {
   Container,
@@ -16,7 +15,6 @@ import {
 import { IPostState } from 'types';
 import { SelectCommunity, Wysiwyg } from 'components';
 import { useCreatePost, useFetchUserCommunities } from 'operations';
-import { authorizationVar } from 'lib';
 
 const useStyles = createStyles((theme) => ({
   height: {
@@ -54,6 +52,7 @@ const handleUpload = (file: File): Promise<string> =>
   });
 
 const TITLE_LENGTH = 200;
+
 function CreatePost() {
   const { classes } = useStyles();
   const { communities, state } = useFetchUserCommunities();
@@ -75,6 +74,7 @@ function CreatePost() {
         !value.length ? 'Post content should not be empty!' : null,
     },
   });
+
   const communitiesData =
     communities && communities.length
       ? communities.map(({ id, picture, title }) => {
@@ -85,9 +85,11 @@ function CreatePost() {
           };
         })
       : [];
+
   const onSubmitClick = async (values: IPostState) => {
     await createPost(values);
   };
+
   return (
     <Container py={25}>
       {state === 'LOADING' ? (

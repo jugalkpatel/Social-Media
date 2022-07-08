@@ -1,6 +1,5 @@
 import { useForm } from 'react-hook-form';
 import { ContextModalProps } from '@mantine/modals';
-
 import {
   Button,
   Group,
@@ -19,7 +18,6 @@ import { RegisterFormValues } from 'types';
 import { useRegister } from 'operations';
 
 function Register({ context, id: modalId }: ContextModalProps) {
-  // const router = useRouter();
   const modals = useModals();
   const {
     handleSubmit,

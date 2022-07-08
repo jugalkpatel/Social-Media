@@ -1,4 +1,4 @@
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { ContextModalProps, useModals } from '@mantine/modals';
 
 import {
@@ -18,15 +18,12 @@ import { LoginFormValues } from 'types';
 import { useLogin } from 'operations';
 
 function Login({ context, id: modalId }: ContextModalProps) {
-  // const router = useRouter();
   const modals = useModals();
   const {
     handleSubmit,
     register,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     setValue,
-    getValues,
-    control,
   } = useForm<LoginFormValues>({
     mode: 'onBlur',
     defaultValues: { email: '', password: '' },

@@ -1,9 +1,9 @@
+import { useRouter } from 'next/router';
 import { createStyles, MediaQuery, Stack, Button, Text } from '@mantine/core';
 import { useWindowScroll } from '@mantine/hooks';
 import { MdArrowBackIos } from 'react-icons/md';
 
 import { ContainerLayout } from 'components';
-import { useRouter } from 'next/router';
 
 type Props = {
   main: React.ReactNode;

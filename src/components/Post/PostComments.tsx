@@ -12,13 +12,13 @@ import {
   EmptyPlaceholder,
   CommentVotes,
 } from 'components';
-import { userIdVar } from 'lib';
 import { useCheckUserInCommunity } from 'hooks';
 import {
   FetchPostDocument,
   FetchPostQuery,
   FetchPostQueryVariables,
 } from 'operations';
+import { userIdVar } from 'lib';
 
 type Props = {
   postId: string;

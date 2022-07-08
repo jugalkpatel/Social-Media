@@ -29,7 +29,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const { name, id } = params as PostParams;
 
     const community = await fetchCommunity(name, apolloClient);
-    // const post = await fetchPost(id, apolloClient);
 
     if (!community) {
       return {
@@ -45,7 +44,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       props: documentProps.props,
     };
   } catch (error) {
-    console.log({ error });
     return {
       notFound: true,
     };
@@ -55,12 +53,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 export default function ({
   community,
   postId,
-}: // post,
-InferGetServerSidePropsType<typeof getServerSideProps>) {
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { banner, picture, title, description, createdAt, id } =
     community as Community;
 
-  console.log({ community });
   return (
     <PostPageLayout
       main={<PostContent postId={postId} />}

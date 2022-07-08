@@ -13,3 +13,17 @@ export function isTokenExpired(error: ApolloError): boolean {
 
   return isExpired;
 }
+
+export function isTokenIncluded(error: ApolloError): boolean {
+  let isTokenIncluded = false;
+
+  if (error.graphQLErrors.length) {
+    error.graphQLErrors.forEach(({ extensions }) => {
+      if (extensions?.code && extensions.code !== 'UNAUTHENTICATED') {
+        isTokenIncluded = true;
+      }
+    });
+  }
+
+  return isTokenIncluded;
+}

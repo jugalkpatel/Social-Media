@@ -21,6 +21,50 @@ type Props = {
   postId: string;
 };
 
+function PostContent({ postId }: Props) {
+  const { post, state } = useFetchPost({ postId });
+
+  if (state === 'ERROR') {
+    return <PostNotFound />;
+  }
+
+  if (state === 'LOADING') {
+    return (
+      <Stack>
+        <PostSkeleton />
+        {new Array(3).fill(0).map((_) => {
+          return <CommentSkeleton key={nanoid()} />;
+        })}
+      </Stack>
+    );
+  }
+
+  return (
+    <Stack>
+      <Post
+        post={post}
+        votes={
+          <PostVotes
+            data={{
+              votes: post.votes,
+              postId: post.id,
+              communityId: post.community.id,
+              communityName: post.community.title,
+              updateCacheOnRemove,
+              updateCacheOnVote,
+            }}
+          />
+        }
+      />
+      <PostComments
+        comments={post.comments}
+        postId={post.id}
+        communityId={post.community.id}
+      />
+    </Stack>
+  );
+}
+
 function updateCacheOnRemove({
   cache,
   deletedVoteId,
@@ -85,51 +129,6 @@ function updateCacheOnVote({ cache, newVote, postId }: VoteCacheUpdateParams) {
   }
 
   throw new Error();
-}
-
-function PostContent({ postId }: Props) {
-  const { post, state } = useFetchPost({ postId });
-
-  if (state === 'ERROR') {
-    return <PostNotFound />;
-  }
-
-  if (state === 'LOADING') {
-    return (
-      <Stack>
-        <PostSkeleton />
-        {new Array(3).fill(0).map((_) => {
-          return <CommentSkeleton key={nanoid()} />;
-        })}
-      </Stack>
-    );
-  }
-
-  return (
-    <Stack>
-      <Post
-        post={post}
-        votes={
-          <PostVotes
-            data={{
-              votes: post.votes,
-              postId: post.id,
-              communityId: post.community.id,
-              communityName: post.community.title,
-              updateCacheOnRemove,
-              updateCacheOnVote,
-            }}
-          />
-        }
-      />
-      <PostComments
-        comments={post.comments}
-        postId={post.id}
-        // communityName={post.community.title}
-        communityId={post.community.id}
-      />
-    </Stack>
-  );
 }
 
 export default PostContent;

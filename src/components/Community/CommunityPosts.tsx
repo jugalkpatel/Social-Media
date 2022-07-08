@@ -13,6 +13,48 @@ type Props = {
   title: string;
 };
 
+function CommunityPosts({ title }: Props) {
+  const { posts, state } = useFetchCommunityPosts({ title });
+
+  if (state === 'ERROR') {
+    return null;
+  }
+
+  if (state === 'LOADING') {
+    return <PostsSkeleton />;
+  }
+
+  return (
+    <Stack>
+      {!posts.length ? (
+        <EmptyPlaceholder message="No Posts Yet" height={300} />
+      ) : (
+        posts.map((post) => {
+          return (
+            <Post
+              key={post.id}
+              post={post}
+              list={true}
+              votes={
+                <PostVotes
+                  data={{
+                    votes: post.votes,
+                    postId: post.id,
+                    communityId: post.community.id,
+                    communityName: post.community.title,
+                    updateCacheOnRemove,
+                    updateCacheOnVote,
+                  }}
+                />
+              }
+            />
+          );
+        })
+      )}
+    </Stack>
+  );
+}
+
 function updateCacheOnRemove({
   cache,
   deletedVoteId,
@@ -131,48 +173,6 @@ function updateCacheOnVote({
   }
 
   throw new Error();
-}
-
-function CommunityPosts({ title }: Props) {
-  const { posts, state } = useFetchCommunityPosts({ title });
-
-  if (state === 'ERROR') {
-    return null;
-  }
-
-  if (state === 'LOADING') {
-    return <PostsSkeleton />;
-  }
-
-  return (
-    <Stack>
-      {!posts.length ? (
-        <EmptyPlaceholder message="No Posts Yet" height={300} />
-      ) : (
-        posts.map((post) => {
-          return (
-            <Post
-              key={post.id}
-              post={post}
-              list={true}
-              votes={
-                <PostVotes
-                  data={{
-                    votes: post.votes,
-                    postId: post.id,
-                    communityId: post.community.id,
-                    communityName: post.community.title,
-                    updateCacheOnRemove,
-                    updateCacheOnVote,
-                  }}
-                />
-              }
-            />
-          );
-        })
-      )}
-    </Stack>
-  );
 }
 
 export default CommunityPosts;

@@ -56,8 +56,6 @@ function remove({
         },
       });
     } catch (error) {
-      // show updated notification with failed
-      console.log({ error });
       const errorMessage = error?.message || 'something went wrong!';
       errorNotification(errorMessage);
     }

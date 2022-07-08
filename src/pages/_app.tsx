@@ -15,6 +15,8 @@ import { NotificationsProvider } from '@mantine/notifications';
 import { ModalsProvider } from '@mantine/modals';
 
 import theme from '../styles/theme';
+import 'normalize.css/normalize.css';
+import '../public/nprogress.css';
 
 import { useApollo } from 'lib';
 import {
@@ -24,9 +26,6 @@ import {
   CreateCommunity,
   WithRouterEvents,
 } from 'components';
-
-import 'normalize.css/normalize.css';
-import '../public/nprogress.css';
 
 setGlobalDateMasks({
   timeFormat: '[on] MMMM Do, YY · hh:mm A',
@@ -47,6 +46,7 @@ const App: NextPage<AppProps> = ({ Component, pageProps }) => {
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
+        <link rel="icon" href="/favicon.ico" />
       </Head>
       <ApolloProvider client={apolloClient}>
         <ColorSchemeProvider

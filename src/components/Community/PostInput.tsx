@@ -3,9 +3,8 @@ import { Group, Input, createStyles } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { IoMdClose } from 'react-icons/io';
 
-import { useCheckUserInCommunity } from 'hooks';
 import { UserAvatar } from 'components';
-// import { isUserPartOfCommunity, userCommunitiesVar } from 'lib';
+import { useCheckUserInCommunity } from 'hooks';
 
 const useStyles = createStyles((theme) => ({
   background: {

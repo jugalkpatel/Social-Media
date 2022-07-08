@@ -17,8 +17,6 @@ function ObserveScroll({
     }
   }, [inView]);
 
-  // console.log({ inView });
-
   return <span ref={ref}></span>;
 }
 

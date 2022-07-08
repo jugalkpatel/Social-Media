@@ -40,7 +40,7 @@ function submit({ submit, error: showError, context }: SubmitParams) {
 
         context.closeAll();
 
-        Router.back();
+        Router.push('/');
 
         return;
       }
@@ -48,6 +48,8 @@ function submit({ submit, error: showError, context }: SubmitParams) {
       const errorMessage = error?.message || 'something went wrong';
 
       showError(errorMessage);
+
+      Router.push('/popular');
     }
   };
 

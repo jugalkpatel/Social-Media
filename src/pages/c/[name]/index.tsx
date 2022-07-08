@@ -26,8 +26,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const community = await fetchCommunity(communityName, apolloClient);
 
-    console.log({ community });
-
     if (!community) {
       return {
         notFound: true,
@@ -109,13 +107,3 @@ export default function ({
     </>
   );
 }
-
-// let isAuthenticated = false;
-
-// const user = await handleAuth(req, apolloClient);
-
-// if (!('authenticated' in user)) {
-//   isAuthenticated = true;
-// }
-
-// console.log({ user });

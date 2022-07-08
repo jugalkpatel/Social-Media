@@ -1,5 +1,6 @@
 import { Button, Stack } from '@mantine/core';
-import { ReactiveVar, useReactiveVar } from '@apollo/client';
+import { useReactiveVar } from '@apollo/client';
+import { useModals } from '@mantine/modals';
 
 import { UpdateCacheOnCommunityOperation } from 'types';
 import { useOpenConfirmModal, useCheckUserInCommunity } from 'hooks';
@@ -11,7 +12,6 @@ import {
   useLeaveCommunity,
 } from 'operations';
 import { userIdVar } from 'lib';
-import { useModals } from '@mantine/modals';
 
 type Props = {
   fullWidth?: boolean;
@@ -20,6 +20,58 @@ type Props = {
     title: string;
   };
 };
+
+function JoinCommunity({ data: { communityId, title }, fullWidth }: Props) {
+  const userId = useReactiveVar(userIdVar);
+  const modals = useModals();
+  const { join, loading: joinOperationLoading } = useJoinCommunity({
+    id: communityId,
+  });
+  const { leave, loading: leaveOperationLoading } = useLeaveCommunity({
+    id: communityId,
+  });
+  const isAuthenticated = !!userId;
+  const { isUserInCommunity } = useCheckUserInCommunity({ communityId });
+  const onLeaveClick = useOpenConfirmModal({
+    data: {
+      title: 'Are you sure, you want to leave this community?',
+      labels: { confirm: 'leave', cancel: 'stay' },
+      onCancel: () => null,
+      onConfirm: () =>
+        leave({ title, communityId, updateCache: updateCacheOnLeave }),
+    },
+  });
+
+  const handleClick = () => {
+    if (!isAuthenticated) {
+      modals.openContextModal('LOGIN', { innerProps: {} });
+
+      return;
+    }
+
+    if (!isUserInCommunity) {
+      join({ title, updateCache: updateCacheOnJoin, communityId });
+    } else {
+      onLeaveClick();
+    }
+  };
+
+  return (
+    <Stack sx={{ width: fullWidth ? null : 'fit-content' }}>
+      <Button
+        size="xs"
+        radius="xl"
+        px={'1.5rem'}
+        fullWidth={true}
+        loading={joinOperationLoading || leaveOperationLoading}
+        variant={isUserInCommunity ? 'outline' : 'filled'}
+        onClick={handleClick}
+      >
+        {isAuthenticated && isUserInCommunity ? 'leave' : 'join'}
+      </Button>
+    </Stack>
+  );
+}
 
 function updateCacheOnJoin({
   title,
@@ -59,6 +111,7 @@ function updateCacheOnJoin({
           members: updatedCommunityMembers,
         },
       },
+      overwrite: true,
     });
 
     return;
@@ -103,63 +156,11 @@ function updateCacheOnLeave({
           members: updatedCommunityMembers,
         },
       },
+      overwrite: true,
     });
 
     return;
   }
-}
-
-function JoinCommunity({ data: { communityId, title }, fullWidth }: Props) {
-  const userId = useReactiveVar(userIdVar);
-  const modals = useModals();
-  const { join, loading: joinOperationLoading } = useJoinCommunity({
-    id: communityId,
-  });
-  const { leave, loading: leaveOperationLoading } = useLeaveCommunity({
-    id: communityId,
-    title,
-  });
-  const isAuthenticated = !!userId;
-  const { isUserInCommunity } = useCheckUserInCommunity({ communityId });
-  const onLeaveClick = useOpenConfirmModal({
-    data: {
-      title: 'Are you sure, you want to leave this community?',
-      labels: { confirm: 'leave', cancel: 'stay' },
-      onCancel: () => null,
-      onConfirm: () =>
-        leave({ title, communityId, updateCache: updateCacheOnLeave }),
-    },
-  });
-
-  const handleClick = () => {
-    if (!isAuthenticated) {
-      modals.openContextModal('LOGIN', { innerProps: {} });
-
-      return;
-    }
-
-    if (!isUserInCommunity) {
-      join({ title, updateCache: updateCacheOnJoin, communityId });
-    } else {
-      onLeaveClick();
-    }
-  };
-
-  return (
-    <Stack sx={{ width: fullWidth ? null : 'fit-content' }}>
-      <Button
-        size="xs"
-        radius="xl"
-        px={'1.5rem'}
-        fullWidth={true}
-        loading={joinOperationLoading || leaveOperationLoading}
-        variant={isUserInCommunity ? 'outline' : 'filled'}
-        onClick={handleClick}
-      >
-        {isAuthenticated && isUserInCommunity ? 'leave' : 'join'}
-      </Button>
-    </Stack>
-  );
 }
 
 export default JoinCommunity;

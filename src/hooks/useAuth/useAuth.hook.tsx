@@ -8,6 +8,7 @@ import {
   useAuthenticateMutation,
   AuthenticateMutation,
   AuthenticateMutationFn,
+  useLogout,
 } from 'operations';
 import {
   setAuthCredentials,
@@ -15,6 +16,7 @@ import {
   userNameVar,
   userPictureVar,
   isTokenExpired,
+  isTokenIncluded,
 } from 'lib';
 
 const checkAccess = (data: AuthenticateMutation) => {
@@ -34,8 +36,9 @@ async function handleRequest(
 
     return checkAccess(data);
   } catch (error) {
-    // console.log(`error in access token ${error}`);
-    if (error instanceof ApolloError) {
+    const isTokenExist = isTokenIncluded(error);
+
+    if (isTokenExist && error instanceof ApolloError) {
       const expired = isTokenExpired(error);
 
       if (expired) {
@@ -53,7 +56,7 @@ async function handleRequest(
       }
     }
 
-    throw new Error(error);
+    throw new Error('token not included');
   }
 }
 
@@ -61,6 +64,7 @@ function useAuth() {
   const isAuthorized = useReactiveVar(authorizationVar);
   const name = useReactiveVar(userNameVar);
   const picture = useReactiveVar(userPictureVar);
+  const { client } = useLogout();
   const [access, { loading: authenticateLoading }] = useAuthenticateMutation();
   const [refresh, { loading: refreshLoading }] = useRefreshMutation();
   const router = useRouter();
@@ -87,15 +91,26 @@ function useAuth() {
           joinedCommunities,
         });
 
+        router.push('/');
+
         return;
       }
 
       throw new Error('something went wrong!');
     } catch (error) {
-      console.log({ error });
-      // router.push('/');
-      // hits when refresh token throws error: refresh token expires
-      // logout and redirect to the login modal
+      if (error instanceof ApolloError) {
+        client.clearStore();
+
+        setAuthCredentials({
+          isLoggedIn: false,
+          bookmarks: [],
+          id: '',
+          joinedCommunities: [],
+          name: '',
+          picture: '',
+        });
+      }
+
       modals.openContextModal('LOGIN', { innerProps: {} });
     }
   };
@@ -109,8 +124,6 @@ function useAuth() {
       checkAuthorization();
     }
   }, []);
-
-  // console.log({ authenticateLoading, refreshLoading });
 
   return {
     data: { isAuthorized, name, picture },

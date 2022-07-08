@@ -1,5 +1,6 @@
-import { CommentLayout } from 'components';
 import { Skeleton } from '@mantine/core';
+
+import { CommentLayout } from 'components';
 
 function CommentSkeleton() {
   return (

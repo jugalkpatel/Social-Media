@@ -44,7 +44,6 @@ function logoutUser({
 
       throw new Error();
     } catch (error) {
-      console.log({ error });
       const errorMessage = error?.message || 'something went wrong!';
 
       showError(errorMessage);
@@ -57,7 +56,7 @@ function useLogout() {
   const { success, error } = useCommonNotifications();
   const logout = logoutUser({ logout: mutationFn, success, error, client });
 
-  return { logout, loading };
+  return { logout, loading, client };
 }
 
 export default useLogout;

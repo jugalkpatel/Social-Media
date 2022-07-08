@@ -23,6 +23,70 @@ type Props = {
   postId: string;
 };
 
+const checkBookmark = (postId: string, bookmarks: Array<Bookmark>) => {
+  const post =
+    bookmarks && bookmarks.length
+      ? bookmarks.find(({ id }) => id === postId)
+      : null;
+
+  return !!post;
+};
+
+const handleOnClick = (e: React.MouseEvent, callback: () => void) => {
+  callback();
+
+  e.stopPropagation();
+};
+
+function Bookmark({ postId }: Props) {
+  const { classes } = useStyles();
+  const modals = useModals();
+  const { createBookmark, loading: createBookmarkLoading } =
+    useCreateBookmark();
+  const { deleteBookmark, loading: removeBookmarkLoading } =
+    useRemoveBookmark();
+  const isLoading = createBookmarkLoading || removeBookmarkLoading;
+
+  const userId = useReactiveVar(userIdVar);
+  const bookmarks = useReactiveVar(userBookmarksVar);
+  const isPostBookmarked = checkBookmark(postId, bookmarks);
+
+  const onBookmarkClick = async () => {
+    if (!userId) {
+      modals.openContextModal('LOGIN', { innerProps: {} });
+
+      return;
+    }
+
+    if (!isPostBookmarked) {
+      await createBookmark({ postId, updateCache: updateCacheOnCreate });
+    } else {
+      await deleteBookmark({ postId, updateCache: updateCacheOnRemove });
+    }
+  };
+
+  return (
+    <Button
+      leftIcon={
+        isPostBookmarked ? (
+          <IoBookmarksOutline className={classes.fontSize} />
+        ) : (
+          <IoBookmarkOutline className={classes.fontSize} />
+        )
+      }
+      variant="subtle"
+      color="gray"
+      px="sm"
+      size="xs"
+      sx={{ color: 'gray' }}
+      onClick={(e: React.MouseEvent) => handleOnClick(e, onBookmarkClick)}
+      loading={isLoading}
+    >
+      {isPostBookmarked ? 'Saved' : 'Save'}
+    </Button>
+  );
+}
+
 function updateCacheOnCreate({
   cache,
   bookmark: newBookmark,
@@ -108,8 +172,6 @@ function updateCacheOnRemove({
         overwrite: true,
       });
 
-      console.log('should remove successfully');
-
       return;
     }
   }
@@ -121,70 +183,6 @@ function updateCacheOnRemove({
   ) {
     throw new Error(data.fetchUserBookmarks.message);
   }
-}
-
-const checkBookmark = (postId: string, bookmarks: Array<Bookmark>) => {
-  const post =
-    bookmarks && bookmarks.length
-      ? bookmarks.find(({ id }) => id === postId)
-      : null;
-
-  return !!post;
-};
-
-const handleOnClick = (e: React.MouseEvent, callback: () => void) => {
-  callback();
-
-  e.stopPropagation();
-};
-
-function Bookmark({ postId }: Props) {
-  const { classes } = useStyles();
-  const modals = useModals();
-  const { createBookmark, loading: createBookmarkLoading } =
-    useCreateBookmark();
-  const { deleteBookmark, loading: removeBookmarkLoading } =
-    useRemoveBookmark();
-  const isLoading = createBookmarkLoading || removeBookmarkLoading;
-
-  const userId = useReactiveVar(userIdVar);
-  const bookmarks = useReactiveVar(userBookmarksVar);
-  const isPostBookmarked = checkBookmark(postId, bookmarks);
-
-  const onBookmarkClick = async () => {
-    if (!userId) {
-      modals.openContextModal('LOGIN', { innerProps: {} });
-
-      return;
-    }
-
-    if (!isPostBookmarked) {
-      await createBookmark({ postId, updateCache: updateCacheOnCreate });
-    } else {
-      await deleteBookmark({ postId, updateCache: updateCacheOnRemove });
-    }
-  };
-
-  return (
-    <Button
-      leftIcon={
-        isPostBookmarked ? (
-          <IoBookmarksOutline className={classes.fontSize} />
-        ) : (
-          <IoBookmarkOutline className={classes.fontSize} />
-        )
-      }
-      variant="subtle"
-      color="gray"
-      px="sm"
-      size="xs"
-      sx={{ color: 'gray' }}
-      onClick={(e: React.MouseEvent) => handleOnClick(e, onBookmarkClick)}
-      loading={isLoading}
-    >
-      {isPostBookmarked ? 'Saved' : 'Save'}
-    </Button>
-  );
 }
 
 export default Bookmark;

@@ -1,6 +1,7 @@
 import { Stack } from '@mantine/core';
 import { nanoid } from 'nanoid';
 
+import { VoteCacheUpdateParams, RemoveVoteCacheUpdateParams } from 'types';
 import {
   ObserveScroll,
   PostsSkeleton,
@@ -14,7 +15,6 @@ import {
   FetchAllPostsByVotesQueryVariables,
   useTopPopularPosts,
 } from 'operations';
-import { VoteCacheUpdateParams, RemoveVoteCacheUpdateParams } from 'types';
 import { NO_OF_POSTS_AT_A_TIME } from 'lib';
 
 function PopularTopPosts() {

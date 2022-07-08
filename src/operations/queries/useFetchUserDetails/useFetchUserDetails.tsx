@@ -24,11 +24,8 @@ function useFetchUserDetails() {
 
   const { user, state } = setState(data, error);
 
-  console.log({ data });
-
   useEffect(() => {
     if (state === 'DATA') {
-      console.log('refetching queries');
       refetch();
     }
   }, []);

@@ -1,5 +1,6 @@
 import { SubmitHandler } from 'react-hook-form';
 import { ModalsContextProps } from '@mantine/modals/lib/context';
+import Router from 'next/router';
 
 import { RegisterFormValues } from 'types';
 import { useRegisterMutation, RegisterMutationFn } from 'operations';
@@ -48,12 +49,16 @@ function register({ submit, error: showError, context }: RegisterParams) {
 
         context.closeAll();
 
+        Router.push('/');
+
         return;
       }
     } catch (error) {
       const errorMessage = error?.message || 'something went wrong!';
 
       showError(errorMessage);
+
+      Router.push('/popular');
     }
   };
 

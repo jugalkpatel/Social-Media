@@ -1,4 +1,5 @@
 import { useReactiveVar } from '@apollo/client';
+
 import { userCommunitiesVar } from 'lib';
 
 function useCheckUserInCommunity({ communityId }: { communityId: string }) {

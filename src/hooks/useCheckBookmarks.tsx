@@ -1,10 +1,9 @@
 import { useReactiveVar } from '@apollo/client';
+
 import { userBookmarksVar } from 'lib';
 
 function useCheckBookmarks() {
   const bookmarks = useReactiveVar(userBookmarksVar);
-
-  console.log({ bookmarks });
 
   const isBookmarked = (postId: string) => {
     const post =

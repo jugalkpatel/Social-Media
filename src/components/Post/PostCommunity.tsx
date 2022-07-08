@@ -7,8 +7,9 @@ import {
   Text,
   Divider,
 } from '@mantine/core';
-import { GiCakeSlice } from 'react-icons/gi';
 import { format } from 'fecha';
+import { GiCakeSlice } from 'react-icons/gi';
+import { useRouter } from 'next/router';
 
 type Props = {
   joinElement: React.ReactNode;
@@ -43,6 +44,7 @@ function PostCommunity({
   data: { banner, picture, title, description, createdAt },
 }: Props) {
   const { classes, cx } = useStyles();
+  const router = useRouter();
   return (
     <Stack className={cx(classes.background, classes.border)} sx={{ gap: '0' }}>
       <Image src={banner} height={30} />
@@ -54,17 +56,18 @@ function PostCommunity({
             radius="xl"
             sx={{ backgroundColor: '#fff' }}
           />
-          <Text weight={700}>c/{title}</Text>
+          <Text
+            weight={700}
+            onClick={() => router.push(`/c/${title}`)}
+            sx={{ cursor: 'pointer' }}
+          >
+            c/{title}
+          </Text>
         </Group>
 
         <Text transform="capitalize" size="sm">
           {description}
         </Text>
-
-        {/* <Stack sx={{ gap: 0 }}>
-          <Text weight={700}>{memberCount}</Text>
-          <Text size="sm">Members</Text>
-        </Stack> */}
 
         {countElement}
 

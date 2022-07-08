@@ -47,7 +47,6 @@ function create({
         },
       });
     } catch (error) {
-      console.log({ error });
       const errorMessage = error?.message || 'something went wrong!';
       showError(errorMessage);
     }
