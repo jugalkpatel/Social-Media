@@ -1,6 +1,5 @@
 import { useForm } from 'react-hook-form';
 import { ContextModalProps, useModals } from '@mantine/modals';
-
 import {
   Group,
   InputWrapper,
@@ -36,9 +35,11 @@ function Login({ context, id: modalId }: ContextModalProps) {
   };
 
   const autofill = async () => {
-    setValue('email', 'guest@gmail.com', { shouldValidate: true });
+    setValue('email', process.env.NEXT_PUBLIC_EMAIL, { shouldValidate: true });
 
-    setValue('password', 'guest12345', { shouldValidate: true });
+    setValue('password', process.env.NEXT_PUBLIC_PASSWORD, {
+      shouldValidate: true,
+    });
 
     handleSubmit(onSubmit)();
   };
