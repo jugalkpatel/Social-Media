@@ -14,6 +14,7 @@ const useStyles = createStyles((theme) => ({
     gridTemplateColumns: '1fr',
     gridTemplateRows: '1fr',
     padding: '0.5rem 0',
+    position: 'relative',
 
     [theme.fn.largerThan('lg')]: {
       gridTemplateColumns: '2.3fr 1fr',
@@ -35,10 +36,12 @@ function FeedLayout({ main, featured }: Props) {
   return (
     <ContainerLayout>
       <div className={classes.grid}>
-        <Stack sx={{ gridRow: '1/-1' }}>{main}</Stack>
+        <Stack sx={{ gridRow: '1/-1', position: 'relative' }}>{main}</Stack>
 
         <MediaQuery smallerThan="lg" styles={{ display: 'none' }}>
-          <Stack sx={{ gridRow: '1/2' }}>{featured}</Stack>
+          <Stack sx={{ gridRow: '1/2', position: 'sticky', top: '4rem' }}>
+            {featured}
+          </Stack>
         </MediaQuery>
 
         <Button

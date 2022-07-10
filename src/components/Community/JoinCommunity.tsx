@@ -42,7 +42,7 @@ function JoinCommunity({ data: { communityId, title }, fullWidth }: Props) {
     },
   });
 
-  const handleClick = () => {
+  const handleClick = async () => {
     if (!isAuthenticated) {
       modals.openContextModal('LOGIN', { innerProps: {} });
 

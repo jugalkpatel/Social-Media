@@ -25,7 +25,7 @@ function CommunityPosts({ title }: Props) {
   }
 
   return (
-    <Stack>
+    <Stack pb="sm">
       {!posts.length ? (
         <EmptyPlaceholder message="No Posts Yet" height={300} />
       ) : (

@@ -98,6 +98,7 @@ function PostVotes({
         error("You're not a member of this community");
         return;
       }
+
       const vote = checkExistingVote({ votes, userId, type });
 
       if (vote) {

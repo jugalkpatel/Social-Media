@@ -27,10 +27,6 @@ function ReadOnlyEditor({ content, variant = 'DEFAULT' }: Props) {
     setText(editor.getContents());
   };
 
-  // useEffect(() => {
-  //   setText(JSON.parse(content));
-  // }, [content]);
-
   const variantClass = variant === 'LIST' ? classes.listVarient : null;
 
   if (!text) {

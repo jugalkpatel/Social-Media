@@ -73,54 +73,68 @@ function CommentVotes({
   const { vote: submitVote, loading: voteCommentLoading } = useVoteComment();
   const { removeVote, loading: removeCommentVoteLoading } =
     useRemoveCommentVote();
+  const isUpvoted = checkExistingVote({ votes, userId, type: VoteType.Upvote });
+  const isDownvoted = checkExistingVote({
+    votes,
+    userId,
+    type: VoteType.Downvote,
+  });
 
-  const onVoteClick = (type: VoteType) => {
-    if (!userId) {
-      modals.openContextModal('LOGIN', { innerProps: {} });
-      return;
-    }
+  const handleClick = (type: VoteType) => {
+    return async () => {
+      if (!userId) {
+        modals.openContextModal('LOGIN', { innerProps: {} });
 
-    if (!isUserInCommunity) {
-      error("You're not a member of this community");
-      return;
-    }
+        return;
+      }
 
-    const vote = checkExistingVote({ type, userId, votes });
+      if (!isUserInCommunity) {
+        error("You're not a member of this community");
+        return;
+      }
 
-    if (vote) {
-      removeVote({
-        commentId,
-        postId,
-        voteId: vote.id,
-        updateCache: updateCacheOnRemoveVote,
-      });
-    } else {
-      submitVote({ commentId, postId, type, updateCache: updateCacheOnVote });
-    }
+      const vote = checkExistingVote({ type, userId, votes });
+
+      if (vote) {
+        removeVote({
+          commentId,
+          postId,
+          voteId: vote.id,
+          updateCache: updateCacheOnRemoveVote,
+        });
+      } else {
+        submitVote({ commentId, postId, type, updateCache: updateCacheOnVote });
+      }
+    };
   };
 
   const isLoading = removeCommentVoteLoading || voteCommentLoading;
+
+  const upVoteClick = handleClick(VoteType.Upvote);
+  const downVoteClick = handleClick(VoteType.Downvote);
   return (
     <>
       <ActionIcon
         variant="transparent"
         size="sm"
-        loading={isLoading}
-        onClick={() => onVoteClick(VoteType.Upvote)}
+        disabled={isLoading}
+        onClick={upVoteClick}
       >
-        <TiArrowSortedUp className={classes.arrow} />
+        <TiArrowSortedUp
+          className={classes.arrow}
+          style={isUpvoted ? { color: 'orange' } : null}
+        />
       </ActionIcon>
 
       <Text weight={700} size="sm" color="gray">
         {commentVoteCount(votes)}
       </Text>
 
-      <ActionIcon
-        size="sm"
-        loading={isLoading}
-        onClick={() => onVoteClick(VoteType.Downvote)}
-      >
-        <TiArrowSortedDown className={classes.arrow} />
+      <ActionIcon size="sm" disabled={isLoading} onClick={downVoteClick}>
+        <TiArrowSortedDown
+          className={classes.arrow}
+          style={isDownvoted ? { color: 'orange' } : null}
+        />
       </ActionIcon>
     </>
   );

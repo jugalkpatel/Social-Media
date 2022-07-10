@@ -5,8 +5,6 @@ import {
   Stack,
   Text,
   Divider,
-  Title,
-  Center,
 } from '@mantine/core';
 import { MdCake } from 'react-icons/md';
 import { format } from 'fecha';
@@ -66,7 +64,6 @@ function CommunityContent({
   allPosts,
 }: Props) {
   const { classes, cx } = useStyles();
-  const posts = [1, 2, 3, 4];
 
   return (
     <ContainerLayout>
@@ -74,21 +71,7 @@ function CommunityContent({
         <div className={classes.mobile}>
           {input}
 
-          <Stack>
-            {posts.length ? (
-              allPosts
-            ) : (
-              <Center style={{ height: '30vh' }}>
-                <Stack justify="center" align="center">
-                  <Title order={4} align="center">
-                    There are no posts in this community.
-                  </Title>
-
-                  {addPost}
-                </Stack>
-              </Center>
-            )}
-          </Stack>
+          {allPosts}
         </div>
 
         <MediaQuery smallerThan="lg" styles={{ display: 'none' }}>

@@ -30,6 +30,7 @@ function Comment({ comment, votes: VotesComponent }: Props) {
     return <CommentSkeleton />;
   }
 
+  const content = JSON.parse(text);
   return (
     <CommentLayout
       avatar={
@@ -53,7 +54,7 @@ function Comment({ comment, votes: VotesComponent }: Props) {
           </Text>
         </Group>
       }
-      main={<ReadOnlyCommentEditor content={text} />}
+      main={<ReadOnlyCommentEditor content={content} />}
       votes={
         <Group align="center" noWrap={true} spacing={4}>
           {VotesComponent}

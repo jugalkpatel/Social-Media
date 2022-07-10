@@ -35,7 +35,7 @@ function Login({ context, id: modalId }: ContextModalProps) {
     modals.openContextModal('REGISTER', { innerProps: {} });
   };
 
-  const autofill = () => {
+  const autofill = async () => {
     setValue('email', 'guest@gmail.com', { shouldValidate: true });
 
     setValue('password', 'guest12345', { shouldValidate: true });

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Skeleton } from '@mantine/core';
-import { DeltaStatic } from 'quill';
 
 import { CommentWysiwyg } from 'components';
 
@@ -9,7 +8,7 @@ type Props = {
 };
 
 function ReadOnlyCommentEditor({ content }: Props) {
-  const [text, setText] = useState<DeltaStatic>(JSON.parse(content));
+  const [text, setText] = useState(content);
 
   const handleText = (value, delta, sources, editor) => {
     setText(editor.getContents());

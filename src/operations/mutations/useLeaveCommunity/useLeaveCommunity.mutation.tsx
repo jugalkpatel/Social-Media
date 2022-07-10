@@ -1,16 +1,11 @@
-import { showNotification } from '@mantine/notifications';
-import { IoMdCheckmark, IoMdClose } from 'react-icons/io';
+import { ReactiveVar } from '@apollo/client';
 
+import { UpdateCacheOnCommunityOperation, UserCommunity } from 'types';
 import {
   useLeaveCommunityMutation,
   LeaveCommunityMutationFn,
-  FetchCommunityMembersDocument,
-  FetchCommunityMembersQuery,
-  FetchCommunityMembersQueryVariables,
 } from 'operations';
 import { CommonNotificationParms, useCommonNotifications } from 'hooks';
-import { ReactiveVar } from '@apollo/client';
-import { UpdateCacheOnCommunityOperation, UserCommunity } from 'types';
 import { userCommunitiesVar } from 'lib';
 
 type Props = {

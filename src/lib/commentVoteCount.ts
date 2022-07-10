@@ -10,5 +10,9 @@ export default function commentVoteCount(
 
   const upvotes = votes.filter(({ type }) => type === VoteType.Upvote);
 
-  return upvotes.length;
+  const downvotes = votes.filter(({ type }) => type === VoteType.Downvote);
+
+  const totalVotes = upvotes.length - downvotes.length;
+
+  return totalVotes < 0 ? 0 : totalVotes;
 }

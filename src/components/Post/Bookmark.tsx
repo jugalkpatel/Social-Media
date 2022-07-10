@@ -59,9 +59,9 @@ function Bookmark({ postId }: Props) {
     }
 
     if (!isPostBookmarked) {
-      await createBookmark({ postId, updateCache: updateCacheOnCreate });
+      createBookmark({ postId, updateCache: updateCacheOnCreate });
     } else {
-      await deleteBookmark({ postId, updateCache: updateCacheOnRemove });
+      deleteBookmark({ postId, updateCache: updateCacheOnRemove });
     }
   };
 
