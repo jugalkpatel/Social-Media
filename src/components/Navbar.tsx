@@ -119,17 +119,17 @@ function Navbar() {
               </ActionIcon>
             }
           >
-            <Menu.Label>Appearance</Menu.Label>
+            {/* <Menu.Label>Appearance</Menu.Label>
             <Menu.Item
               icon={dark ? <IoIosSunny /> : <MdNightsStay />}
               onClick={() => toggleColorScheme()}
             >
               {dark ? 'Light Mode' : 'Dark Mode'}
-            </Menu.Item>
+            </Menu.Item> */}
 
-            <Divider />
+            {/* <Divider /> */}
 
-            <Menu.Label>MORE STUFF</Menu.Label>
+            {/* <Menu.Label>MORE STUFF</Menu.Label> */}
             {isAuthorized ? (
               <Menu.Item
                 icon={<BsPlusCircleDotted />}
