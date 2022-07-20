@@ -1,17 +1,22 @@
 import Router from 'next/router';
 
+import { UserCommunity } from 'types';
 import { CommonNotificationParms, useCommonNotifications } from 'hooks';
 import {
   useCreateCommunityMutation,
   CreateCommunityMutationFn,
+  addCommunity,
 } from 'operations';
+import { userCommunitiesVar } from 'lib';
 
 type CreateCommunityParams = CommonNotificationParms & {
   createCommunityMutation: CreateCommunityMutationFn;
+  updateLocalCommunities: (newCommunity: UserCommunity) => void;
 };
 
 function create({
   createCommunityMutation,
+  updateLocalCommunities,
   success,
   error: showError,
 }: CreateCommunityParams) {
@@ -42,6 +47,8 @@ function create({
       ) {
         const { id, title } = data.createCommunity;
 
+        updateLocalCommunities({ __typename: 'Community', id });
+
         success('community created sucessfully');
 
         Router.push(`/c/${title}`);
@@ -61,9 +68,11 @@ function create({
 function useCreateCommunity() {
   const [mutationFn, { loading }] = useCreateCommunityMutation();
   const { success, error } = useCommonNotifications();
+  const updateLocalCommunities = addCommunity(userCommunitiesVar);
 
   const createCommunity = create({
     createCommunityMutation: mutationFn,
+    updateLocalCommunities,
     success,
     error,
   });

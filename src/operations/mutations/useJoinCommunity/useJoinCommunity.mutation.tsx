@@ -82,4 +82,4 @@ function useJoinCommunity({ id }: Props) {
   return { join, loading };
 }
 
-export default useJoinCommunity;
+export { useJoinCommunity, addCommunity };
