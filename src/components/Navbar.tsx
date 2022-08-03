@@ -7,7 +7,6 @@ import {
   useMantineColorScheme,
   Menu,
   createStyles,
-  Divider,
   Title,
   Text,
   Avatar,
@@ -86,7 +85,7 @@ function Navbar() {
 
         {router.pathname !== '/popular' ? (
           <Link href="/popular" passHref>
-            <ActionIcon variant="outline" title="create post" component="a">
+            <ActionIcon variant="outline" title="popular" component="a">
               <AiOutlineCompass />
             </ActionIcon>
           </Link>

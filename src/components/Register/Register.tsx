@@ -69,13 +69,14 @@ function Register({ context, id: modalId }: ContextModalProps) {
               <Input
                 id="name-input"
                 placeholder="Type your name"
+                type="text"
                 {...register('name', {
+                  setValueAs: (value) => value.trim(),
                   required: 'Name is required',
                 })}
               />
             </InputWrapper>
 
-            {/*TODO: validate Email */}
             <InputWrapper
               id="email-input"
               label="Email"
@@ -84,7 +85,9 @@ function Register({ context, id: modalId }: ContextModalProps) {
               <Input
                 id="email-input"
                 placeholder="Type your email"
+                type="email"
                 {...register('email', {
+                  setValueAs: (value) => value.trim(),
                   required: 'Email is required',
                 })}
               />
@@ -123,10 +126,11 @@ function Register({ context, id: modalId }: ContextModalProps) {
 
               <PasswordInput
                 placeholder="Type your password"
-                id="password-inpput"
+                id="password-input"
                 error={errors.password ? errors.password.message : null}
                 {...register('password', {
                   required: 'Password is required',
+                  setValueAs: (value) => value.trim(),
                   minLength: {
                     value: 8,
                     message: 'minimum length should be 8 characters',

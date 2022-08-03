@@ -4,12 +4,13 @@ import {
   Title,
   Divider,
   createStyles,
-  Input,
   Stack,
   Button,
   Loader,
   Center,
   Text,
+  TextInput,
+  InputWrapper,
 } from '@mantine/core';
 
 import { IPostState } from 'types';
@@ -51,17 +52,22 @@ const handleUpload = (file: File): Promise<string> =>
       });
   });
 
+type IPostStateWithLength = IPostState & {
+  contentLength: number;
+};
+
 const TITLE_LENGTH = 200;
 
 function CreatePost() {
   const { classes } = useStyles();
   const { communities, state } = useFetchUserCommunities();
   const { createPost, loading } = useCreatePost();
-  const form = useForm<IPostState>({
+  const form = useForm<IPostStateWithLength>({
     initialValues: {
       community: '',
       title: '',
       content: '',
+      contentLength: 0,
     },
     validate: {
       community: (value) =>
@@ -69,9 +75,11 @@ function CreatePost() {
           ? 'Please select valid value for communities'
           : null,
       title: (value) =>
-        value.length <= 0 ? 'Title atleast include 1 character' : null,
+        value.length <= 1 ? 'Title should include atleast 2 letters' : null,
       content: (value) =>
-        !value.length ? 'Post content should not be empty!' : null,
+        value.length < 2 ? 'content must have at least 2 letters' : null,
+      contentLength: (value) =>
+        value - 1 <= 4 ? 'Post content must have at least 5 letters' : null,
     },
   });
 
@@ -109,12 +117,13 @@ function CreatePost() {
 
             <Stack spacing="sm">
               <Stack sx={{ gap: '10px' }}>
-                <Input
+                <TextInput
+                  id="title-input"
                   size="sm"
                   maxLength={TITLE_LENGTH}
-                  placeholder="Title"
-                  required
+                  placeholder="Enter Post Title"
                   {...form.getInputProps('title')}
+                  required
                 />
                 <Text size="xs" pl={3}>
                   {TITLE_LENGTH - form.values.title.length} characters remaining
@@ -123,19 +132,31 @@ function CreatePost() {
 
               <Divider size="xs" />
 
-              <Wysiwyg
-                value={form.values.content}
-                onChange={(value, delta, sources, editor) => {
-                  form.setFieldValue(
-                    'content',
-                    JSON.stringify(editor.getContents()),
-                  );
-                }}
-                className={classes.height}
-                onImageUpload={handleUpload}
-                sx={{ maxWidth: '100%', overflowY: 'auto' }}
-              />
+              <InputWrapper
+                id="content-input"
+                error={
+                  form?.errors && form.errors?.contentLength
+                    ? form.errors.contentLength
+                    : null
+                }
+              >
+                <Wysiwyg
+                  id="content-input"
+                  value={form.values.content}
+                  onChange={(value, delta, sources, editor) => {
+                    form.setFieldValue('contentLength', editor.getLength());
+                    form.setFieldValue(
+                      'content',
+                      JSON.stringify(editor.getContents()),
+                    );
+                  }}
+                  className={classes.height}
+                  onImageUpload={handleUpload}
+                  sx={{ maxWidth: '100%', overflowY: 'auto' }}
+                />
+              </InputWrapper>
             </Stack>
+
             <Divider my="md" size="xs" />
 
             <Stack align="flex-end">

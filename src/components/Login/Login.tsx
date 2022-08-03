@@ -76,6 +76,7 @@ function Login({ context, id: modalId }: ContextModalProps) {
                 id="email-input"
                 placeholder="Type your email"
                 {...register('email', {
+                  setValueAs: (value) => value.trim(),
                   required: 'Email is required',
                 })}
               />
@@ -116,6 +117,7 @@ function Login({ context, id: modalId }: ContextModalProps) {
                 id="password-input"
                 error={errors.password ? errors.password.message : null}
                 {...register('password', {
+                  setValueAs: (value) => value.trim(),
                   required: 'Password is required',
                   minLength: {
                     value: 8,

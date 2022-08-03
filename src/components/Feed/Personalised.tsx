@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Tabs, TabsProps } from '@mantine/core';
+import { Tabs } from '@mantine/core';
 import { CgToday } from 'react-icons/cg';
 import { AiOutlineStock } from 'react-icons/ai';
 
