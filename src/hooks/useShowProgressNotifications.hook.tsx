@@ -12,7 +12,7 @@ export type ProgressNotificationsParams = {
   error: (errorMessage: string) => void;
 };
 
-function showProgressNotifications({ id, time }: Props) {
+function useShowProgressNotifications({ id, time }: Props) {
   const start = (startMessage: string) => {
     showNotification({
       id,
@@ -46,4 +46,4 @@ function showProgressNotifications({ id, time }: Props) {
   return { start, success, error };
 }
 
-export default showProgressNotifications;
+export default useShowProgressNotifications;

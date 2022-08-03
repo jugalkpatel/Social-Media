@@ -1,6 +1,9 @@
 import { RemoveVoteCacheUpdateParams } from 'types';
 import { useRemoveVoteMutation, RemoveVoteMutationFn } from 'operations';
-import { showProgressNotifications, ProgressNotificationsParams } from 'hooks';
+import {
+  useShowProgressNotifications,
+  ProgressNotificationsParams,
+} from 'hooks';
 
 type RemoveVoteParams = {
   postId: string;
@@ -63,14 +66,13 @@ function remove({
 }
 
 function useRemoveVote() {
-  const { start, error, success } = showProgressNotifications({
+  const { start, error, success } = useShowProgressNotifications({
     id: 'post-vote',
   });
   const [mutationFn, { loading }] = useRemoveVoteMutation();
 
   const removeVote = remove({ mutationFn, start, success, error });
 
-  // return loading for disabling buttons while operation is in progress
   return { removeVote, loading };
 }
 

@@ -3,7 +3,10 @@ import {
   useRemoveCommentVoteMutation,
   RemoveCommentVoteMutationFn,
 } from 'operations';
-import { ProgressNotificationsParams, showProgressNotifications } from 'hooks';
+import {
+  ProgressNotificationsParams,
+  useShowProgressNotifications,
+} from 'hooks';
 
 type VoteParams = {
   voteId: string;
@@ -67,7 +70,7 @@ function removeCommentVote({
 
 function useRemoveCommentVote() {
   const [mutationFn, { loading }] = useRemoveCommentVoteMutation();
-  const { start, success, error } = showProgressNotifications({
+  const { start, success, error } = useShowProgressNotifications({
     id: 'comment-vote',
   });
 

@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { ApolloError, useReactiveVar } from '@apollo/client';
 
 import { State } from 'types';
@@ -5,9 +6,12 @@ import {
   useFetchAllUserPostsByVoteQuery,
   FetchAllUserPostsByVoteQuery,
 } from 'operations';
-import { useCommonNotifications, CommonNotificationParms } from 'hooks';
+import {
+  useCommonNotifications,
+  CommonNotificationParms,
+  useShowProgressNotifications,
+} from 'hooks';
 import { NO_OF_POSTS_AT_A_TIME, userCommunitiesVar } from 'lib';
-import { useEffect } from 'react';
 
 type SetStateParams = CommonNotificationParms & {
   data: FetchAllUserPostsByVoteQuery;
@@ -54,6 +58,8 @@ function useTopUserPosts() {
   });
   const { error, success } = useCommonNotifications();
   const { posts, state, cursor } = setState({ data, isError, success, error });
+  const { start: fetchMorePostsStart, success: fetchMoreSuccess } =
+    useShowProgressNotifications({ id: 'user-posts-top', time: 500 });
   const joinedCommunities = useReactiveVar(userCommunitiesVar);
 
   useEffect(() => {
@@ -64,9 +70,11 @@ function useTopUserPosts() {
 
   const fetchMorePosts = async () => {
     if (cursor) {
+      fetchMorePostsStart('hang on! fetching more posts');
       await fetchMore({
         variables: { cursorId: cursor, take: NO_OF_POSTS_AT_A_TIME },
       });
+      fetchMoreSuccess('new posts are added successfully');
     }
   };
 

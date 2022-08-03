@@ -6,7 +6,11 @@ import {
   FetchAllUserPostsByTimeQuery,
   useFetchAllUserPostsByTimeQuery,
 } from 'operations';
-import { CommonNotificationParms, useCommonNotifications } from 'hooks';
+import {
+  CommonNotificationParms,
+  useCommonNotifications,
+  useShowProgressNotifications,
+} from 'hooks';
 import { NO_OF_POSTS_AT_A_TIME, userCommunitiesVar } from 'lib';
 
 type SetStateParams = CommonNotificationParms & {
@@ -53,6 +57,8 @@ function useNewUserPosts() {
   });
   const { success, error } = useCommonNotifications();
   const { posts, state, cursor } = setState({ data, isError, success, error });
+  const { start: fetchMorePostsStart, success: fetchMoreSuccess } =
+    useShowProgressNotifications({ id: 'user-posts-new', time: 500 });
   const joinedCommunities = useReactiveVar(userCommunitiesVar);
 
   useEffect(() => {
@@ -63,9 +69,11 @@ function useNewUserPosts() {
 
   const fetchMorePosts = async () => {
     if (cursor) {
+      fetchMorePostsStart('hang on! fetching more posts');
       await fetchMore({
         variables: { cursorId: cursor, take: NO_OF_POSTS_AT_A_TIME },
       });
+      fetchMoreSuccess('new posts are added successfully');
     }
   };
 
