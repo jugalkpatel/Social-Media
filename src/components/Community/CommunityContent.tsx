@@ -76,22 +76,24 @@ function CommunityContent({
 
         <MediaQuery smallerThan="lg" styles={{ display: 'none' }}>
           <Stack
+            spacing="xs"
             className={cx(classes.background, classes.border)}
             p="md"
             sx={{ gridRow: '1/2', gridColumn: '2/3' }}
-            justify="space-evenly"
+            justify="space-between"
           >
-            <Text size="sm" weight={700}>
-              About Community
-            </Text>
+            <Stack spacing="xs">
+              <Text size="sm" weight={700}>
+                About Community
+              </Text>
 
-            <Text lineClamp={4}>{description}</Text>
+              <Text lineClamp={3}>{description}</Text>
+            </Stack>
 
             {count}
 
-            <Divider size="xs" />
-
             <Stack>
+              <Divider size="xs" />
               <Group align="center" sx={{ gap: '10px' }}>
                 <MdCake fontSize={25} />
                 <Text weight={500}>

@@ -74,6 +74,7 @@ function Login({ context, id: modalId }: ContextModalProps) {
             >
               <Input
                 id="email-input"
+                type="email"
                 placeholder="Type your email"
                 {...register('email', {
                   setValueAs: (value) => value.trim(),
