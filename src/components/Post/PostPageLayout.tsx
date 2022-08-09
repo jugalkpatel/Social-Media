@@ -4,6 +4,7 @@ import { useWindowScroll } from '@mantine/hooks';
 import { MdArrowBackIos } from 'react-icons/md';
 
 import { ContainerLayout } from 'components';
+import { getPrevPath } from 'lib';
 
 type Props = {
   main: React.ReactNode;
@@ -53,6 +54,15 @@ function PostPageLayout({ main, right }: Props) {
   const { classes } = useStyles();
   const [, scrollTo] = useWindowScroll();
   const router = useRouter();
+
+  function back() {
+    if (getPrevPath() === '/submit') {
+      return router.push('/');
+    }
+
+    router.back();
+  }
+
   return (
     <ContainerLayout>
       <div className={classes.grid}>
@@ -62,7 +72,7 @@ function PostPageLayout({ main, right }: Props) {
             size="xs"
             sx={{ width: 'fit-content' }}
             px="xs"
-            onClick={() => router.back()}
+            onClick={() => back()}
           >
             <MdArrowBackIos />
             <Text size="xs" px={3}>

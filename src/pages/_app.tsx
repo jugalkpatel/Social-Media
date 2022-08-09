@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { ApolloProvider } from '@apollo/client';
 import { setGlobalDateMasks } from 'fecha';
 
@@ -26,6 +27,7 @@ import {
   CreateCommunity,
   WithRouterEvents,
 } from 'components';
+import { storePathValues } from 'lib';
 
 setGlobalDateMasks({
   timeFormat: '[on] MMMM Do, YY · hh:mm A',
@@ -33,10 +35,13 @@ setGlobalDateMasks({
 
 const App: NextPage<AppProps> = ({ Component, pageProps }) => {
   const apolloClient = useApollo(pageProps);
+  const router = useRouter();
   const [colorScheme, setColorScheme] = useState<ColorScheme>('dark');
 
   const toggleColorScheme = (value?: ColorScheme) =>
     setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
+
+  useEffect(() => storePathValues, [router.asPath]);
 
   return (
     <>
