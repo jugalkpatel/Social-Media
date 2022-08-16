@@ -19,3 +19,13 @@ export function getPrevPath(): string | null {
 
   return storage.getItem('prevPath');
 }
+
+export function getCurrentPath(): string | null {
+  const storage = globalThis?.sessionStorage;
+
+  if (!storage) {
+    return null;
+  }
+
+  return storage.getItem('currentPath');
+}

@@ -79,7 +79,9 @@ function CreatePost() {
       content: (value) =>
         value.length < 2 ? 'content must have at least 2 letters' : null,
       contentLength: (value) =>
-        value - 1 <= 4 ? 'Post content must have at least 5 letters' : null,
+        value - 1 <= 4
+          ? 'Post Content must contain a minimum of 5 letters.'
+          : null,
     },
   });
 

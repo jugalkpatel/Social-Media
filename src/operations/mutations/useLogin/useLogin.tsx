@@ -5,7 +5,7 @@ import { ModalsContextProps } from '@mantine/modals/lib/context';
 import { LoginFormValues } from 'types';
 import { useLoginMutation, LoginMutationFn } from 'operations';
 import { useCommonNotifications } from 'hooks';
-import { setAuthCredentials } from 'lib';
+import { setAuthCredentials, getCurrentPath } from 'lib';
 
 type SubmitParams = {
   submit: LoginMutationFn;
@@ -28,6 +28,7 @@ function submit({ submit, error: showError, context }: SubmitParams) {
 
       if (data && data?.login && data.login.__typename === 'User') {
         const { id, name, picture, bookmarks, joinedCommunities } = data.login;
+        const currentPath = getCurrentPath();
 
         setAuthCredentials({
           isLoggedIn: !!id,
@@ -40,7 +41,7 @@ function submit({ submit, error: showError, context }: SubmitParams) {
 
         context.closeAll();
 
-        Router.push('/');
+        Router.push(`${currentPath ? currentPath : '/popular'}`);
 
         return;
       }

@@ -6,5 +6,9 @@ export { default as voteCount } from './voteCount';
 export { default as commentVoteCount } from './commentVoteCount';
 export { topFilter, timeFilter } from './filters';
 export { default as withAuth } from './authWrapper';
-export { storePathValues, getPrevPath } from './storePathValues';
+export {
+  storePathValues,
+  getPrevPath,
+  getCurrentPath,
+} from './storePathValues';
 export * from './constants';

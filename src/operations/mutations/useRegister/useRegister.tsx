@@ -5,7 +5,7 @@ import Router from 'next/router';
 import { RegisterFormValues } from 'types';
 import { useRegisterMutation, RegisterMutationFn } from 'operations';
 import { useCommonNotifications } from 'hooks';
-import { setAuthCredentials } from 'lib';
+import { setAuthCredentials, getCurrentPath } from 'lib';
 
 type RegisterParams = {
   submit: RegisterMutationFn;
@@ -37,6 +37,7 @@ function register({ submit, error: showError, context }: RegisterParams) {
       if (data && data?.register && data.register.__typename === 'User') {
         const { id, name, picture, bookmarks, joinedCommunities } =
           data.register;
+        const currentPath = getCurrentPath();
 
         setAuthCredentials({
           isLoggedIn: !!id,
@@ -49,7 +50,7 @@ function register({ submit, error: showError, context }: RegisterParams) {
 
         context.closeAll();
 
-        Router.push('/');
+        Router.push(`${currentPath ? currentPath : '/popular'}`);
 
         return;
       }
