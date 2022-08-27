@@ -50,7 +50,8 @@ function register({ submit, error: showError, context }: RegisterParams) {
 
         context.closeAll();
 
-        Router.push(`${currentPath ? currentPath : '/popular'}`);
+        // Router.push(`${currentPath ? currentPath : '/popular'}`);
+        Router.push('/');
 
         return;
       }

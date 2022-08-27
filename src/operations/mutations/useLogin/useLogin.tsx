@@ -41,7 +41,8 @@ function submit({ submit, error: showError, context }: SubmitParams) {
 
         context.closeAll();
 
-        Router.push(`${currentPath ? currentPath : '/popular'}`);
+        // Router.push(`${currentPath ? currentPath : '/popular'}`);
+        Router.push('/');
 
         return;
       }
